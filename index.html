@@ -174,12 +174,21 @@
 
     .calendar-day.disabled {
       cursor: default;
-      background: #f7f7f7;
-      color: #aaa;
+      background: #f2f3f4;
+      color: #a2a8ad;
     }
 
     .calendar-day.disabled:hover {
       border-color: #e5e9ef;
+      background: #f2f3f4;
+    }
+
+    .calendar-day.closed {
+      background: #f3f3f3;
+    }
+
+    .calendar-day.partial {
+      background: #fffaf0;
     }
 
     .calendar-day.selected {
@@ -193,9 +202,20 @@
     }
 
     .day-note {
-      margin-top: 10px;
+      margin-top: 9px;
       font-size: 11px;
+      line-height: 1.4;
       color: #6b7280;
+    }
+
+    .closed-note {
+      color: #8c8c8c;
+      font-weight: 700;
+    }
+
+    .partial-note {
+      color: #9a7628;
+      font-weight: 700;
     }
 
     .today-mark {
@@ -216,7 +236,15 @@
 
     .selected-date {
       color: #5f6b73;
-      margin-bottom: 18px;
+      margin-bottom: 8px;
+    }
+
+    .schedule-note {
+      background: #fff8e8;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
     }
 
     .slot {
@@ -229,6 +257,17 @@
       border-radius: 12px;
     }
 
+    .slot.open {
+      border-color: #b9d9d5;
+      background: #f6fbfa;
+    }
+
+    .slot.closed {
+      background: #f3f3f3;
+      color: #999;
+      border-color: #e0e0e0;
+    }
+
     .slot-time {
       font-size: 17px;
       font-weight: 700;
@@ -237,11 +276,11 @@
     .slot-status {
       margin-top: 5px;
       font-size: 13px;
-      color: #7a838b;
+      color: #6f787f;
     }
 
-    .slot.pending {
-      background: #fafafa;
+    .slot.closed .slot-status {
+      color: #999;
     }
 
     .notice {
@@ -292,12 +331,12 @@
       }
 
       .calendar-day {
-        min-height: 65px;
+        min-height: 68px;
         padding: 6px;
       }
 
       .day-note {
-        display: none;
+        font-size: 10px;
       }
 
       h1 {
@@ -322,27 +361,19 @@
 <nav>
   <div class="nav-inner">
 
-    <button
-      class="tab-button active"
-      data-tab="booking">
+    <button class="tab-button active" data-tab="booking">
       📅 課程預約
     </button>
 
-    <button
-      class="tab-button"
-      data-tab="announcements">
+    <button class="tab-button" data-tab="announcements">
       📢 公告提醒
     </button>
 
-    <button
-      class="tab-button"
-      data-tab="materials">
+    <button class="tab-button" data-tab="materials">
       📚 課程資料
     </button>
 
-    <button
-      class="tab-button"
-      data-tab="info">
+    <button class="tab-button" data-tab="info">
       ❓ 上課須知
     </button>
 
@@ -352,11 +383,7 @@
 
 <main>
 
-  <!-- 課程預約 -->
-
-  <section
-    id="booking"
-    class="tab-content active">
+  <section id="booking" class="tab-content active">
 
     <div class="calendar-layout">
 
@@ -364,28 +391,19 @@
 
         <div class="calendar-toolbar">
 
-          <div
-            class="calendar-title"
-            id="calendarTitle">
-          </div>
+          <div class="calendar-title" id="calendarTitle"></div>
 
           <div class="toolbar-buttons">
 
-            <button
-              class="small-button"
-              onclick="changeMonth(-1)">
+            <button class="small-button" onclick="changeMonth(-1)">
               ‹
             </button>
 
-            <button
-              class="small-button"
-              onclick="goToday()">
+            <button class="small-button" onclick="goToday()">
               今天
             </button>
 
-            <button
-              class="small-button"
-              onclick="changeMonth(1)">
+            <button class="small-button" onclick="changeMonth(1)">
               ›
             </button>
 
@@ -406,10 +424,7 @@
 
         </div>
 
-        <div
-          id="calendarGrid"
-          class="calendar-grid">
-        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
 
       </div>
 
@@ -418,11 +433,11 @@
 
         <h2>預約時段</h2>
 
-        <div
-          id="selectedDate"
-          class="selected-date">
+        <div id="selectedDate" class="selected-date">
           請先選擇日期
         </div>
+
+        <div id="scheduleNote"></div>
 
         <div id="slotList">
           <div class="empty">
@@ -437,11 +452,7 @@
   </section>
 
 
-  <!-- 公告 -->
-
-  <section
-    id="announcements"
-    class="tab-content">
+  <section id="announcements" class="tab-content">
 
     <div class="card">
 
@@ -458,11 +469,7 @@
   </section>
 
 
-  <!-- 課程資料 -->
-
-  <section
-    id="materials"
-    class="tab-content">
+  <section id="materials" class="tab-content">
 
     <div class="card">
 
@@ -472,9 +479,7 @@
         下列分類會依 Google Sheet 的 Courses 工作表同步更新。
       </p>
 
-      <div
-        id="categoryList"
-        class="category-grid">
+      <div id="categoryList" class="category-grid">
 
         <div class="loading">
           資料載入中……
@@ -487,11 +492,7 @@
   </section>
 
 
-  <!-- 上課須知 -->
-
-  <section
-    id="info"
-    class="tab-content">
+  <section id="info" class="tab-content">
 
     <div class="card">
 
@@ -519,7 +520,8 @@ let appConfig = {
   slots: ['09:00', '15:00', '17:00'],
   bookingDaysAhead: 60,
   courses: [],
-  announcements: []
+  announcements: [],
+  scheduleOverrides: {}
 };
 
 
@@ -536,9 +538,9 @@ let selectedDate = null;
 
 
 
-// ======================
+// ======================================================
 // 分頁
-// ======================
+// ======================================================
 
 document
   .querySelectorAll('.tab-button')
@@ -570,9 +572,9 @@ document
 
 
 
-// ======================
+// ======================================================
 // JSONP
-// ======================
+// ======================================================
 
 function jsonp(action) {
 
@@ -600,10 +602,8 @@ function jsonp(action) {
 
 
     window[callbackName] = data => {
-
       cleanup();
       resolve(data);
-
     };
 
 
@@ -636,9 +636,9 @@ function jsonp(action) {
 
 
 
-// ======================
-// 載入設定
-// ======================
+// ======================================================
+// 載入 Google Sheet 設定
+// ======================================================
 
 async function loadConfig() {
 
@@ -649,13 +649,33 @@ async function loadConfig() {
 
 
     if (!data.success) {
+
       throw new Error(
         data.message || '資料讀取失敗'
       );
+
     }
 
 
-    appConfig = data;
+    appConfig = {
+      slots:
+        data.slots ||
+        ['09:00', '15:00', '17:00'],
+
+      bookingDaysAhead:
+        Number(
+          data.bookingDaysAhead || 60
+        ),
+
+      courses:
+        data.courses || [],
+
+      announcements:
+        data.announcements || [],
+
+      scheduleOverrides:
+        data.scheduleOverrides || {}
+    };
 
 
     document
@@ -696,16 +716,14 @@ async function loadConfig() {
 
 
 
-// ======================
+// ======================================================
 // 月曆
-// ======================
+// ======================================================
 
 function renderCalendar() {
 
   const grid =
-    document.getElementById(
-      'calendarGrid'
-    );
+    document.getElementById('calendarGrid');
 
 
   grid.innerHTML = '';
@@ -719,9 +737,7 @@ function renderCalendar() {
 
 
   document
-    .getElementById(
-      'calendarTitle'
-    )
+    .getElementById('calendarTitle')
     .textContent =
     `${year} 年 ${month + 1} 月`;
 
@@ -737,11 +753,7 @@ function renderCalendar() {
     );
 
 
-  for (
-    let i = 0;
-    i < 42;
-    i++
-  ) {
+  for (let i = 0; i < 42; i++) {
 
     const date =
       new Date(
@@ -759,9 +771,7 @@ function renderCalendar() {
       'calendar-day';
 
 
-    if (
-      date.getMonth() !== month
-    ) {
+    if (date.getMonth() !== month) {
 
       cell.classList.add(
         'other-month'
@@ -770,14 +780,49 @@ function renderCalendar() {
     }
 
 
-    const isAllowed =
-      isDateBookable(date);
+    const withinRange =
+      isWithinBookingRange(date);
 
 
-    if (!isAllowed) {
+    const schedule =
+      getScheduleForDate(date);
+
+
+    const allClosed =
+      appConfig.slots.every(
+        slot =>
+          schedule.slots[slot] === false
+      );
+
+
+    const someClosed =
+      appConfig.slots.some(
+        slot =>
+          schedule.slots[slot] === false
+      );
+
+
+    if (!withinRange) {
 
       cell.classList.add(
         'disabled'
+      );
+
+    }
+
+    else if (allClosed) {
+
+      cell.classList.add(
+        'disabled',
+        'closed'
+      );
+
+    }
+
+    else if (someClosed) {
+
+      cell.classList.add(
+        'partial'
       );
 
     }
@@ -805,9 +850,7 @@ function renderCalendar() {
       'day-number';
 
 
-    if (
-      sameDate(date, today)
-    ) {
+    if (sameDate(date, today)) {
 
       const mark =
         document.createElement('span');
@@ -820,7 +863,9 @@ function renderCalendar() {
 
       number.appendChild(mark);
 
-    } else {
+    }
+
+    else {
 
       number.textContent =
         date.getDate();
@@ -831,7 +876,7 @@ function renderCalendar() {
     cell.appendChild(number);
 
 
-    if (isAllowed) {
+    if (withinRange) {
 
       const note =
         document.createElement('div');
@@ -839,11 +884,49 @@ function renderCalendar() {
       note.className =
         'day-note';
 
-      note.textContent =
-        '可查看時段';
+
+      if (allClosed) {
+
+        note.classList.add(
+          'closed-note'
+        );
+
+        note.textContent =
+          schedule.note ||
+          '不開放';
+
+      }
+
+      else if (someClosed) {
+
+        note.classList.add(
+          'partial-note'
+        );
+
+        note.textContent =
+          schedule.note ||
+          '部分時段不開放';
+
+      }
+
+      else {
+
+        note.textContent =
+          schedule.note ||
+          '可查看時段';
+
+      }
+
 
       cell.appendChild(note);
 
+    }
+
+
+    if (
+      withinRange &&
+      !allClosed
+    ) {
 
       cell.addEventListener(
         'click',
@@ -880,6 +963,11 @@ function renderSlots() {
       'selectedDate'
     );
 
+  const noteBox =
+    document.getElementById(
+      'scheduleNote'
+    );
+
   const slotList =
     document.getElementById(
       'slotList'
@@ -890,6 +978,8 @@ function renderSlots() {
 
     dateText.textContent =
       '請先選擇日期';
+
+    noteBox.innerHTML = '';
 
     slotList.innerHTML =
       '<div class="empty">' +
@@ -907,38 +997,138 @@ function renderSlots() {
     );
 
 
+  const schedule =
+    getScheduleForDate(
+      selectedDate
+    );
+
+
+  if (schedule.note) {
+
+    noteBox.innerHTML = `
+      <div class="schedule-note">
+        ${escapeHtml(schedule.note)}
+      </div>
+    `;
+
+  }
+
+  else {
+
+    noteBox.innerHTML = '';
+
+  }
+
+
   slotList.innerHTML = '';
 
 
-  appConfig.slots.forEach(
-    time => {
+  appConfig.slots.forEach(time => {
 
-      const slot =
-        document.createElement('div');
-
-      slot.className =
-        'slot pending';
+    const isOpen =
+      schedule.slots[time] !== false;
 
 
-      slot.innerHTML = `
-        <div class="slot-time">
-          ${escapeHtml(time)}
-        </div>
-
-        <div class="slot-status">
-          下一步接上預約狀態
-        </div>
-      `;
+    const slot =
+      document.createElement('div');
 
 
-      slotList.appendChild(slot);
+    slot.className =
+      isOpen
+        ? 'slot open'
+        : 'slot closed';
 
-    }
-  );
+
+    slot.innerHTML = `
+
+      <div class="slot-time">
+        ${escapeHtml(time)}
+      </div>
+
+      <div class="slot-status">
+
+        ${
+          isOpen
+            ? '🟢 開放'
+            : '⚪ 不開放'
+        }
+
+      </div>
+
+    `;
+
+
+    slotList.appendChild(slot);
+
+  });
 
 }
 
 
+
+// ======================================================
+// 取得某一天 Schedule 狀態
+// ======================================================
+
+function getScheduleForDate(date) {
+
+  const dateKey =
+    formatDateKey(date);
+
+
+  const override =
+    appConfig.scheduleOverrides[
+      dateKey
+    ];
+
+
+  const slots = {};
+
+
+  appConfig.slots.forEach(slot => {
+
+    if (
+      override &&
+      Object.prototype.hasOwnProperty.call(
+        override,
+        slot
+      )
+    ) {
+
+      slots[slot] =
+        override[slot] !== false;
+
+    }
+
+    else {
+
+      // Schedule 沒有設定 → 預設開放
+      slots[slot] = true;
+
+    }
+
+  });
+
+
+  return {
+
+    slots: slots,
+
+    note:
+      override &&
+      override.note
+        ? override.note
+        : ''
+
+  };
+
+}
+
+
+
+// ======================================================
+// 月曆切換
+// ======================================================
 
 function changeMonth(offset) {
 
@@ -973,20 +1163,28 @@ function goToday() {
 
 
 
-function isDateBookable(date) {
+// ======================================================
+// 可預約日期範圍
+// ======================================================
+
+function isWithinBookingRange(date) {
 
   const d =
     startOfDay(date);
 
+
   const end =
     new Date(today);
+
 
   end.setDate(
     end.getDate() +
     Number(
-      appConfig.bookingDaysAhead || 60
+      appConfig.bookingDaysAhead ||
+      60
     )
   );
+
 
   return (
     d >= today &&
@@ -997,9 +1195,9 @@ function isDateBookable(date) {
 
 
 
-// ======================
+// ======================================================
 // 課程分類
-// ======================
+// ======================================================
 
 function renderCategories() {
 
@@ -1047,9 +1245,9 @@ function renderCategories() {
 
 
 
-// ======================
+// ======================================================
 // 公告
-// ======================
+// ======================================================
 
 function renderAnnouncements() {
 
@@ -1097,25 +1295,29 @@ function renderAnnouncements() {
 
 
     notice.innerHTML = `
+
       <div class="notice-title">
         ${escapeHtml(item.title)}
       </div>
 
       ${
         dates
-        ? `<div style="
-             font-size:12px;
-             color:#7a838b;
-             margin-bottom:5px;
-           ">
-             ${escapeHtml(dates)}
-           </div>`
-        : ''
+          ? `
+            <div style="
+              font-size:12px;
+              color:#7a838b;
+              margin-bottom:5px;
+            ">
+              ${escapeHtml(dates)}
+            </div>
+          `
+          : ''
       }
 
       <div>
         ${escapeHtml(item.content)}
       </div>
+
     `;
 
 
@@ -1127,9 +1329,9 @@ function renderAnnouncements() {
 
 
 
-// ======================
+// ======================================================
 // 共用工具
-// ======================
+// ======================================================
 
 function startOfDay(date) {
 
@@ -1154,6 +1356,36 @@ function sameDate(a, b) {
 
     a.getDate() ===
       b.getDate()
+  );
+
+}
+
+
+
+function formatDateKey(date) {
+
+  const year =
+    date.getFullYear();
+
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, '0');
+
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, '0');
+
+
+  return (
+    year +
+    '-' +
+    month +
+    '-' +
+    day
   );
 
 }
@@ -1189,32 +1421,19 @@ function escapeHtml(text) {
   return String(
     text ?? ''
   )
-  .replaceAll(
-    '&',
-    '&amp;'
-  )
-  .replaceAll(
-    '<',
-    '&lt;'
-  )
-  .replaceAll(
-    '>',
-    '&gt;'
-  )
-  .replaceAll(
-    '"',
-    '&quot;'
-  )
-  .replaceAll(
-    "'",
-    '&#039;'
-  );
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#039;');
 
 }
 
 
 
+// ======================================================
 // 啟動
+// ======================================================
 
 loadConfig();
 
