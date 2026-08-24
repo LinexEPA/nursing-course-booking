@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>護理教育課程預約</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        "Noto Sans TC",
+        "Microsoft JhengHei",
+        Arial,
+        sans-serif;
+      background: #f6f8fb;
+      color: #263238;
+    }
+
+    header {
+      background: white;
+      padding: 28px 20px 20px;
+      border-bottom: 1px solid #e5e9ef;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    nav {
+      background: white;
+      border-bottom: 1px solid #e5e9ef;
+      overflow-x: auto;
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+    }
+
+    .tab-button {
+      border: none;
+      background: transparent;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .tab-button:hover {
+      background: #f2f5f8;
+    }
+
+    .tab-button.active {
+      background: #e7f2f1;
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px 60px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .calendar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 20px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .calendar-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .toolbar-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .small-button {
+      border: 1px solid #d8dee6;
+      background: white;
+      border-radius: 9px;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+
+    .small-button:hover {
+      background: #f6f8fa;
+    }
+
+    .weekday-grid,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .weekday {
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      padding: 8px 0;
+    }
+
+    .calendar-day {
+      min-height: 90px;
+      border: 1px solid #e5e9ef;
+      border-radius: 10px;
+      padding: 8px;
+      background: white;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .calendar-day:hover {
+      border-color: #8db8b4;
+      background: #f8fcfb;
+    }
+
+    .calendar-day.other-month {
+      opacity: 0.35;
+    }
+
+    .calendar-day.disabled {
+      cursor: default;
+      background: #f7f7f7;
+      color: #aaa;
+    }
+
+    .calendar-day.disabled:hover {
+      border-color: #e5e9ef;
+    }
+
+    .calendar-day.selected {
+      border: 2px solid #5f9f99;
+      background: #eef8f7;
+    }
+
+    .day-number {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .day-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .today-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 25px;
+      height: 25px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #e7f2f1;
+    }
+
+    .slot-panel h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .selected-date {
+      color: #5f6b73;
+      margin-bottom: 18px;
+    }
+
+    .slot {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #dfe5ea;
+      background: white;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+    }
+
+    .slot-time {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .slot-status {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #7a838b;
+    }
+
+    .slot.pending {
+      background: #fafafa;
+    }
+
+    .notice {
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: #fff8e8;
+      margin-bottom: 12px;
+    }
+
+    .notice-title {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .category-card {
+      border: 1px solid #e1e6eb;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fafcfd;
+    }
+
+    .loading {
+      color: #6b7280;
+      padding: 20px 0;
+    }
+
+    .error {
+      background: #fff0f0;
+      border-radius: 10px;
+      padding: 14px;
+      color: #a33;
+    }
+
+    .empty {
+      color: #7b838b;
+      padding: 10px 0;
+    }
+
+    @media (max-width: 800px) {
+      .calendar-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-day {
+        min-height: 65px;
+        padding: 6px;
+      }
+
+      .day-note {
+        display: none;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1 id="siteTitle">護理教育課程預約</h1>
+    <div class="subtitle">
+      查看可預約日期、課程資訊與相關公告
+    </div>
+  </div>
+</header>
+
+
+<nav>
+  <div class="nav-inner">
+
+    <button
+      class="tab-button active"
+      data-tab="booking">
+      📅 課程預約
+    </button>
+
+    <button
+      class="tab-button"
+      data-tab="announcements">
+      📢 公告提醒
+    </button>
+
+    <button
+      class="tab-button"
+      data-tab="materials">
+      📚 課程資料
+    </button>
+
+    <button
+      class="tab-button"
+      data-tab="info">
+      ❓ 上課須知
+    </button>
+
+  </div>
+</nav>
+
+
+<main>
+
+  <!-- 課程預約 -->
+
+  <section
+    id="booking"
+    class="tab-content active">
+
+    <div class="calendar-layout">
+
+      <div class="card">
+
+        <div class="calendar-toolbar">
+
+          <div
+            class="calendar-title"
+            id="calendarTitle">
+          </div>
+
+          <div class="toolbar-buttons">
+
+            <button
+              class="small-button"
+              onclick="changeMonth(-1)">
+              ‹
+            </button>
+
+            <button
+              class="small-button"
+              onclick="goToday()">
+              今天
+            </button>
+
+            <button
+              class="small-button"
+              onclick="changeMonth(1)">
+              ›
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="weekday-grid">
+
+          <div class="weekday">日</div>
+          <div class="weekday">一</div>
+          <div class="weekday">二</div>
+          <div class="weekday">三</div>
+          <div class="weekday">四</div>
+          <div class="weekday">五</div>
+          <div class="weekday">六</div>
+
+        </div>
+
+        <div
+          id="calendarGrid"
+          class="calendar-grid">
+        </div>
+
+      </div>
+
+
+      <div class="card slot-panel">
+
+        <h2>預約時段</h2>
+
+        <div
+          id="selectedDate"
+          class="selected-date">
+          請先選擇日期
+        </div>
+
+        <div id="slotList">
+          <div class="empty">
+            點選左側日期後顯示時段。
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- 公告 -->
+
+  <section
+    id="announcements"
+    class="tab-content">
+
+    <div class="card">
+
+      <h2>📢 公告提醒</h2>
+
+      <div id="announcementList">
+        <div class="loading">
+          資料載入中……
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- 課程資料 -->
+
+  <section
+    id="materials"
+    class="tab-content">
+
+    <div class="card">
+
+      <h2>📚 課程分類</h2>
+
+      <p>
+        下列分類會依 Google Sheet 的 Courses 工作表同步更新。
+      </p>
+
+      <div
+        id="categoryList"
+        class="category-grid">
+
+        <div class="loading">
+          資料載入中……
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- 上課須知 -->
+
+  <section
+    id="info"
+    class="tab-content">
+
+    <div class="card">
+
+      <h2>❓ 上課須知</h2>
+
+      <p>
+        此區之後可以放置預約注意事項、上課地點、
+        課前準備或其他說明。
+      </p>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbxj8O4d4ZZPti5_2F_9MhBNBS60r2zCBVGzMtqzQ1CLaet6J9oaTA7_62aonmv2cdei/exec';
+
+
+let appConfig = {
+  slots: ['09:00', '15:00', '17:00'],
+  bookingDaysAhead: 60,
+  courses: [],
+  announcements: []
+};
+
+
+const today = startOfDay(new Date());
+
+let currentMonth =
+  new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  );
+
+let selectedDate = null;
+
+
+
+// ======================
+// 分頁
+// ======================
+
+document
+  .querySelectorAll('.tab-button')
+  .forEach(button => {
+
+    button.addEventListener('click', () => {
+
+      document
+        .querySelectorAll('.tab-button')
+        .forEach(btn =>
+          btn.classList.remove('active')
+        );
+
+      document
+        .querySelectorAll('.tab-content')
+        .forEach(content =>
+          content.classList.remove('active')
+        );
+
+      button.classList.add('active');
+
+      document
+        .getElementById(button.dataset.tab)
+        .classList.add('active');
+
+    });
+
+  });
+
+
+
+// ======================
+// JSONP
+// ======================
+
+function jsonp(action) {
+
+  return new Promise((resolve, reject) => {
+
+    const callbackName =
+      'jsonpCallback_' +
+      Date.now() +
+      '_' +
+      Math.floor(Math.random() * 100000);
+
+    const script =
+      document.createElement('script');
+
+
+    const cleanup = () => {
+
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+
+    };
+
+
+    window[callbackName] = data => {
+
+      cleanup();
+      resolve(data);
+
+    };
+
+
+    script.onerror = () => {
+
+      cleanup();
+
+      reject(
+        new Error('無法連線至預約系統')
+      );
+
+    };
+
+
+    script.src =
+      API_URL +
+      '?action=' +
+      encodeURIComponent(action) +
+      '&callback=' +
+      encodeURIComponent(callbackName) +
+      '&_=' +
+      Date.now();
+
+
+    document.body.appendChild(script);
+
+  });
+
+}
+
+
+
+// ======================
+// 載入設定
+// ======================
+
+async function loadConfig() {
+
+  try {
+
+    const data =
+      await jsonp('config');
+
+
+    if (!data.success) {
+      throw new Error(
+        data.message || '資料讀取失敗'
+      );
+    }
+
+
+    appConfig = data;
+
+
+    document
+      .getElementById('siteTitle')
+      .textContent =
+      data.siteTitle ||
+      '護理教育課程預約';
+
+
+    renderCategories();
+    renderAnnouncements();
+    renderCalendar();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    document
+      .getElementById('categoryList')
+      .innerHTML =
+      '<div class="error">' +
+      '無法讀取課程資料。' +
+      '</div>';
+
+
+    document
+      .getElementById('announcementList')
+      .innerHTML =
+      '<div class="error">' +
+      '無法讀取公告資料。' +
+      '</div>';
+
+  }
+
+}
+
+
+
+// ======================
+// 月曆
+// ======================
+
+function renderCalendar() {
+
+  const grid =
+    document.getElementById(
+      'calendarGrid'
+    );
+
+
+  grid.innerHTML = '';
+
+
+  const year =
+    currentMonth.getFullYear();
+
+  const month =
+    currentMonth.getMonth();
+
+
+  document
+    .getElementById(
+      'calendarTitle'
+    )
+    .textContent =
+    `${year} 年 ${month + 1} 月`;
+
+
+  const firstDay =
+    new Date(year, month, 1);
+
+  const startDay =
+    new Date(
+      year,
+      month,
+      1 - firstDay.getDay()
+    );
+
+
+  for (
+    let i = 0;
+    i < 42;
+    i++
+  ) {
+
+    const date =
+      new Date(
+        startDay.getFullYear(),
+        startDay.getMonth(),
+        startDay.getDate() + i
+      );
+
+
+    const cell =
+      document.createElement('div');
+
+
+    cell.className =
+      'calendar-day';
+
+
+    if (
+      date.getMonth() !== month
+    ) {
+
+      cell.classList.add(
+        'other-month'
+      );
+
+    }
+
+
+    const isAllowed =
+      isDateBookable(date);
+
+
+    if (!isAllowed) {
+
+      cell.classList.add(
+        'disabled'
+      );
+
+    }
+
+
+    if (
+      selectedDate &&
+      sameDate(
+        date,
+        selectedDate
+      )
+    ) {
+
+      cell.classList.add(
+        'selected'
+      );
+
+    }
+
+
+    const number =
+      document.createElement('div');
+
+    number.className =
+      'day-number';
+
+
+    if (
+      sameDate(date, today)
+    ) {
+
+      const mark =
+        document.createElement('span');
+
+      mark.className =
+        'today-mark';
+
+      mark.textContent =
+        date.getDate();
+
+      number.appendChild(mark);
+
+    } else {
+
+      number.textContent =
+        date.getDate();
+
+    }
+
+
+    cell.appendChild(number);
+
+
+    if (isAllowed) {
+
+      const note =
+        document.createElement('div');
+
+      note.className =
+        'day-note';
+
+      note.textContent =
+        '可查看時段';
+
+      cell.appendChild(note);
+
+
+      cell.addEventListener(
+        'click',
+        () => selectDate(date)
+      );
+
+    }
+
+
+    grid.appendChild(cell);
+
+  }
+
+}
+
+
+
+function selectDate(date) {
+
+  selectedDate =
+    startOfDay(date);
+
+  renderCalendar();
+  renderSlots();
+
+}
+
+
+
+function renderSlots() {
+
+  const dateText =
+    document.getElementById(
+      'selectedDate'
+    );
+
+  const slotList =
+    document.getElementById(
+      'slotList'
+    );
+
+
+  if (!selectedDate) {
+
+    dateText.textContent =
+      '請先選擇日期';
+
+    slotList.innerHTML =
+      '<div class="empty">' +
+      '點選左側日期後顯示時段。' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  dateText.textContent =
+    formatChineseDate(
+      selectedDate
+    );
+
+
+  slotList.innerHTML = '';
+
+
+  appConfig.slots.forEach(
+    time => {
+
+      const slot =
+        document.createElement('div');
+
+      slot.className =
+        'slot pending';
+
+
+      slot.innerHTML = `
+        <div class="slot-time">
+          ${escapeHtml(time)}
+        </div>
+
+        <div class="slot-status">
+          下一步接上預約狀態
+        </div>
+      `;
+
+
+      slotList.appendChild(slot);
+
+    }
+  );
+
+}
+
+
+
+function changeMonth(offset) {
+
+  currentMonth =
+    new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + offset,
+      1
+    );
+
+  renderCalendar();
+
+}
+
+
+
+function goToday() {
+
+  currentMonth =
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    );
+
+  selectedDate = null;
+
+  renderCalendar();
+  renderSlots();
+
+}
+
+
+
+function isDateBookable(date) {
+
+  const d =
+    startOfDay(date);
+
+  const end =
+    new Date(today);
+
+  end.setDate(
+    end.getDate() +
+    Number(
+      appConfig.bookingDaysAhead || 60
+    )
+  );
+
+  return (
+    d >= today &&
+    d <= end
+  );
+
+}
+
+
+
+// ======================
+// 課程分類
+// ======================
+
+function renderCategories() {
+
+  const container =
+    document.getElementById(
+      'categoryList'
+    );
+
+
+  const courses =
+    appConfig.courses || [];
+
+
+  if (courses.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">' +
+      '目前沒有課程分類。' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML = '';
+
+
+  courses.forEach(course => {
+
+    const card =
+      document.createElement('div');
+
+    card.className =
+      'category-card';
+
+    card.textContent =
+      course.name;
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+
+// ======================
+// 公告
+// ======================
+
+function renderAnnouncements() {
+
+  const container =
+    document.getElementById(
+      'announcementList'
+    );
+
+
+  const items =
+    appConfig.announcements || [];
+
+
+  if (items.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">' +
+      '目前沒有公告。' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML = '';
+
+
+  items.forEach(item => {
+
+    const notice =
+      document.createElement('div');
+
+    notice.className =
+      'notice';
+
+
+    const dates =
+      [
+        item.startDate,
+        item.endDate
+      ]
+      .filter(Boolean)
+      .join(' ～ ');
+
+
+    notice.innerHTML = `
+      <div class="notice-title">
+        ${escapeHtml(item.title)}
+      </div>
+
+      ${
+        dates
+        ? `<div style="
+             font-size:12px;
+             color:#7a838b;
+             margin-bottom:5px;
+           ">
+             ${escapeHtml(dates)}
+           </div>`
+        : ''
+      }
+
+      <div>
+        ${escapeHtml(item.content)}
+      </div>
+    `;
+
+
+    container.appendChild(notice);
+
+  });
+
+}
+
+
+
+// ======================
+// 共用工具
+// ======================
+
+function startOfDay(date) {
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+
+}
+
+
+
+function sameDate(a, b) {
+
+  return (
+    a.getFullYear() ===
+      b.getFullYear() &&
+
+    a.getMonth() ===
+      b.getMonth() &&
+
+    a.getDate() ===
+      b.getDate()
+  );
+
+}
+
+
+
+function formatChineseDate(date) {
+
+  const weekdays = [
+    '日',
+    '一',
+    '二',
+    '三',
+    '四',
+    '五',
+    '六'
+  ];
+
+
+  return (
+    `${date.getFullYear()} 年 ` +
+    `${date.getMonth() + 1} 月 ` +
+    `${date.getDate()} 日 ` +
+    `星期${weekdays[date.getDay()]}`
+  );
+
+}
+
+
+
+function escapeHtml(text) {
+
+  return String(
+    text ?? ''
+  )
+  .replaceAll(
+    '&',
+    '&amp;'
+  )
+  .replaceAll(
+    '<',
+    '&lt;'
+  )
+  .replaceAll(
+    '>',
+    '&gt;'
+  )
+  .replaceAll(
+    '"',
+    '&quot;'
+  )
+  .replaceAll(
+    "'",
+    '&#039;'
+  );
+
+}
+
+
+
+// 啟動
+
+loadConfig();
+
+</script>
+
+</body>
+</html>
