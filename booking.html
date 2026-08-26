@@ -1,0 +1,4610 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>護理教育課程預約</title>
+
+  <style>
+    :root {
+      --bg: #FAF8F7;
+      --card: #FFFFFF;
+
+      --primary: #739F99;
+      --primary-dark: #527F79;
+      --primary-soft: #EAF3F1;
+
+      --rose: #D9A6A6;
+      --rose-soft: #F8EDED;
+
+      --yellow: #E8C98F;
+      --yellow-soft: #FBF4E7;
+
+      --text: #33383D;
+      --muted: #7C8185;
+
+      --line: #ECE9E7;
+      --disabled: #ECEDEA;
+
+      --shadow:
+        0 10px 35px rgba(76, 72, 70, 0.07);
+
+      --radius-lg: 24px;
+      --radius-md: 17px;
+      --radius-sm: 12px;
+    }
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+
+    body {
+      margin: 0;
+
+      font-family:
+        "Noto Sans TC",
+        "PingFang TC",
+        "Microsoft JhengHei",
+        sans-serif;
+
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(217,166,166,0.12),
+          transparent 27%
+        ),
+        radial-gradient(
+          circle at top left,
+          rgba(115,159,153,0.10),
+          transparent 30%
+        ),
+        var(--bg);
+
+      color: var(--text);
+
+      min-height: 100vh;
+    }
+
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+
+    /* ===============================
+       HERO
+       =============================== */
+
+    .hero {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 54px 22px 30px;
+    }
+
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 7px 13px;
+
+      border-radius: 999px;
+
+      background: rgba(255,255,255,0.72);
+
+      border:
+        1px solid rgba(115,159,153,0.16);
+
+      color: var(--primary-dark);
+
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+
+    .hero-eyebrow-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: var(--rose);
+    }
+
+
+    .hero h1 {
+      margin:
+        17px 0 10px;
+
+      font-size:
+        clamp(30px, 5vw, 46px);
+
+      line-height: 1.2;
+
+      letter-spacing: -0.03em;
+    }
+
+
+    .hero-description {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+
+
+    /* ===============================
+       NAV
+       =============================== */
+
+    .navigation-wrap {
+      position: sticky;
+      top: 0;
+
+      z-index: 100;
+
+      padding:
+        0 16px 14px;
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      background:
+        rgba(250,248,247,0.76);
+    }
+
+
+    .navigation {
+      max-width: 1160px;
+
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+
+      gap: 7px;
+
+      padding: 7px;
+
+      border-radius: 18px;
+
+      background:
+        rgba(255,255,255,0.90);
+
+      border: 1px solid var(--line);
+
+      box-shadow:
+        0 6px 25px rgba(70,65,62,0.05);
+
+      overflow-x: auto;
+    }
+
+
+    .nav-button {
+      appearance: none;
+
+      border: none;
+
+      background: transparent;
+
+      color: var(--muted);
+
+      padding: 11px 17px;
+
+      border-radius: 13px;
+
+      white-space: nowrap;
+
+      cursor: pointer;
+
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+
+    .nav-button:hover {
+      background: #F6F3F2;
+      color: var(--text);
+    }
+
+
+    .nav-button.active {
+      color: var(--primary-dark);
+
+      background:
+        var(--primary-soft);
+    }
+
+
+
+    /* ===============================
+       MAIN
+       =============================== */
+
+    main {
+      max-width: 1160px;
+
+      margin: 0 auto;
+
+      padding:
+        18px 22px 80px;
+    }
+
+
+    .tab-content {
+      display: none;
+    }
+
+
+    .tab-content.active {
+      display: block;
+
+      animation:
+        pageFade 0.25s ease;
+    }
+
+
+    @keyframes pageFade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+
+    /* ===============================
+       CARDS
+       =============================== */
+
+    .card {
+      background:
+        rgba(255,255,255,0.93);
+
+      border:
+        1px solid rgba(236,233,231,0.90);
+
+      border-radius:
+        var(--radius-lg);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+
+    .section-card {
+      padding: 28px;
+    }
+
+
+    .section-kicker {
+      margin-bottom: 7px;
+
+      color:
+        var(--primary-dark);
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      letter-spacing: 0.08em;
+    }
+
+
+    .section-title {
+      margin: 0;
+
+      font-size: 24px;
+
+      letter-spacing: -0.02em;
+    }
+
+
+    .section-description {
+      margin:
+        8px 0 22px;
+
+      color:
+        var(--muted);
+
+      font-size: 14px;
+
+      line-height: 1.75;
+    }
+
+
+
+    /* ===============================
+       BOOKING LAYOUT
+       =============================== */
+
+    .booking-layout {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.75fr)
+        minmax(310px, 0.85fr);
+
+      gap: 22px;
+
+      align-items: start;
+    }
+
+
+    .calendar-card {
+      padding: 26px;
+    }
+
+
+    .slots-card {
+      padding: 26px;
+
+      position: sticky;
+
+      top: 88px;
+    }
+
+
+
+    /* ===============================
+       CALENDAR HEADER
+       =============================== */
+
+    .calendar-toolbar {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 16px;
+
+      margin-bottom: 22px;
+    }
+
+
+    .calendar-month {
+      font-size: 23px;
+
+      font-weight: 800;
+
+      letter-spacing: -0.02em;
+    }
+
+
+    .calendar-month small {
+      display: block;
+
+      margin-bottom: 4px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
+      font-weight: 600;
+
+      letter-spacing: 0.04em;
+    }
+
+
+    .calendar-controls {
+      display: flex;
+
+      gap: 7px;
+    }
+
+
+    .icon-button {
+      min-width: 38px;
+      height: 38px;
+
+      border: 1px solid var(--line);
+
+      border-radius: 12px;
+
+      background: #FFF;
+
+      color: var(--text);
+
+      cursor: pointer;
+
+      transition:
+        all 0.18s ease;
+    }
+
+
+    .icon-button:hover {
+      transform: translateY(-1px);
+
+      border-color:
+        rgba(115,159,153,0.45);
+
+      background:
+        var(--primary-soft);
+    }
+
+
+    .today-button {
+      padding:
+        0 13px;
+
+      font-size: 12px;
+
+      font-weight: 700;
+    }
+
+
+
+    /* ===============================
+       LEGEND
+       =============================== */
+
+    .calendar-legend {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 14px;
+
+      margin-bottom: 20px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+
+    .legend-item {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 6px;
+    }
+
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+    }
+
+
+    .legend-open {
+      background: var(--primary);
+    }
+
+    .legend-partial {
+      background: var(--yellow);
+    }
+
+    .legend-full {
+      background: var(--rose);
+    }
+
+    .legend-closed {
+      background: #BEC2C1;
+    }
+
+
+
+    /* ===============================
+       CALENDAR
+       =============================== */
+
+    .weekday-grid,
+    .calendar-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(7, 1fr);
+
+      gap: 8px;
+    }
+
+
+    .weekday {
+      text-align: center;
+
+      padding: 5px 0 9px;
+
+      color: #9A9D9F;
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+
+    .calendar-day {
+      min-height: 91px;
+
+      border:
+        1px solid transparent;
+
+      border-radius: 16px;
+
+      padding: 10px;
+
+      background:
+        #FCFBFA;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+    }
+
+
+    .calendar-day:hover {
+      transform: translateY(-2px);
+
+      border-color:
+        rgba(115,159,153,0.30);
+
+      box-shadow:
+        0 8px 20px
+        rgba(80,100,95,0.07);
+
+      background: #FFFFFF;
+    }
+
+
+    .calendar-day.other-month {
+      opacity: 0.30;
+    }
+
+
+    .calendar-day.disabled {
+      cursor: default;
+
+      color: #B8BAB9;
+
+      background:
+        #F5F4F3;
+    }
+
+
+    .calendar-day.disabled:hover {
+      transform: none;
+
+      box-shadow: none;
+
+      border-color:
+        transparent;
+    }
+
+
+    .calendar-day.selected {
+      border-color:
+        rgba(115,159,153,0.58);
+
+      background:
+        var(--primary-soft);
+
+      box-shadow:
+        0 9px 23px
+        rgba(115,159,153,0.13);
+    }
+
+
+    .day-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+    }
+
+
+    .day-number {
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      width: 29px;
+      height: 29px;
+
+      border-radius: 50%;
+
+      font-size: 13px;
+
+      font-weight: 800;
+    }
+
+
+    .today-number {
+      color: white;
+
+      background:
+        var(--primary);
+    }
+
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+    }
+
+
+    .status-dot.open {
+      background:
+        var(--primary);
+    }
+
+
+    .status-dot.partial {
+      background:
+        var(--yellow);
+    }
+
+
+    .status-dot.full {
+      background:
+        var(--rose);
+    }
+
+
+    .status-dot.closed {
+      background:
+        #BEC2C1;
+    }
+
+
+    .day-label {
+      margin-top: 13px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.4;
+    }
+
+
+    .day-label.open {
+      color:
+        var(--primary-dark);
+    }
+
+
+    .day-label.partial {
+      color:
+        #A47E35;
+    }
+
+
+    .day-label.full {
+      color:
+        #B47373;
+    }
+
+
+
+    /* ===============================
+       SLOTS
+       =============================== */
+
+    .slots-heading {
+      margin-bottom: 4px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
+      font-weight: 700;
+    }
+
+
+    .selected-date {
+      margin: 0 0 18px;
+
+      font-size: 21px;
+
+      font-weight: 800;
+
+      letter-spacing: -0.02em;
+    }
+
+
+    .schedule-note {
+      margin-bottom: 15px;
+
+      padding: 11px 13px;
+
+      border-radius: 12px;
+
+      background:
+        var(--yellow-soft);
+
+      color:
+        #8B6B33;
+
+      font-size: 12px;
+
+      line-height: 1.6;
+    }
+
+
+    .slot {
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 13px;
+
+      width: 100%;
+
+      margin-bottom: 10px;
+
+      padding: 16px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        16px;
+
+      background: #FFF;
+
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+
+    .slot.open {
+      cursor: pointer;
+    }
+
+
+    .slot.open:hover {
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(115,159,153,0.35);
+
+      box-shadow:
+        0 9px 22px
+        rgba(115,159,153,0.10);
+    }
+
+
+    .slot.booked {
+      background:
+        var(--rose-soft);
+
+      border-color:
+        rgba(217,166,166,0.32);
+    }
+
+
+    .slot.closed {
+      background:
+        #F5F4F3;
+
+      color:
+        #A2A5A5;
+    }
+
+
+    .slot-time {
+      font-size: 18px;
+
+      font-weight: 800;
+
+      letter-spacing:
+        0.01em;
+    }
+
+
+    .slot-status {
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      margin-top: 4px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+
+    .mini-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+    }
+
+
+    .mini-dot.open {
+      background: var(--primary);
+    }
+
+
+    .mini-dot.booked {
+      background: var(--rose);
+    }
+
+
+    .mini-dot.closed {
+      background: #BFC3C2;
+    }
+
+
+    .slot-arrow {
+      width: 34px;
+      height: 34px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background:
+        var(--primary-soft);
+
+      color:
+        var(--primary-dark);
+
+      font-size: 18px;
+
+      font-weight: 700;
+    }
+
+
+
+    /* ===============================
+       INFO / CATEGORIES
+       =============================== */
+
+    .category-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(210px,1fr)
+        );
+
+      gap: 14px;
+    }
+
+
+    .category-card {
+      position: relative;
+
+      min-height: 128px;
+
+      padding: 20px;
+
+      overflow: hidden;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #FFFFFF,
+          #FCFAF9
+        );
+    }
+
+
+    .category-number {
+      margin-bottom: 18px;
+
+      color:
+        var(--rose);
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing:
+        0.08em;
+    }
+
+
+    .category-name {
+      font-size: 17px;
+
+      font-weight: 800;
+    }
+
+
+    .category-decoration {
+      position: absolute;
+
+      right: -15px;
+      bottom: -25px;
+
+      width: 80px;
+      height: 80px;
+
+      border-radius: 50%;
+
+      background:
+        var(--primary-soft);
+    }
+
+
+
+    /* ===============================
+       ANNOUNCEMENTS
+       =============================== */
+
+    .notice {
+      display: grid;
+
+      grid-template-columns:
+        42px 1fr;
+
+      gap: 14px;
+
+      margin-bottom: 12px;
+
+      padding: 16px;
+
+      border-radius: 17px;
+
+      border:
+        1px solid
+        rgba(232,201,143,0.28);
+
+      background:
+        var(--yellow-soft);
+    }
+
+
+    .notice-icon {
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 14px;
+
+      background:
+        rgba(255,255,255,0.7);
+
+      font-size: 17px;
+    }
+
+
+    .notice-title {
+      margin-bottom: 4px;
+
+      font-weight: 800;
+    }
+
+
+    .notice-date {
+      margin-bottom: 5px;
+
+      color: #9A7B46;
+
+      font-size: 11px;
+    }
+
+
+    .notice-content {
+      color: #655E56;
+
+      font-size: 13px;
+
+      line-height: 1.7;
+    }
+
+
+
+    /* ===============================
+       EMPTY
+       =============================== */
+
+    .empty-state {
+      padding:
+        34px 15px;
+
+      text-align: center;
+
+      color: var(--muted);
+    }
+
+
+    .empty-icon {
+      width: 54px;
+      height: 54px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      margin:
+        0 auto 12px;
+
+      border-radius: 18px;
+
+      background:
+        var(--primary-soft);
+
+      font-size: 21px;
+    }
+
+
+    .loading {
+      color:
+        var(--muted);
+
+      font-size: 13px;
+    }
+
+
+    .error {
+      padding: 13px 14px;
+
+      border-radius: 13px;
+
+      background:
+        var(--rose-soft);
+
+      color:
+        #A96565;
+
+      font-size: 13px;
+
+      line-height: 1.6;
+    }
+
+
+
+    /* ===============================
+       MODAL
+       =============================== */
+
+    .modal-overlay {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 9999;
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 22px;
+
+      background:
+        rgba(43,46,47,0.42);
+
+      backdrop-filter:
+        blur(8px);
+
+      -webkit-backdrop-filter:
+        blur(8px);
+    }
+
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+
+    .modal {
+      width: 100%;
+
+      max-width: 620px;
+
+      max-height: 91vh;
+
+      overflow-y: auto;
+
+      padding: 28px;
+
+      border-radius: 26px;
+
+      background:
+        #FFFFFF;
+
+      box-shadow:
+        0 24px 65px
+        rgba(40,43,44,0.20);
+
+      animation:
+        modalUp 0.22s ease;
+    }
+
+
+    @keyframes modalUp {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(15px)
+          scale(0.985);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+
+    .modal-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+
+      gap: 20px;
+
+      margin-bottom: 22px;
+    }
+
+
+    .modal-eyebrow {
+      margin-bottom: 5px;
+
+      color:
+        var(--primary-dark);
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing:
+        0.08em;
+    }
+
+
+    .modal-title {
+      margin: 0;
+
+      font-size: 25px;
+
+      letter-spacing: -0.02em;
+    }
+
+
+    .modal-subtitle {
+      margin-top: 6px;
+
+      color:
+        var(--muted);
+
+      font-size: 13px;
+    }
+
+
+    .close-button {
+      flex-shrink: 0;
+
+      width: 38px;
+      height: 38px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background:
+        #F4F2F1;
+
+      color:
+        #737779;
+
+      cursor: pointer;
+
+      font-size: 18px;
+    }
+
+
+
+    /* ===============================
+       BOOKING SUMMARY
+       =============================== */
+
+    .booking-summary {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 10px;
+
+      margin-bottom: 26px;
+    }
+
+
+    .summary-item {
+      padding: 14px 15px;
+
+      border-radius: 15px;
+
+      background:
+        var(--primary-soft);
+    }
+
+
+    .summary-label {
+      margin-bottom: 4px;
+
+      color:
+        var(--primary-dark);
+
+      font-size: 10px;
+
+      font-weight: 800;
+    }
+
+
+    .summary-value {
+      font-size: 14px;
+
+      font-weight: 800;
+    }
+
+
+
+    /* ===============================
+       FORM
+       =============================== */
+
+    .form-section-title {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      margin:
+        23px 0 14px;
+
+      font-size: 14px;
+
+      font-weight: 800;
+    }
+
+
+    .form-section-line {
+      width: 22px;
+      height: 4px;
+
+      border-radius: 999px;
+
+      background:
+        var(--rose);
+    }
+
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 14px;
+    }
+
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+
+    .form-group.full {
+      grid-column:
+        1 / -1;
+    }
+
+
+    .form-label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color:
+        #555B5E;
+
+      font-size: 12px;
+
+      font-weight: 800;
+    }
+
+
+    .required {
+      margin-left: 2px;
+
+      color:
+        var(--rose);
+    }
+
+
+    .form-control {
+      width: 100%;
+
+      padding:
+        12px 13px;
+
+      border:
+        1px solid #E5E2E0;
+
+      border-radius: 13px;
+
+      outline: none;
+
+      background:
+        #FCFBFA;
+
+      color:
+        var(--text);
+
+      font-size: 14px;
+
+      transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+    }
+
+
+    .form-control:focus {
+      background: white;
+
+      border-color:
+        rgba(115,159,153,0.60);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(115,159,153,0.09);
+    }
+
+
+    textarea.form-control {
+      min-height: 88px;
+
+      resize: vertical;
+    }
+
+
+    .form-hint {
+      margin-top: 5px;
+
+      color:
+        #999D9F;
+
+      font-size: 10px;
+    }
+
+
+
+    /* ===============================
+       FORM BUTTONS
+       =============================== */
+
+    .form-actions {
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      margin-top: 25px;
+    }
+
+
+    .secondary-button,
+    .primary-button {
+      min-height: 45px;
+
+      padding:
+        0 20px;
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      font-size: 13px;
+
+      font-weight: 800;
+    }
+
+
+    .secondary-button {
+      border:
+        1px solid var(--line);
+
+      background: white;
+
+      color:
+        var(--muted);
+    }
+
+
+    .primary-button {
+      border: none;
+
+      background:
+        var(--primary);
+
+      color: white;
+
+      box-shadow:
+        0 8px 20px
+        rgba(115,159,153,0.20);
+
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease;
+    }
+
+
+    .primary-button:hover {
+      transform:
+        translateY(-1px);
+
+      background:
+        var(--primary-dark);
+    }
+
+
+    .primary-button:disabled {
+      cursor: wait;
+
+      opacity: 0.60;
+    }
+
+
+    .submit-message {
+      display: none;
+
+      margin-top: 17px;
+    }
+
+
+    .submit-message.show {
+      display: block;
+    }
+
+
+    .success-box {
+      padding: 19px;
+
+      border-radius: 17px;
+
+      background:
+        var(--primary-soft);
+
+      color:
+        #416D67;
+
+      line-height: 1.75;
+    }
+
+
+    .success-check {
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      margin-bottom: 11px;
+
+      border-radius: 50%;
+
+      background:
+        var(--primary);
+
+      color: white;
+
+      font-size: 20px;
+
+      font-weight: 800;
+    }
+
+
+
+    /* ===============================
+       RESPONSIVE
+       =============================== */
+
+    @media (
+      max-width: 860px
+    ) {
+
+      .hero {
+        padding-top: 38px;
+      }
+
+
+      .booking-layout {
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .slots-card {
+        position: static;
+      }
+
+
+      .calendar-day {
+        min-height: 78px;
+      }
+
+    }
+
+
+    @media (
+      max-width: 600px
+    ) {
+
+      .hero {
+        padding:
+          30px 16px 20px;
+      }
+
+
+      .hero-description {
+        font-size: 13px;
+      }
+
+
+      .navigation-wrap {
+        padding:
+          0 10px 10px;
+      }
+
+
+      .navigation {
+        border-radius: 15px;
+      }
+
+
+      .nav-button {
+        flex: 1;
+
+        padding:
+          10px 12px;
+
+        font-size: 12px;
+
+        text-align: center;
+      }
+
+
+      main {
+        padding:
+          13px 12px 65px;
+      }
+
+
+      .calendar-card,
+      .slots-card,
+      .section-card {
+        padding: 17px;
+
+        border-radius: 20px;
+      }
+
+
+      .calendar-month {
+        font-size: 19px;
+      }
+
+
+      .calendar-legend {
+        gap: 9px;
+      }
+
+
+      .weekday-grid,
+      .calendar-grid {
+        gap: 4px;
+      }
+
+
+      .calendar-day {
+        min-height: 62px;
+
+        padding: 5px;
+
+        border-radius: 12px;
+      }
+
+
+      .day-number {
+        width: 25px;
+        height: 25px;
+
+        font-size: 11px;
+      }
+
+
+      .day-label {
+        display: none;
+      }
+
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+
+      .slots-card {
+        margin-top: 2px;
+      }
+
+
+      .form-grid {
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .form-group.full {
+        grid-column:
+          auto;
+      }
+
+
+      .booking-summary {
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .modal-overlay {
+        align-items:
+          flex-end;
+
+        padding: 0;
+      }
+
+
+      .modal {
+        max-width: none;
+
+        max-height: 92vh;
+
+        border-radius:
+          27px 27px 0 0;
+
+        padding:
+          24px 18px 28px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<!-- ===============================
+     HERO
+     =============================== -->
+
+<section class="hero">
+
+  <div class="hero-eyebrow">
+
+    <span class="hero-eyebrow-dot"></span>
+
+    LEARNING HUB
+
+  </div>
+
+
+  <h1 id="siteTitle">
+    護理教育課程預約
+  </h1>
+
+
+  <p class="hero-description">
+    找一個適合的時間，一起學習。
+    查看開放時段、課程資訊與最新提醒。
+  </p>
+
+</section>
+
+
+
+<!-- ===============================
+     NAVIGATION
+     =============================== -->
+
+<div class="navigation-wrap">
+
+  <nav class="navigation">
+
+    <button
+      class="nav-button active"
+      data-tab="booking">
+
+      預約
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-tab="materials">
+
+      課程
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-tab="announcements">
+
+      公告
+
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-tab="info">
+
+      須知
+
+    </button>
+
+  </nav>
+
+</div>
+
+
+
+<main>
+
+
+<!-- ===============================
+     BOOKING
+     =============================== -->
+
+<section
+  id="booking"
+  class="tab-content active">
+
+
+  <div class="booking-layout">
+
+
+    <!-- Calendar -->
+
+    <div class="card calendar-card">
+
+
+      <div class="calendar-toolbar">
+
+
+        <div class="calendar-month">
+
+          <small>
+            CHOOSE A DATE
+          </small>
+
+          <span id="calendarTitle"></span>
+
+        </div>
+
+
+        <div class="calendar-controls">
+
+
+          <button
+            class="icon-button"
+            onclick="changeMonth(-1)">
+
+            ‹
+
+          </button>
+
+
+          <button
+            class="icon-button today-button"
+            onclick="goToday()">
+
+            今天
+
+          </button>
+
+
+          <button
+            class="icon-button"
+            onclick="changeMonth(1)">
+
+            ›
+
+          </button>
+
+
+        </div>
+
+      </div>
+
+
+
+      <div class="calendar-legend">
+
+        <span class="legend-item">
+          <span class="legend-dot legend-open"></span>
+          可預約
+        </span>
+
+        <span class="legend-item">
+          <span class="legend-dot legend-partial"></span>
+          尚有時段
+        </span>
+
+        <span class="legend-item">
+          <span class="legend-dot legend-full"></span>
+          已額滿
+        </span>
+
+        <span class="legend-item">
+          <span class="legend-dot legend-closed"></span>
+          不開放
+        </span>
+
+      </div>
+
+
+
+      <div class="weekday-grid">
+
+        <div class="weekday">日</div>
+        <div class="weekday">一</div>
+        <div class="weekday">二</div>
+        <div class="weekday">三</div>
+        <div class="weekday">四</div>
+        <div class="weekday">五</div>
+        <div class="weekday">六</div>
+
+      </div>
+
+
+      <div
+        id="calendarGrid"
+        class="calendar-grid">
+      </div>
+
+
+    </div>
+
+
+
+    <!-- Slots -->
+
+    <aside class="card slots-card">
+
+
+      <div class="slots-heading">
+        SELECT A TIME
+      </div>
+
+
+      <h2
+        id="selectedDate"
+        class="selected-date">
+
+        請選擇日期
+
+      </h2>
+
+
+      <div id="scheduleNote"></div>
+
+
+      <div id="slotList">
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            ♡
+          </div>
+
+          點選月曆中的日期，
+          <br>
+          查看當日可預約時段。
+
+        </div>
+
+      </div>
+
+
+    </aside>
+
+
+  </div>
+
+
+</section>
+
+
+
+<!-- ===============================
+     COURSES
+     =============================== -->
+
+<section
+  id="materials"
+  class="tab-content">
+
+
+  <div class="card section-card">
+
+
+    <div class="section-kicker">
+      EXPLORE
+    </div>
+
+
+    <h2 class="section-title">
+      課程分類
+    </h2>
+
+
+    <p class="section-description">
+      課程內容會依目前開放的教學主題持續調整。
+    </p>
+
+
+    <div
+      id="categoryList"
+      class="category-grid">
+
+      <div class="loading">
+        課程載入中……
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+</section>
+
+
+
+<!-- ===============================
+     ANNOUNCEMENTS
+     =============================== -->
+
+<section
+  id="announcements"
+  class="tab-content">
+
+
+  <div class="card section-card">
+
+
+    <div class="section-kicker">
+      UPDATES
+    </div>
+
+
+    <h2 class="section-title">
+      最新提醒
+    </h2>
+
+
+    <p class="section-description">
+      課程異動、預約提醒與其他重要訊息會顯示在這裡。
+    </p>
+
+
+    <div id="announcementList">
+
+      <div class="loading">
+        公告載入中……
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+</section>
+
+
+
+<!-- ===============================
+     INFORMATION
+     =============================== -->
+
+<section
+  id="info"
+  class="tab-content">
+
+
+  <div class="card section-card">
+
+
+    <div class="section-kicker">
+      BEFORE CLASS
+    </div>
+
+
+    <h2 class="section-title">
+      上課須知
+    </h2>
+
+
+    <p class="section-description">
+      預約完成後，若日期、時間或課程需求需要調整，
+      請提前與教學窗口聯繫。
+      此區後續可再加入上課地點、課前準備及相關說明。
+    </p>
+
+
+  </div>
+
+
+</section>
+
+
+</main>
+
+
+
+<!-- ===============================
+     BOOKING MODAL
+     =============================== -->
+
+<div
+  id="bookingModal"
+  class="modal-overlay">
+
+
+  <div class="modal">
+
+
+    <div class="modal-header">
+
+
+      <div>
+
+        <div class="modal-eyebrow">
+          BOOK YOUR SESSION
+        </div>
+
+        <h2 class="modal-title">
+          預約課程
+        </h2>
+
+        <div
+          id="modalDateTime"
+          class="modal-subtitle">
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="closeBookingModal()">
+
+        ×
+
+      </button>
+
+
+    </div>
+
+
+
+    <div class="booking-summary">
+
+
+      <div class="summary-item">
+
+        <div class="summary-label">
+          DATE
+        </div>
+
+        <div
+          id="summaryDate"
+          class="summary-value">
+        </div>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <div class="summary-label">
+          TIME
+        </div>
+
+        <div
+          id="summarySlot"
+          class="summary-value">
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+
+    <form
+      id="bookingForm"
+      method="POST"
+      target="bookingSubmitFrame">
+
+
+      <input
+        type="hidden"
+        name="action"
+        value="book">
+
+
+      <input
+        type="hidden"
+        name="requestId"
+        id="requestId">
+
+
+      <input
+        type="hidden"
+        name="date"
+        id="bookingDate">
+
+
+      <input
+        type="hidden"
+        name="slot"
+        id="bookingSlot">
+
+
+
+      <!-- Contact -->
+
+      <div class="form-section-title">
+
+        <span class="form-section-line"></span>
+
+        聯絡資訊
+
+      </div>
+
+
+
+      <div class="form-grid">
+
+
+        <div class="form-group">
+
+          <label class="form-label">
+
+            對口負責人
+
+            <span class="required">*</span>
+
+          </label>
+
+          <input
+            type="text"
+            name="contactPerson"
+            id="contactPerson"
+            class="form-control"
+            placeholder="請輸入姓名"
+            required>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label class="form-label">
+
+            單位／部門
+
+            <span class="required">*</span>
+
+          </label>
+
+          <input
+            type="text"
+            name="department"
+            id="department"
+            class="form-control"
+            placeholder="例如：11B"
+            required>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label class="form-label">
+
+            院內雲端
+
+            <span class="required">*</span>
+
+          </label>
+
+          <input
+            type="text"
+            name="internalCloud"
+            id="internalCloud"
+            class="form-control"
+            placeholder="院內聯絡號碼"
+            required>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label class="form-label">
+
+            院內信箱
+
+            <span class="required">*</span>
+
+          </label>
+
+          <input
+            type="text"
+            name="internalEmail"
+            id="internalEmail"
+            class="form-control"
+            placeholder="請輸入院內信箱"
+            required>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- Course -->
+
+      <div class="form-section-title">
+
+        <span class="form-section-line"></span>
+
+        課程需求
+
+      </div>
+
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+
+          課程分類
+
+          <span class="required">*</span>
+
+        </label>
+
+
+        <select
+          name="categoryId"
+          id="categoryId"
+          class="form-control"
+          required>
+
+          <option value="">
+            請選擇課程分類
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          課程／需求內容
+        </label>
+
+        <textarea
+          name="requestContent"
+          id="requestContent"
+          class="form-control"
+          placeholder="可以簡單告訴我們這次希望討論或學習的內容"></textarea>
+
+      </div>
+
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          備註
+        </label>
+
+        <textarea
+          name="note"
+          id="note"
+          class="form-control"
+          placeholder="其他需要事先知道的事項"></textarea>
+
+      </div>
+
+
+
+      <div
+        id="submitMessage"
+        class="submit-message">
+      </div>
+
+
+
+      <div class="form-actions">
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="closeBookingModal()">
+
+          返回
+
+        </button>
+
+
+        <button
+          type="submit"
+          id="submitBookingButton"
+          class="primary-button">
+
+          確認預約 →
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+
+  </div>
+
+</div>
+
+
+
+<iframe
+  name="bookingSubmitFrame"
+  id="bookingSubmitFrame"
+  style="display:none;">
+</iframe>
+
+
+
+<script>
+
+/* =====================================================
+   API
+   ===================================================== */
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbyD4bhLsFaSTAKqcUmei4-P8woaTw53hEVVBkjOZa2icG7Ki7dLgPLM902NnSrAJ5Qe/exec';
+
+
+
+/* =====================================================
+   DATA
+   ===================================================== */
+
+let appConfig = {
+
+  slots:
+    [
+      '09:00',
+      '15:00',
+      '17:00'
+    ],
+
+  bookingDaysAhead:
+    60,
+
+  courses:
+    [],
+
+  announcements:
+    [],
+
+  scheduleOverrides:
+    {},
+
+  bookedSlots:
+    {}
+};
+
+
+const today =
+  startOfDay(
+    new Date()
+  );
+
+
+let currentMonth =
+  new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  );
+
+
+let selectedDate =
+  null;
+
+
+let submitting =
+  false;
+
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+document
+  .querySelectorAll(
+    '.nav-button'
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      'click',
+      () => {
+
+        document
+          .querySelectorAll(
+            '.nav-button'
+          )
+          .forEach(btn =>
+            btn.classList.remove(
+              'active'
+            )
+          );
+
+
+        document
+          .querySelectorAll(
+            '.tab-content'
+          )
+          .forEach(content =>
+            content.classList.remove(
+              'active'
+            )
+          );
+
+
+        button.classList.add(
+          'active'
+        );
+
+
+        document
+          .getElementById(
+            button.dataset.tab
+          )
+          .classList.add(
+            'active'
+          );
+
+      }
+    );
+
+  });
+
+
+
+/* =====================================================
+   JSONP
+   ===================================================== */
+
+function jsonp(
+  action,
+  extraParams = {}
+) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const callbackName =
+        'jsonpCallback_' +
+        Date.now() +
+        '_' +
+        Math.floor(
+          Math.random() *
+          100000
+        );
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      const cleanup =
+        () => {
+
+          delete window[
+            callbackName
+          ];
+
+          if (
+            script.parentNode
+          ) {
+
+            script.parentNode
+              .removeChild(
+                script
+              );
+          }
+        };
+
+
+      window[
+        callbackName
+      ] =
+        data => {
+
+          cleanup();
+
+          resolve(
+            data
+          );
+        };
+
+
+      script.onerror =
+        () => {
+
+          cleanup();
+
+          reject(
+            new Error(
+              '無法連線至預約系統'
+            )
+          );
+        };
+
+
+      const params =
+        new URLSearchParams();
+
+
+      params.set(
+        'action',
+        action
+      );
+
+
+      params.set(
+        'callback',
+        callbackName
+      );
+
+
+      params.set(
+        '_',
+        Date.now()
+      );
+
+
+      Object.entries(
+        extraParams
+      )
+      .forEach(
+        ([key,value]) => {
+
+          params.set(
+            key,
+            value
+          );
+        }
+      );
+
+
+      script.src =
+        API_URL +
+        '?' +
+        params.toString();
+
+
+      document.body
+        .appendChild(
+          script
+        );
+
+    }
+  );
+}
+
+
+
+/* =====================================================
+   LOAD CONFIG
+   ===================================================== */
+
+async function loadConfig() {
+
+  try {
+
+    const data =
+      await jsonp(
+        'config'
+      );
+
+
+    if (
+      !data.success
+    ) {
+
+      throw new Error(
+        data.message ||
+        '資料讀取失敗'
+      );
+    }
+
+
+    appConfig = {
+
+      slots:
+        data.slots ||
+        [
+          '09:00',
+          '15:00',
+          '17:00'
+        ],
+
+      bookingDaysAhead:
+        Number(
+          data.bookingDaysAhead ||
+          60
+        ),
+
+      courses:
+        data.courses ||
+        [],
+
+      announcements:
+        data.announcements ||
+        [],
+
+      scheduleOverrides:
+        data.scheduleOverrides ||
+        {},
+
+      bookedSlots:
+        data.bookedSlots ||
+        {}
+    };
+
+
+    document
+      .getElementById(
+        'siteTitle'
+      )
+      .textContent =
+      data.siteTitle ||
+      '護理教育課程預約';
+
+
+    renderCategories();
+
+    renderAnnouncements();
+
+    renderCategoryOptions();
+
+    renderCalendar();
+
+
+    if (
+      selectedDate
+    ) {
+
+      renderSlots();
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    document
+      .getElementById(
+        'categoryList'
+      )
+      .innerHTML =
+      '<div class="error">' +
+      '目前無法讀取課程資料。' +
+      '</div>';
+
+
+    document
+      .getElementById(
+        'announcementList'
+      )
+      .innerHTML =
+      '<div class="error">' +
+      '目前無法讀取公告資料。' +
+      '</div>';
+
+  }
+}
+
+
+
+/* =====================================================
+   CALENDAR
+   ===================================================== */
+
+function renderCalendar() {
+
+  const grid =
+    document.getElementById(
+      'calendarGrid'
+    );
+
+
+  grid.innerHTML =
+    '';
+
+
+  const year =
+    currentMonth
+      .getFullYear();
+
+
+  const month =
+    currentMonth
+      .getMonth();
+
+
+  document
+    .getElementById(
+      'calendarTitle'
+    )
+    .textContent =
+    `${year} 年 ${month + 1} 月`;
+
+
+  const firstDay =
+    new Date(
+      year,
+      month,
+      1
+    );
+
+
+  const startDay =
+    new Date(
+      year,
+      month,
+      1 -
+      firstDay.getDay()
+    );
+
+
+  for (
+    let i = 0;
+    i < 42;
+    i++
+  ) {
+
+    const date =
+      new Date(
+        startDay.getFullYear(),
+        startDay.getMonth(),
+        startDay.getDate() + i
+      );
+
+
+    const cell =
+      document.createElement(
+        'div'
+      );
+
+
+    cell.className =
+      'calendar-day';
+
+
+    if (
+      date.getMonth() !==
+      month
+    ) {
+
+      cell.classList.add(
+        'other-month'
+      );
+    }
+
+
+    const withinRange =
+      isWithinBookingRange(
+        date
+      );
+
+
+    const status =
+      getDateStatus(
+        date
+      );
+
+
+    if (
+      !withinRange ||
+      status.allClosed
+    ) {
+
+      cell.classList.add(
+        'disabled'
+      );
+    }
+
+
+    if (
+      selectedDate &&
+      sameDate(
+        date,
+        selectedDate
+      )
+    ) {
+
+      cell.classList.add(
+        'selected'
+      );
+    }
+
+
+
+    const dayTop =
+      document.createElement(
+        'div'
+      );
+
+
+    dayTop.className =
+      'day-top';
+
+
+
+    const dayNumber =
+      document.createElement(
+        'div'
+      );
+
+
+    dayNumber.className =
+      'day-number';
+
+
+    if (
+      sameDate(
+        date,
+        today
+      )
+    ) {
+
+      dayNumber.classList.add(
+        'today-number'
+      );
+    }
+
+
+    dayNumber.textContent =
+      date.getDate();
+
+
+    dayTop.appendChild(
+      dayNumber
+    );
+
+
+
+    if (
+      withinRange
+    ) {
+
+      const dot =
+        document.createElement(
+          'span'
+        );
+
+
+      dot.className =
+        'status-dot';
+
+
+      if (
+        status.allClosed
+      ) {
+
+        dot.classList.add(
+          'closed'
+        );
+      }
+
+      else if (
+        status.allUnavailable
+      ) {
+
+        dot.classList.add(
+          'full'
+        );
+      }
+
+      else if (
+        status.someUnavailable
+      ) {
+
+        dot.classList.add(
+          'partial'
+        );
+      }
+
+      else {
+
+        dot.classList.add(
+          'open'
+        );
+      }
+
+
+      dayTop.appendChild(
+        dot
+      );
+    }
+
+
+    cell.appendChild(
+      dayTop
+    );
+
+
+
+    if (
+      withinRange
+    ) {
+
+      const label =
+        document.createElement(
+          'div'
+        );
+
+
+      label.className =
+        'day-label';
+
+
+      if (
+        status.allClosed
+      ) {
+
+        label.textContent =
+          status.note ||
+          '不開放';
+      }
+
+      else if (
+        status.allUnavailable
+      ) {
+
+        label.classList.add(
+          'full'
+        );
+
+        label.textContent =
+          '已額滿';
+      }
+
+      else if (
+        status.someUnavailable
+      ) {
+
+        label.classList.add(
+          'partial'
+        );
+
+        label.textContent =
+          '尚有時段';
+      }
+
+      else {
+
+        label.classList.add(
+          'open'
+        );
+
+        label.textContent =
+          '可預約';
+      }
+
+
+      cell.appendChild(
+        label
+      );
+    }
+
+
+
+    if (
+      withinRange &&
+      !status.allClosed
+    ) {
+
+      cell.addEventListener(
+        'click',
+        () =>
+          selectDate(
+            date
+          )
+      );
+    }
+
+
+    grid.appendChild(
+      cell
+    );
+  }
+
+}
+
+
+
+/* =====================================================
+   DATE STATUS
+   ===================================================== */
+
+function getDateStatus(
+  date
+) {
+
+  const dateKey =
+    formatDateKey(
+      date
+    );
+
+
+  const schedule =
+    getScheduleForDate(
+      date
+    );
+
+
+  let scheduleOpenCount =
+    0;
+
+
+  let availableCount =
+    0;
+
+
+  appConfig.slots
+    .forEach(slot => {
+
+      const scheduleOpen =
+        schedule.slots[
+          slot
+        ] !== false;
+
+
+      if (
+        scheduleOpen
+      ) {
+
+        scheduleOpenCount++;
+
+
+        if (
+          !isSlotBooked(
+            dateKey,
+            slot
+          )
+        ) {
+
+          availableCount++;
+        }
+      }
+
+    });
+
+
+  return {
+
+    allClosed:
+      scheduleOpenCount === 0,
+
+    allUnavailable:
+      scheduleOpenCount > 0 &&
+      availableCount === 0,
+
+    someUnavailable:
+      scheduleOpenCount > 0 &&
+      availableCount <
+      scheduleOpenCount,
+
+    availableCount:
+      availableCount,
+
+    note:
+      schedule.note ||
+      ''
+  };
+}
+
+
+
+/* =====================================================
+   SELECT DATE
+   ===================================================== */
+
+function selectDate(
+  date
+) {
+
+  selectedDate =
+    startOfDay(
+      date
+    );
+
+
+  renderCalendar();
+
+  renderSlots();
+}
+
+
+
+/* =====================================================
+   RENDER SLOTS
+   ===================================================== */
+
+function renderSlots() {
+
+  const dateText =
+    document.getElementById(
+      'selectedDate'
+    );
+
+
+  const noteBox =
+    document.getElementById(
+      'scheduleNote'
+    );
+
+
+  const slotList =
+    document.getElementById(
+      'slotList'
+    );
+
+
+  if (
+    !selectedDate
+  ) {
+
+    dateText.textContent =
+      '請選擇日期';
+
+
+    noteBox.innerHTML =
+      '';
+
+
+    slotList.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ♡
+        </div>
+
+        點選月曆中的日期，
+        <br>
+        查看當日可預約時段。
+
+      </div>
+    `;
+
+
+    return;
+  }
+
+
+  dateText.textContent =
+    formatChineseDate(
+      selectedDate
+    );
+
+
+  const schedule =
+    getScheduleForDate(
+      selectedDate
+    );
+
+
+  const dateKey =
+    formatDateKey(
+      selectedDate
+    );
+
+
+  if (
+    schedule.note
+  ) {
+
+    noteBox.innerHTML = `
+      <div class="schedule-note">
+        ${escapeHtml(
+          schedule.note
+        )}
+      </div>
+    `;
+
+  }
+
+  else {
+
+    noteBox.innerHTML =
+      '';
+  }
+
+
+  slotList.innerHTML =
+    '';
+
+
+  appConfig.slots
+    .forEach(time => {
+
+
+      const scheduleOpen =
+        schedule.slots[
+          time
+        ] !== false;
+
+
+      const booked =
+        isSlotBooked(
+          dateKey,
+          time
+        );
+
+
+      const slot =
+        document.createElement(
+          'div'
+        );
+
+
+
+      if (
+        !scheduleOpen
+      ) {
+
+        slot.className =
+          'slot closed';
+
+
+        slot.innerHTML = `
+
+          <div>
+
+            <div class="slot-time">
+              ${escapeHtml(time)}
+            </div>
+
+            <div class="slot-status">
+
+              <span class="mini-dot closed"></span>
+
+              不開放
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      else if (
+        booked
+      ) {
+
+        slot.className =
+          'slot booked';
+
+
+        slot.innerHTML = `
+
+          <div>
+
+            <div class="slot-time">
+              ${escapeHtml(time)}
+            </div>
+
+            <div class="slot-status">
+
+              <span class="mini-dot booked"></span>
+
+              已預約
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      else {
+
+        slot.className =
+          'slot open';
+
+
+        slot.innerHTML = `
+
+          <div>
+
+            <div class="slot-time">
+              ${escapeHtml(time)}
+            </div>
+
+            <div class="slot-status">
+
+              <span class="mini-dot open"></span>
+
+              可預約
+
+            </div>
+
+          </div>
+
+
+          <div class="slot-arrow">
+            →
+          </div>
+
+        `;
+
+
+        slot.addEventListener(
+          'click',
+          () =>
+            openBookingModal(
+              selectedDate,
+              time
+            )
+        );
+      }
+
+
+      slotList.appendChild(
+        slot
+      );
+
+    });
+
+}
+
+
+
+/* =====================================================
+   SCHEDULE
+   ===================================================== */
+
+function getScheduleForDate(
+  date
+) {
+
+  const dateKey =
+    formatDateKey(
+      date
+    );
+
+
+  const override =
+    appConfig
+      .scheduleOverrides[
+        dateKey
+      ];
+
+
+  const slots =
+    {};
+
+
+  appConfig.slots
+    .forEach(slot => {
+
+
+      if (
+        override &&
+        Object
+          .prototype
+          .hasOwnProperty
+          .call(
+            override,
+            slot
+          )
+      ) {
+
+        slots[
+          slot
+        ] =
+          override[
+            slot
+          ] !== false;
+
+      }
+
+      else {
+
+        slots[
+          slot
+        ] = true;
+
+      }
+
+    });
+
+
+  return {
+
+    slots:
+      slots,
+
+    note:
+      override &&
+      override.note
+        ? override.note
+        : ''
+  };
+
+}
+
+
+
+/* =====================================================
+   BOOKINGS
+   ===================================================== */
+
+function isSlotBooked(
+  dateKey,
+  slot
+) {
+
+  const list =
+    appConfig
+      .bookedSlots[
+        dateKey
+      ] ||
+    [];
+
+
+  return list.includes(
+    slot
+  );
+}
+
+
+
+/* =====================================================
+   MONTH CONTROLS
+   ===================================================== */
+
+function changeMonth(
+  offset
+) {
+
+  currentMonth =
+    new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() +
+      offset,
+      1
+    );
+
+
+  renderCalendar();
+}
+
+
+
+function goToday() {
+
+  currentMonth =
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    );
+
+
+  selectedDate =
+    null;
+
+
+  renderCalendar();
+
+  renderSlots();
+}
+
+
+
+/* =====================================================
+   BOOKING RANGE
+   ===================================================== */
+
+function isWithinBookingRange(
+  date
+) {
+
+  const d =
+    startOfDay(
+      date
+    );
+
+
+  const end =
+    new Date(
+      today
+    );
+
+
+  end.setDate(
+    end.getDate() +
+    Number(
+      appConfig.bookingDaysAhead ||
+      60
+    )
+  );
+
+
+  return (
+    d >= today &&
+    d <= end
+  );
+}
+
+
+
+/* =====================================================
+   COURSES
+   ===================================================== */
+
+function renderCategories() {
+
+  const container =
+    document.getElementById(
+      'categoryList'
+    );
+
+
+  const courses =
+    appConfig.courses ||
+    [];
+
+
+  if (
+    courses.length === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ♡
+        </div>
+
+        目前沒有開放的課程分類。
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    '';
+
+
+  courses.forEach(
+    (course,index) => {
+
+
+      const card =
+        document.createElement(
+          'div'
+        );
+
+
+      card.className =
+        'category-card';
+
+
+      card.innerHTML = `
+
+        <div class="category-number">
+          COURSE
+          ${String(index + 1).padStart(2,'0')}
+        </div>
+
+        <div class="category-name">
+          ${escapeHtml(
+            course.name
+          )}
+        </div>
+
+        <div class="category-decoration"></div>
+
+      `;
+
+
+      container.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =====================================================
+   COURSE OPTIONS
+   ===================================================== */
+
+function renderCategoryOptions() {
+
+  const select =
+    document.getElementById(
+      'categoryId'
+    );
+
+
+  select.innerHTML =
+    '<option value="">' +
+    '請選擇課程分類' +
+    '</option>';
+
+
+  appConfig.courses
+    .forEach(course => {
+
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+
+      option.value =
+        course.id;
+
+
+      option.textContent =
+        course.name;
+
+
+      select.appendChild(
+        option
+      );
+
+    });
+
+}
+
+
+
+/* =====================================================
+   ANNOUNCEMENTS
+   ===================================================== */
+
+function renderAnnouncements() {
+
+  const container =
+    document.getElementById(
+      'announcementList'
+    );
+
+
+  const items =
+    appConfig.announcements ||
+    [];
+
+
+  if (
+    items.length === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ♡
+        </div>
+
+        目前沒有新的公告，
+        <br>
+        可以直接前往預約課程。
+
+      </div>
+    `;
+
+
+    return;
+  }
+
+
+  container.innerHTML =
+    '';
+
+
+  items.forEach(
+    item => {
+
+
+      const notice =
+        document.createElement(
+          'div'
+        );
+
+
+      notice.className =
+        'notice';
+
+
+      const dates =
+        [
+          item.startDate,
+          item.endDate
+        ]
+        .filter(Boolean)
+        .join(' ～ ');
+
+
+      notice.innerHTML = `
+
+        <div class="notice-icon">
+          ✦
+        </div>
+
+
+        <div>
+
+          <div class="notice-title">
+            ${escapeHtml(
+              item.title
+            )}
+          </div>
+
+
+          ${
+            dates
+              ? `
+                <div class="notice-date">
+
+                  ${escapeHtml(
+                    dates
+                  )}
+
+                </div>
+              `
+              : ''
+          }
+
+
+          <div class="notice-content">
+
+            ${escapeHtml(
+              item.content
+            )}
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(
+        notice
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =====================================================
+   OPEN BOOKING MODAL
+   ===================================================== */
+
+function openBookingModal(
+  date,
+  slot
+) {
+
+  const dateKey =
+    formatDateKey(
+      date
+    );
+
+
+  if (
+    isSlotBooked(
+      dateKey,
+      slot
+    )
+  ) {
+
+    alert(
+      '這個時段剛剛已被預約，請重新選擇。'
+    );
+
+
+    loadConfig();
+
+    return;
+  }
+
+
+  document
+    .getElementById(
+      'bookingForm'
+    )
+    .reset();
+
+
+  document
+    .getElementById(
+      'bookingDate'
+    )
+    .value =
+    dateKey;
+
+
+  document
+    .getElementById(
+      'bookingSlot'
+    )
+    .value =
+    slot;
+
+
+  document
+    .getElementById(
+      'summaryDate'
+    )
+    .textContent =
+    formatChineseDate(
+      date
+    );
+
+
+  document
+    .getElementById(
+      'summarySlot'
+    )
+    .textContent =
+    slot;
+
+
+  document
+    .getElementById(
+      'modalDateTime'
+    )
+    .textContent =
+    `${formatChineseDate(date)} ・ ${slot}`;
+
+
+  document
+    .getElementById(
+      'submitMessage'
+    )
+    .className =
+    'submit-message';
+
+
+  document
+    .getElementById(
+      'submitMessage'
+    )
+    .innerHTML =
+    '';
+
+
+  const button =
+    document.getElementById(
+      'submitBookingButton'
+    );
+
+
+  button.disabled =
+    false;
+
+
+  button.textContent =
+    '確認預約 →';
+
+
+  document
+    .getElementById(
+      'bookingModal'
+    )
+    .classList.add(
+      'show'
+    );
+
+
+  document.body
+    .classList.add(
+      'modal-open'
+    );
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODAL
+   ===================================================== */
+
+function closeBookingModal() {
+
+  if (
+    submitting
+  ) {
+
+    return;
+  }
+
+
+  document
+    .getElementById(
+      'bookingModal'
+    )
+    .classList.remove(
+      'show'
+    );
+
+
+  document.body
+    .classList.remove(
+      'modal-open'
+    );
+
+}
+
+
+
+/* =====================================================
+   SUBMIT BOOKING
+   ===================================================== */
+
+document
+  .getElementById(
+    'bookingForm'
+  )
+  .addEventListener(
+    'submit',
+    async function(event) {
+
+
+      event.preventDefault();
+
+
+      if (
+        submitting
+      ) {
+
+        return;
+      }
+
+
+      if (
+        !this.checkValidity()
+      ) {
+
+        this.reportValidity();
+
+        return;
+      }
+
+
+      submitting =
+        true;
+
+
+      const button =
+        document.getElementById(
+          'submitBookingButton'
+        );
+
+
+      const messageBox =
+        document.getElementById(
+          'submitMessage'
+        );
+
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        '確認時段中…';
+
+
+      messageBox.className =
+        'submit-message show';
+
+
+      messageBox.innerHTML =
+        '<div class="loading">' +
+        '正在確認這個時段仍然可預約，請稍候…' +
+        '</div>';
+
+
+
+      const requestId =
+        'REQ-' +
+        Date.now() +
+        '-' +
+        Math.random()
+          .toString(36)
+          .substring(
+            2,
+            10
+          );
+
+
+      document
+        .getElementById(
+          'requestId'
+        )
+        .value =
+        requestId;
+
+
+      this.action =
+        API_URL;
+
+
+      this.submit();
+
+
+
+      try {
+
+        const result =
+          await waitForBookingResult(
+            requestId
+          );
+
+
+        if (
+          result.success
+        ) {
+
+          messageBox.innerHTML = `
+
+            <div class="success-box">
+
+              <div class="success-check">
+                ✓
+              </div>
+
+
+              <strong>
+                預約完成
+              </strong>
+
+              <br>
+
+
+              ${escapeHtml(
+                result.date ||
+                ''
+              )}
+
+              ・
+
+              ${escapeHtml(
+                result.slot ||
+                ''
+              )}
+
+              <br>
+
+
+              ${escapeHtml(
+                result.course ||
+                ''
+              )}
+
+              <br><br>
+
+
+              已為你保留這個時段。
+
+            </div>
+
+          `;
+
+
+          await loadConfig();
+
+
+          button.textContent =
+            '預約完成';
+
+
+          setTimeout(
+            () => {
+
+
+              submitting =
+                false;
+
+
+              document
+                .getElementById(
+                  'bookingModal'
+                )
+                .classList.remove(
+                  'show'
+                );
+
+
+              document.body
+                .classList.remove(
+                  'modal-open'
+                );
+
+
+            },
+            2200
+          );
+
+        }
+
+
+        else {
+
+          submitting =
+            false;
+
+
+          button.disabled =
+            false;
+
+
+          button.textContent =
+            '確認預約 →';
+
+
+          messageBox.innerHTML = `
+
+            <div class="error">
+
+              ${escapeHtml(
+                result.message ||
+                '預約失敗，請稍後再試。'
+              )}
+
+            </div>
+
+          `;
+
+
+          if (
+            result.conflict
+          ) {
+
+            await loadConfig();
+
+          }
+
+        }
+
+      }
+
+
+      catch (
+        error
+      ) {
+
+        console.error(
+          error
+        );
+
+
+        submitting =
+          false;
+
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          '確認預約 →';
+
+
+        messageBox.innerHTML = `
+
+          <div class="error">
+
+            暫時無法確認預約結果。
+            請先重新整理頁面查看該時段是否已變成「已預約」，
+            不要立即重複送出。
+
+          </div>
+
+        `;
+
+      }
+
+    }
+  );
+
+
+
+/* =====================================================
+   WAIT RESULT
+   ===================================================== */
+
+async function waitForBookingResult(
+  requestId
+) {
+
+  const maxAttempts =
+    20;
+
+
+  for (
+    let attempt = 0;
+    attempt < maxAttempts;
+    attempt++
+  ) {
+
+    await sleep(
+      700
+    );
+
+
+    const result =
+      await jsonp(
+        'bookingResult',
+        {
+          requestId:
+            requestId
+        }
+      );
+
+
+    if (
+      !result.pending
+    ) {
+
+      return result;
+
+    }
+
+  }
+
+
+  throw new Error(
+    'Booking result timeout'
+  );
+
+}
+
+
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
+
+function sleep(
+  milliseconds
+) {
+
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        milliseconds
+      )
+  );
+
+}
+
+
+
+function startOfDay(
+  date
+) {
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+
+}
+
+
+
+function sameDate(
+  a,
+  b
+) {
+
+  return (
+    a.getFullYear() ===
+      b.getFullYear() &&
+
+    a.getMonth() ===
+      b.getMonth() &&
+
+    a.getDate() ===
+      b.getDate()
+  );
+
+}
+
+
+
+function formatDateKey(
+  date
+) {
+
+  const year =
+    date.getFullYear();
+
+
+  const month =
+    String(
+      date.getMonth() + 1
+    )
+    .padStart(
+      2,
+      '0'
+    );
+
+
+  const day =
+    String(
+      date.getDate()
+    )
+    .padStart(
+      2,
+      '0'
+    );
+
+
+  return (
+    year +
+    '-' +
+    month +
+    '-' +
+    day
+  );
+
+}
+
+
+
+function formatChineseDate(
+  date
+) {
+
+  const weekdays =
+    [
+      '日',
+      '一',
+      '二',
+      '三',
+      '四',
+      '五',
+      '六'
+    ];
+
+
+  return (
+    `${date.getMonth() + 1} 月 ` +
+    `${date.getDate()} 日・` +
+    `星期${weekdays[date.getDay()]}`
+  );
+
+}
+
+
+
+function escapeHtml(
+  text
+) {
+
+  return String(
+    text ?? ''
+  )
+  .replaceAll(
+    '&',
+    '&amp;'
+  )
+  .replaceAll(
+    '<',
+    '&lt;'
+  )
+  .replaceAll(
+    '>',
+    '&gt;'
+  )
+  .replaceAll(
+    '"',
+    '&quot;'
+  )
+  .replaceAll(
+    "'",
+    '&#039;'
+  );
+
+}
+
+
+
+/* =====================================================
+   MODAL BACKDROP
+   ===================================================== */
+
+document
+  .getElementById(
+    'bookingModal'
+  )
+  .addEventListener(
+    'click',
+    event => {
+
+
+      if (
+        event.target.id ===
+        'bookingModal' &&
+        !submitting
+      ) {
+
+        closeBookingModal();
+
+      }
+
+    }
+  );
+
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+loadConfig();
+
+</script>
+
+
+</body>
+</html>
