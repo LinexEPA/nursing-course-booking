@@ -35,6 +35,15 @@
 </main>
 <footer><div class="shell">Nursing Education Learning Hub · Designed for learning, practice and reflection.</div></footer>
 <script>
+if('scrollRestoration' in history){history.scrollRestoration='manual'}
+function forceHomepageTop(){
+  if(location.hash){history.replaceState(null,'',location.pathname+location.search)}
+  window.scrollTo(0,0)
+}
+forceHomepageTop();
+document.addEventListener('DOMContentLoaded',forceHomepageTop);
+window.addEventListener('load',()=>{forceHomepageTop();setTimeout(forceHomepageTop,80)});
+window.addEventListener('pageshow',()=>{forceHomepageTop();setTimeout(forceHomepageTop,80)});
 const HUB_API_URL='https://script.google.com/macros/s/AKfycbyD4bhLsFaSTAKqcUmei4-P8woaTw53hEVVBkjOZa2icG7Ki7dLgPLM902NnSrAJ5Qe/exec';
 const FALLBACK_RESOURCES=[
   {resourceId:'R001',type:'教學工具',name:'EPA 給藥思考工具｜範例體驗',description:'從給藥情境留下自己的判斷順序與思考軌跡。',url:'epa-medication.html',buttonText:'體驗看看 →',display:true,sort:1},
