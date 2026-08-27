@@ -16,9 +16,9 @@
   const status=document.getElementById('status');
   try{
     if(!('serviceWorker' in navigator)) throw new Error('此瀏覽器不支援必要的背景連線功能');
-    await navigator.serviceWorker.register('./epa-backend-sw.js',{scope:'./'});
+    await navigator.serviceWorker.register('./epa-backend-sw.js?v=20260827-save1',{scope:'./'});
     await navigator.serviceWorker.ready;
-    location.replace('./epa-medication-core.html?v=20260826-1');
+    location.replace('./epa-medication-core.html?v=20260827-save1');
   }catch(err){
     document.getElementById('spinner').style.display='none';
     status.className='error';
