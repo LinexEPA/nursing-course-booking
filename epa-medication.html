@@ -16,9 +16,20 @@
   const status=document.getElementById('status');
   try{
     if(!('serviceWorker' in navigator)) throw new Error('此瀏覽器不支援必要的背景連線功能');
-    await navigator.serviceWorker.register('./epa-backend-sw.js?v=20260827-fix2',{scope:'./'});
+
+    const targetScope=new URL('./',location.href).href;
+    const registrations=await navigator.serviceWorker.getRegistrations();
+    for(const registration of registrations){
+      if(registration.scope===targetScope){
+        await registration.unregister();
+      }
+    }
+
+    await navigator.serviceWorker.register('./epa-backend-sw.js?v=20260827-fix3',{scope:'./'});
     await navigator.serviceWorker.ready;
-    location.replace('./epa-medication-core.html?v=20260827-fix2');
+    await new Promise(resolve=>setTimeout(resolve,120));
+
+    location.replace('./epa-medication-core.html?v=20260827-fix3');
   }catch(err){
     document.getElementById('spinner').style.display='none';
     status.className='error';
