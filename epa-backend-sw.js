@@ -74,7 +74,11 @@ function saveAsPdf(){
 <\/script>
 `;
 
-      html = html.replace('</body></html>', saveOverride + '</body></html>');
+      const closingTag = '</body></html>';
+      const closingIndex = html.lastIndexOf(closingTag);
+      if (closingIndex >= 0) {
+        html = html.slice(0, closingIndex) + saveOverride + html.slice(closingIndex);
+      }
 
       return new Response(html, {
         status: response.status,
