@@ -6,7 +6,7 @@
   <title>新手導師輔導紀錄分析</title>
   <style>
     :root{--teal:#0d8f98;--navy:#203b63;--ink:#22313f;--muted:#667085;--line:#d8e2e8;--bg:#f5f8fa;--card:#fff;--warn:#fff7e6;--ok:#eef9f3}
-    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
     .wrap{max-width:960px;margin:0 auto;padding:40px 20px 64px}.hero{margin-bottom:22px}.hero h1{margin:0 0 8px;font-size:30px;color:var(--navy)}.hero p{margin:0;color:var(--muted);line-height:1.7}
     .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(32,59,99,.05)}
     .drop{border:2px dashed #9fc9cd;border-radius:16px;padding:26px;text-align:center;background:#f8fcfc;transition:.2s}.drop.drag{background:#eaf8f8;border-color:var(--teal)}
@@ -14,7 +14,7 @@
     .status{margin-top:18px;padding:14px 16px;border-radius:12px;background:#f2f5f7;color:#475467;line-height:1.6}.status.ok{background:var(--ok);color:#17633a}.status.warn{background:var(--warn);color:#8a5a00}
     .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}.metric{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff}.metric b{display:block;font-size:24px;color:var(--navy)}.metric span{font-size:12px;color:var(--muted)}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.btn{border:0;border-radius:12px;padding:15px 18px;font-size:16px;font-weight:800;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.detail{background:#203b63;color:#fff}.btn.supervisor{background:#0d8f98;color:#fff}
-    .note{margin-top:18px;padding:14px 16px;border-left:4px solid var(--teal);background:#f8fbfc;color:#475467;line-height:1.7;font-size:14px}.version{margin-top:14px;color:#98a2b3;font-size:12px;text-align:right}
+    .note{margin-top:18px;padding:14px 16px;border-left:4px solid var(--teal);background:#f8fbfc;color:#475467;line-height:1.7;font-size:14px}
     @media(max-width:720px){.summary{grid-template-columns:repeat(2,1fr)}.actions{grid-template-columns:1fr}.hero h1{font-size:25px}}
   </style>
 </head>
@@ -22,7 +22,7 @@
   <main class="wrap">
     <section class="hero">
       <h1>新手導師輔導紀錄分析</h1>
-      <p>上傳每月「輔導紀錄清冊」Excel，由固定規則進行第一輪分類，再產生細緻分析版與主管審閱版。檔案只在目前瀏覽器記憶體中處理，不上傳到 GitHub。</p>
+      <p>上傳每月輔導紀錄清冊，系統協助整理需退回修正、管理確認及教學亮點，並產生審閱用 Excel。</p>
     </section>
 
     <section class="card">
@@ -36,7 +36,7 @@
 
       <div class="summary" aria-label="分析摘要">
         <div class="metric"><b id="mTotal">—</b><span>總紀錄</span></div>
-        <div class="metric"><b id="mText">—</b><span>文字／內容案件</span></div>
+        <div class="metric"><b id="mText">—</b><span>需文字檢視</span></div>
         <div class="metric"><b id="mApproval">—</b><span>需主管審批</span></div>
         <div class="metric"><b id="mMgmt">—</b><span>管理確認</span></div>
         <div class="metric"><b id="mHighlight">—</b><span>教學亮點候選</span></div>
@@ -47,16 +47,14 @@
         <button id="supervisorBtn" class="btn supervisor" disabled>產生主管審閱版 Excel</button>
       </div>
 
-      <div class="note">
-        目前為規則驗證版：明顯錯字需退回；標點、空格與純格式問題不退件。有具體情境、行為與結果的困難描述不視為負向標籤；正向親暱語氣若有具體事實支持也不退件。單純提到病人安全或主管，不自動視為病安事件或管理介入。
-      </div>
-      <div class="version">Rule engine v1.4｜2026-09</div>
+      <div class="note">資料處理說明：上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。</div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="./rules.js?v=20260902-5"></script>
-  <script src="./rules-v14-patch.js?v=20260902-5"></script>
-  <script src="./app-v2.js?v=20260902-5"></script>
+  <script src="./rules.js?v=20260902-6"></script>
+  <script src="./rules-v14-patch.js?v=20260902-6"></script>
+  <script src="./app-v2.js?v=20260902-6"></script>
+  <script src="./public-mode.js?v=20260902-6"></script>
 </body>
 </html>
