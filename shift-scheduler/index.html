@@ -1,284 +1,65 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>11B 排班規劃｜V1</title>
-  <style>
-    :root{
-      --bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;
-      --primary:#315f7d;--primary-2:#eaf2f7;--hard:#9a3412;--hard-bg:#fff7ed;
-      --soft:#6d5b14;--soft-bg:#fefce8;--ok:#166534;--ok-bg:#f0fdf4;--warn:#92400e;--warn-bg:#fffbeb;
-      --radius:16px;--shadow:0 8px 28px rgba(15,23,42,.06)
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",Arial,sans-serif;background:var(--bg);color:var(--ink)}
-    button,input,select,textarea{font:inherit}
-    .topbar{position:sticky;top:0;z-index:20;background:rgba(246,247,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(229,231,235,.9)}
-    .topbar-inner{max-width:1280px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{display:flex;align-items:center;gap:12px}.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:white;font-weight:800}
-    .brand h1{font-size:18px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:2px 0 0}
-    .status{font-size:12px;padding:7px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #e0e7ff;white-space:nowrap}
-    main{max-width:1280px;margin:0 auto;padding:24px 20px 56px}
-    .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:18px;margin-bottom:18px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .hero-main{padding:24px}.hero-main h2{font-size:28px;line-height:1.25;margin:0 0 10px}.hero-main p{color:var(--muted);line-height:1.7;margin:0}
-    .hero-side{padding:20px}.hero-side h3{margin:0 0 12px;font-size:15px}.flow{display:grid;gap:8px}.flow-item{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;background:#f8fafc}.num{width:24px;height:24px;border-radius:50%;background:var(--primary-2);color:var(--primary);display:grid;place-items:center;font-weight:700;font-size:12px;flex:0 0 auto}.flow-item b{font-size:13px}.flow-item span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}.step{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:white;font-size:12px;color:var(--muted)}.step strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}.step.active{border-color:#a8c2d3;background:var(--primary-2)}
-    .section{margin-top:18px;overflow:hidden}.section-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.section-head h3{margin:0;font-size:17px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.section-body{padding:20px}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    label{font-size:12px;color:#475569;font-weight:700;display:block;margin-bottom:6px}.field{width:100%;border:1px solid #d7dce3;border-radius:10px;background:white;padding:10px 12px;outline:none}.field:focus{border-color:#9bb7ca;box-shadow:0 0 0 3px rgba(49,95,125,.09)}textarea.field{min-height:170px;resize:vertical;line-height:1.65}
-    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}.btn-secondary{background:#f1f5f9;color:#334155;border:1px solid #dbe2ea}.btn-ghost{background:transparent;color:#475569;border:1px solid var(--line)}.btn-danger{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.btn:disabled{opacity:.45;cursor:not-allowed}
-    .notice{padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.6}.notice.info{background:#eff6ff;color:#1e3a8a;border:1px solid #dbeafe}.notice.warn{background:var(--warn-bg);color:var(--warn);border:1px solid #fde68a}.notice.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #bbf7d0}
-    table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;white-space:nowrap}th{background:#f8fafc;color:#475569;font-size:12px;position:sticky;top:0}tr:last-child td{border-bottom:0}.table-input{width:100%;min-width:95px;border:1px solid #dbe1e8;border-radius:8px;padding:7px 8px;background:white}.small{font-size:12px;color:var(--muted)}
-    .pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}.pill.hard{background:var(--hard-bg);color:var(--hard)}.pill.soft{background:var(--soft-bg);color:var(--soft)}.pill.ok{background:var(--ok-bg);color:var(--ok)}
-    .rules{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.rule{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.rule-title{font-weight:700;font-size:13px}.rule-desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}.rule-actions{display:flex;gap:5px;align-items:center}
-    .switch{position:relative;width:42px;height:24px;background:#cbd5e1;border-radius:999px;cursor:pointer;flex:0 0 auto}.switch.on{background:var(--primary)}.switch::after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:3px;left:3px;transition:.18s}.switch.on::after{left:21px}
-    .schedule-grid{overflow:auto;border:1px solid var(--line);border-radius:12px}.schedule-grid table{min-width:1100px}.schedule-grid td{text-align:center;padding:7px}.schedule-grid th{text-align:center}.schedule-grid th:first-child,.schedule-grid td:first-child{text-align:left;position:sticky;left:0;background:white;z-index:3}.shift-cell{min-width:34px;height:32px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:12px;background:#f8fafc;color:#64748b}.shift-cell.off{background:#f1f5f9}.shift-cell.day{background:#eef6fb;color:#315f7d}.shift-cell.eve{background:#f5f3ff;color:#6d28d9}.shift-cell.night{background:#eef2ff;color:#3730a3}
-    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check{padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:13px}.check.ok{background:var(--ok-bg);color:var(--ok);border-color:#bbf7d0}.check.muted{background:#f8fafc;color:#64748b}
-    .footer-note{text-align:center;color:var(--muted);font-size:12px;padding-top:24px}
-    .toast{position:fixed;right:18px;bottom:18px;max-width:340px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.18);font-size:13px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
-    @media(max-width:900px){.hero,.grid-2,.grid-3,.rules,.checklist{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.hero-main h2{font-size:23px}.topbar-inner{padding:12px 14px}main{padding:18px 14px 44px}.section-body{padding:16px}.section-head{padding:15px 16px}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11B 排班規劃｜V1.1</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--primary:#315f7d;--primary2:#eaf2f7;--hard:#9a3412;--hardbg:#fff7ed;--soft:#6d5b14;--softbg:#fefce8;--ok:#166534;--okbg:#f0fdf4;--r:16px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",Arial,sans-serif}button,input,select,textarea{font:inherit}
+header{position:sticky;top:0;z-index:20;background:rgba(246,247,251,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.top{max-width:1280px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;gap:12px;align-items:center}.mark{width:38px;height:38px;border-radius:12px;background:var(--primary);color:white;display:grid;place-items:center;font-weight:800}.brand h1{font-size:18px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:2px 0 0}.status{font-size:12px;border-radius:999px;padding:7px 10px;background:#eef2ff;color:#3730a3}
+main{max-width:1280px;margin:auto;padding:22px 20px 50px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 28px rgba(15,23,42,.05);margin-top:16px;overflow:hidden}.head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.head h2{font-size:17px;margin:0}.head p{font-size:12px;color:var(--muted);margin:4px 0 0}.body{padding:20px}.hero{padding:24px}.hero h2{font-size:26px;margin:0 0 8px}.hero p{color:var(--muted);line-height:1.7;margin:0}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:10px;padding:9px 13px;font-weight:700;cursor:pointer}.primary{background:var(--primary);color:#fff}.secondary{background:#f1f5f9;color:#334155;border:1px solid #dbe2ea}.ghost{background:white;color:#475569;border:1px solid var(--line)}.danger{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.field{width:100%;padding:9px 10px;border:1px solid #d7dce3;border-radius:9px;background:white}textarea.field{min-height:120px;line-height:1.6;resize:vertical}label{font-size:12px;font-weight:700;color:#475569;display:block;margin-bottom:6px}.note{padding:11px 13px;border-radius:11px;font-size:13px;line-height:1.55}.info{background:#eff6ff;color:#1e3a8a;border:1px solid #dbeafe}.ok{background:var(--okbg);color:var(--ok);border:1px solid #bbf7d0}.warn{background:#fffbeb;color:#92400e;border:1px solid #fde68a}.small{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}.wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{background:#f8fafc;color:#475569;font-size:12px}tr:last-child td{border-bottom:0}.tfield{width:100%;min-width:90px;padding:7px 8px;border:1px solid #dbe1e8;border-radius:8px;background:white}.pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}.hard{background:var(--hardbg);color:var(--hard)}.soft{background:var(--softbg);color:var(--soft)}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rule{padding:12px;border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;gap:10px}.rule b{font-size:13px}.rule span{display:block;color:var(--muted);font-size:12px;margin-top:4px;line-height:1.45}.switch{width:42px;height:24px;background:#cbd5e1;border-radius:999px;position:relative;cursor:pointer;flex:0 0 auto}.switch.on{background:var(--primary)}.switch:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:3px;left:3px;transition:.15s}.switch.on:after{left:21px}.summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.badge{padding:6px 9px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);font-size:12px}.schedule{overflow:auto;border:1px solid var(--line);border-radius:12px}.schedule table{min-width:1050px}.schedule td,.schedule th{text-align:center}.schedule th:first-child,.schedule td:first-child{text-align:left;position:sticky;left:0;background:white;z-index:2}.cell{width:31px;height:29px;border-radius:7px;background:#f8fafc;display:grid;place-items:center;font-size:11px;color:#64748b}.footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}.toast{position:fixed;right:18px;bottom:18px;background:#111827;color:white;padding:11px 14px;border-radius:11px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}
+@media(max-width:900px){.grid2,.grid3,.rules{grid-template-columns:1fr}.top{padding:12px 14px}main{padding:15px 14px 40px}.body{padding:15px}.hero h2{font-size:22px}}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-mark">班</div>
-        <div><h1>11B 排班規劃</h1><p>前端原型 V1｜尚未連接 Google Apps Script / OpenAI API</p></div>
-      </div>
-      <div class="status">● 前端測試模式</div>
-    </div>
-  </header>
+<header><div class="top"><div class="brand"><div class="mark">班</div><div><h1>11B 排班規劃</h1><p>前端原型 V1.1｜人員只設定一次，後續規則自動帶入</p></div></div><div class="status">● 前端測試模式</div></div></header>
+<main>
+<section class="card hero"><h2>人員主檔只建立一次，之後不要再重複輸入姓名</h2><p>這一版把「全單位固定規則」與「個別人員限制」拆開。人員建立後，個別限制、AI解析結果與班表都直接從同一份人員清單帶入。正式接 Google Sheet 後，人員主檔會長期保存，不需要每月重建。</p></section>
 
-  <main>
-    <section class="hero">
-      <div class="card hero-main">
-        <h2>先把「本月需求」說清楚，再讓規則引擎排班</h2>
-        <p>這一版先確認護理長實際操作是否順手。固定規則、人員、本月需求、AI解析後確認、班表與規則檢核都先放到同一個介面；目前所有資料只存在這台裝置的瀏覽器，不會送到 AI，也不會產生 Token 費用。</p>
-      </div>
-      <div class="card hero-side">
-        <h3>預計正式流程</h3>
-        <div class="flow">
-          <div class="flow-item"><div class="num">1</div><div><b>輸入本月特殊需求</b><span>用自然語言一次說完</span></div></div>
-          <div class="flow-item"><div class="num">2</div><div><b>AI 解析為排班規則</b><span>只負責理解，不直接排班</span></div></div>
-          <div class="flow-item"><div class="num">3</div><div><b>護理長確認</b><span>AI 聽錯可直接修正</span></div></div>
-          <div class="flow-item"><div class="num">4</div><div><b>排班引擎計算</b><span>硬規則必須遵守</span></div></div>
-        </div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>基本設定</h2><p>正式版月份與單位可由後端保存。</p></div><button class="btn secondary" id="save">儲存本機草稿</button></div><div class="body grid3"><div><label>排班月份</label><input class="field" type="month" id="month"></div><div><label>單位</label><input class="field" id="unit" value="11B"></div><div><label>模式</label><select class="field" id="mode"><option>正式排班</option><option>測試排班</option></select></div></div></section>
 
-    <div class="steps">
-      <div class="step active"><strong>01 固定規則</strong>一次設定、長期沿用</div>
-      <div class="step active"><strong>02 本月需求</strong>護理長自然語言輸入</div>
-      <div class="step"><strong>03 確認解析</strong>AI 規則逐條確認</div>
-      <div class="step"><strong>04 產生班表</strong>演算法計算</div>
-      <div class="step"><strong>05 人工調整</strong>即時檢核違規</div>
-    </div>
+<section class="card"><div class="head"><div><h2>① 人員主檔｜只設定一次</h2><p>可一次貼上姓名清單；其他欄位都有固定選項，不必自由輸入。</p></div><div class="toolbar"><button class="btn ghost" id="addPerson">＋ 新增一人</button></div></div><div class="body">
+<div class="grid2" style="margin-bottom:14px"><div><label>快速建立人員</label><textarea class="field" id="bulkNames" placeholder="直接貼姓名即可，一行一人。例如：\n王○○\n林○○\n陳○○"></textarea><div class="toolbar" style="margin-top:8px"><button class="btn secondary" id="importNames">一次匯入姓名</button><button class="btn ghost" id="clearPeople">清空人員</button></div></div><div><div class="note info"><b>設計原則</b><br>第一次只需要建立名單。預設為「護理師／一般／班別不限／不可帶新人」，只有例外的人再調整。正式接 Google Sheet 後，這份人員主檔可以全年沿用。</div><div class="summary" id="peopleSummary" style="margin-top:10px"></div></div></div>
+<div class="wrap"><table><thead><tr><th>啟用</th><th>姓名／代號</th><th>職類</th><th>資歷</th><th>主要班別</th><th>可帶新人</th><th></th></tr></thead><tbody id="peopleBody"></tbody></table></div>
+</div></section>
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>基本設定</h3><p>先選排班月份與使用情境；正式版會由 Google Sheet 帶入。</p></div>
-        <button class="btn btn-secondary" id="saveDraft">儲存本機草稿</button>
-      </div>
-      <div class="section-body grid-3">
-        <div><label for="month">排班月份</label><input class="field" type="month" id="month"></div>
-        <div><label for="unit">單位</label><input class="field" id="unit" value="11B"></div>
-        <div><label for="mode">模式</label><select class="field" id="mode"><option>正式排班</option><option>測試排班</option></select></div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>② 全單位固定規則</h2><p>這裡只放所有人共同遵守的規範，不再塞個別姓名。</p></div></div><div class="body"><div class="rules" id="rules"></div></div></section>
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>① 固定排班規則</h3><p>先放入目前討論過的規則草案。正式接排班引擎前，會再逐條與你確認。</p></div>
-        <button class="btn btn-ghost" id="addRule">＋ 新增規則</button>
-      </div>
-      <div class="section-body">
-        <div class="notice warn" style="margin-bottom:14px">目前這些是「前端規則草案」，尚未真正執行排班計算。硬規則之後會由程式鎖死；最佳化規則只會盡量滿足。</div>
-        <div class="rules" id="ruleList"></div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>③ 個別人員限制｜自動帶入上方名單</h2><p>需要針對某位人員設定時，直接選人，不再重新輸入姓名。</p></div><button class="btn ghost" id="addConstraint">＋ 新增人員規則</button></div><div class="body"><div class="wrap"><table><thead><tr><th>人員</th><th>限制／偏好</th><th>性質</th><th>備註</th><th></th></tr></thead><tbody id="constraintBody"></tbody></table></div></div></section>
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>② 本月排班人員</h3><p>V1 先讓你確認需要哪些欄位；之後可改成從 Google Sheet 自動帶入。</p></div>
-        <button class="btn btn-ghost" id="addPerson">＋ 新增人員</button>
-      </div>
-      <div class="section-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>姓名／代號</th><th>職類</th><th>資歷/角色</th><th>主要班別</th><th>可帶新人</th><th></th></tr></thead>
-            <tbody id="peopleBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>④ 本月特殊需求</h2><p>未來這一區才會使用 API，把自然語言轉成下方的結構化條件。</p></div></div><div class="body grid2"><div><label>直接描述本月需求</label><textarea class="field" id="needs" placeholder="例如：王○○ 5、12號預休；林○○這個月不要大夜；陳○○前半月優先小夜。"></textarea><div class="toolbar" style="margin-top:8px"><button class="btn primary" id="ai">AI 解析本月需求</button><button class="btn secondary" id="demo">載入示範解析</button></div></div><div><div class="note info"><b>目前尚未接 API。</b><br>這顆按鈕現在不會送出任何資料，也不會花 Token。正式版 AI 會以「人員主檔」為可用名單，不應自行創造不存在的人員。</div></div></div></section>
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>③ 請直接描述本月特殊需求</h3><p>這裡就是未來真正會呼叫 API 的入口。</p></div>
-      </div>
-      <div class="section-body grid-2">
-        <div>
-          <label for="needs">本月需求</label>
-          <textarea class="field" id="needs" placeholder="例如：\nA 5、12號預休，12號只能白班。\nB 這個月不要排大夜。\nC 前半月以小夜為主，並安排帶新人。\nD 20號出差8小時。\nE 希望本月多排2個大夜。"></textarea>
-          <div class="toolbar" style="margin-top:10px">
-            <button class="btn btn-primary" id="aiParse">AI 解析本月需求</button>
-            <button class="btn btn-secondary" id="demoParse">載入示範解析結果</button>
-            <button class="btn btn-ghost" id="clearNeeds">清空</button>
-          </div>
-        </div>
-        <div>
-          <label>目前連線狀態</label>
-          <div class="notice info"><b>V1 尚未接 OpenAI API。</b><br>按「AI 解析本月需求」只會提示尚未連線，不會把文字送出去。等我們下一階段完成 Google Apps Script 後，這顆按鈕才會真正把內容送到後端。</div>
-          <div class="notice ok" style="margin-top:10px"><b>正式版預計：</b><br>AI 只把自然語言轉成固定格式的排班條件，護理長確認後，才交給排班引擎。AI 不直接決定最終班表。</div>
-        </div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>⑤ AI 解析結果確認</h2><p>「人員」下拉選單直接來自人員主檔。AI 聽錯時只需改選，不必重新打名字。</p></div><div class="toolbar"><button class="btn ghost" id="addParsed">＋ 手動新增</button><button class="btn secondary" id="confirm">確認套用</button></div></div><div class="body"><div class="wrap"><table><thead><tr><th>人員</th><th>日期／期間</th><th>系統理解</th><th>性質</th><th>確認</th><th></th></tr></thead><tbody id="parsedBody"></tbody></table></div></div></section>
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>④ AI 解析結果確認</h3><p>正式版每一條都可以人工修正；確認後才會成為本月規則。</p></div>
-        <div class="toolbar"><button class="btn btn-ghost" id="addParsed">＋ 手動新增</button><button class="btn btn-secondary" id="confirmParsed">確認套用本月規則</button></div>
-      </div>
-      <div class="section-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>人員</th><th>日期／期間</th><th>系統理解</th><th>性質</th><th>確認</th><th></th></tr></thead>
-            <tbody id="parsedBody"><tr><td colspan="6" class="small">尚無解析結果。可先按「載入示範解析結果」查看操作方式。</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section class="card"><div class="head"><div><h2>⑥ 班表預覽</h2><p>目前只做版型；正式排班會由規則引擎計算。</p></div></div><div class="body"><div class="schedule" id="schedule"></div></div></section>
+<div class="footer">V1.1｜目前不呼叫 AI、不儲存到雲端、不產生 Token 費用</div>
+</main><div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const S={people:[{active:true,name:'A',role:'護理師',level:'資深',shift:'白／小夜',mentor:'是'},{active:true,name:'B',role:'護理師',level:'一般',shift:'不限',mentor:'是'},{active:true,name:'C',role:'護理師',level:'新人',shift:'白班',mentor:'否'}],rules:[{title:'班別最低人力',desc:'各班最低人力必須符合設定。',type:'hard',on:true},{title:'連續工作天數上限',desc:'不得超過設定的連續工作天數。',type:'hard',on:true},{title:'班別轉換休息間隔',desc:'特定班別轉換必須保留足夠休息。',type:'hard',on:true},{title:'減少不必要轉班',desc:'硬規則符合後，盡量減少班別切換。',type:'soft',on:true}],constraints:[],parsed:[]};
+function toast(x){let t=$('#toast');t.textContent=x;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2300)}function nextMonth(){let d=new Date();d.setMonth(d.getMonth()+1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function personOpts(v=''){return S.people.filter(p=>p.active&&p.name.trim()).map(p=>`<option value="${esc(p.name)}" ${p.name===v?'selected':''}>${esc(p.name)}</option>`).join('')||'<option value="">尚無人員</option>'}
+function renderPeople(){
+ $('#peopleBody').innerHTML=S.people.map((p,i)=>`<tr><td><input type="checkbox" data-p="active" data-i="${i}" ${p.active?'checked':''}></td><td><input class="tfield" data-p="name" data-i="${i}" value="${esc(p.name)}"></td><td><select class="tfield" data-p="role" data-i="${i}"><option ${p.role==='護理師'?'selected':''}>護理師</option><option ${p.role==='照服員'?'selected':''}>照服員</option></select></td><td><select class="tfield" data-p="level" data-i="${i}"><option ${p.level==='資深'?'selected':''}>資深</option><option ${p.level==='一般'?'selected':''}>一般</option><option ${p.level==='新人'?'selected':''}>新人</option></select></td><td><select class="tfield" data-p="shift" data-i="${i}"><option ${p.shift==='不限'?'selected':''}>不限</option><option ${p.shift==='白班'?'selected':''}>白班</option><option ${p.shift==='小夜'?'selected':''}>小夜</option><option ${p.shift==='大夜'?'selected':''}>大夜</option><option ${p.shift==='白／小夜'?'selected':''}>白／小夜</option><option ${p.shift==='小夜／大夜'?'selected':''}>小夜／大夜</option><option ${p.shift==='白／大夜'?'selected':''}>白／大夜</option></select></td><td><select class="tfield" data-p="mentor" data-i="${i}"><option ${p.mentor==='否'?'selected':''}>否</option><option ${p.mentor==='是'?'selected':''}>是</option></select></td><td><button class="btn ghost" data-del-person="${i}">刪除</button></td></tr>`).join('');
+ let active=S.people.filter(p=>p.active);$('#peopleSummary').innerHTML=`<span class="badge">啟用 ${active.length} 人</span><span class="badge">資深 ${active.filter(p=>p.level==='資深').length}</span><span class="badge">新人 ${active.filter(p=>p.level==='新人').length}</span><span class="badge">可帶新人 ${active.filter(p=>p.mentor==='是').length}</span>`;renderConstraints();renderParsed();renderSchedule();
+}
+function renderRules(){$('#rules').innerHTML=S.rules.map((r,i)=>`<div class="rule"><div><b>${esc(r.title)}</b><span>${esc(r.desc)}</span></div><div style="display:flex;gap:7px;align-items:center"><span class="pill ${r.type}">${r.type==='hard'?'硬規則':'最佳化'}</span><div class="switch ${r.on?'on':''}" data-switch="${i}"></div></div></div>`).join('')}
+function renderConstraints(){if(!S.constraints.length){$('#constraintBody').innerHTML='<tr><td colspan="5" class="small">目前沒有個別限制。新增時可直接從上方人員名單選擇。</td></tr>';return}$('#constraintBody').innerHTML=S.constraints.map((c,i)=>`<tr><td><select class="tfield" data-c="person" data-ci="${i}">${personOpts(c.person)}</select></td><td><select class="tfield" data-c="rule" data-ci="${i}"><option ${c.rule==='不可單獨值班'?'selected':''}>不可單獨值班</option><option ${c.rule==='禁止大夜'?'selected':''}>禁止大夜</option><option ${c.rule==='只能白班'?'selected':''}>只能白班</option><option ${c.rule==='優先白班'?'selected':''}>優先白班</option><option ${c.rule==='優先小夜'?'selected':''}>優先小夜</option><option ${c.rule==='優先大夜'?'selected':''}>優先大夜</option></select></td><td><select class="tfield" data-c="type" data-ci="${i}"><option value="hard" ${c.type==='hard'?'selected':''}>硬規則</option><option value="soft" ${c.type==='soft'?'selected':''}>偏好</option></select></td><td><input class="tfield" data-c="note" data-ci="${i}" value="${esc(c.note||'')}"></td><td><button class="btn ghost" data-del-c="${i}">刪除</button></td></tr>`).join('')}
+function renderParsed(){if(!S.parsed.length){$('#parsedBody').innerHTML='<tr><td colspan="6" class="small">尚無解析結果。</td></tr>';return}$('#parsedBody').innerHTML=S.parsed.map((r,i)=>`<tr><td><select class="tfield" data-r="person" data-ri="${i}">${personOpts(r.person)}</select></td><td><input class="tfield" data-r="period" data-ri="${i}" value="${esc(r.period)}"></td><td><input class="tfield" style="min-width:220px" data-r="rule" data-ri="${i}" value="${esc(r.rule)}"></td><td><select class="tfield" data-r="type" data-ri="${i}"><option value="hard" ${r.type==='hard'?'selected':''}>硬規則</option><option value="soft" ${r.type==='soft'?'selected':''}>偏好</option></select></td><td><input type="checkbox" data-r="ok" data-ri="${i}" ${r.ok?'checked':''}></td><td><button class="btn ghost" data-del-r="${i}">刪除</button></td></tr>`).join('')}
+function renderSchedule(){let people=S.people.filter(p=>p.active&&p.name.trim()),days=Array.from({length:31},(_,i)=>i+1);$('#schedule').innerHTML=`<table><thead><tr><th>人員</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${people.map(p=>`<tr><td>${esc(p.name)}</td>${days.map(()=>'<td><div class="cell">—</div></td>').join('')}</tr>`).join('')}</tbody></table>`}
 
-    <section class="card section">
-      <div class="section-head">
-        <div><h3>⑤ 班表預覽</h3><p>目前只顯示版型；之後由排班演算法產生，不會靠 AI 自由生成。</p></div>
-        <div class="toolbar"><button class="btn btn-primary" id="generate" disabled>產生班表（待接排班引擎）</button><button class="btn btn-ghost" id="resetPreview">清除預覽</button></div>
-      </div>
-      <div class="section-body">
-        <div class="schedule-grid" id="scheduleWrap"></div>
-      </div>
-    </section>
-
-    <section class="card section">
-      <div class="section-head"><div><h3>⑥ 規則檢核</h3><p>正式版在產生班表與人工調班時即時更新。</p></div></div>
-      <div class="section-body">
-        <div class="checklist">
-          <div class="check muted">○ 最低人力配置｜待接排班引擎</div>
-          <div class="check muted">○ 連續工作天數｜待接排班引擎</div>
-          <div class="check muted">○ 班別轉換／休息規則｜待接排班引擎</div>
-          <div class="check muted">○ 資深／帶教搭配｜待接排班引擎</div>
-          <div class="check muted">○ 本月硬性需求｜待接排班引擎</div>
-          <div class="check muted">○ 偏好達成情形｜待接排班引擎</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer-note">11B 排班規劃 V1｜本頁目前不呼叫 AI、不儲存到雲端、不產生 Token 費用</div>
-  </main>
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const $ = s => document.querySelector(s);
-    const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    const state = {
-      rules:[
-        {title:'班別最低人力',desc:'各班最低護理人力配置，正式數字待最後確認。',type:'hard',on:true},
-        {title:'連續工作天數上限',desc:'不可超過設定的連續工作天數。',type:'hard',on:true},
-        {title:'大夜轉白班休息間隔',desc:'班別轉換需保留設定的休息天數。',type:'hard',on:true},
-        {title:'不可單獨上班者搭配',desc:'需與符合資格或資深人員同班。',type:'hard',on:true},
-        {title:'減少不必要轉班',desc:'在硬規則全部符合後，盡量降低班別切換。',type:'soft',on:true},
-        {title:'個人主要班別偏好',desc:'盡量依個人主要班別或本月偏好分配。',type:'soft',on:true}
-      ],
-      people:[
-        {name:'A',role:'護理師',level:'資深',shift:'白／小夜',mentor:'是'},
-        {name:'B',role:'護理師',level:'一般',shift:'白／大夜',mentor:'是'},
-        {name:'C',role:'護理師',level:'一般',shift:'小夜',mentor:'否'},
-        {name:'D',role:'護理師',level:'新人',shift:'白班',mentor:'否'}
-      ],
-      parsed:[]
-    };
-
-    function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
-    function nextMonth(){const d=new Date();d.setMonth(d.getMonth()+1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
-    $('#month').value=nextMonth();
-
-    function renderRules(){
-      $('#ruleList').innerHTML=state.rules.map((r,i)=>`<div class="rule">
-        <div><div class="rule-title">${esc(r.title)}</div><div class="rule-desc">${esc(r.desc)}</div></div>
-        <div class="rule-actions"><span class="pill ${r.type}">${r.type==='hard'?'硬規則':'最佳化'}</span><div class="switch ${r.on?'on':''}" data-rule-switch="${i}"></div><button class="btn btn-ghost" style="padding:5px 8px" data-rule-del="${i}">×</button></div>
-      </div>`).join('');
-    }
-    function renderPeople(){
-      $('#peopleBody').innerHTML=state.people.map((p,i)=>`<tr>
-        <td><input class="table-input" data-p="name" data-i="${i}" value="${esc(p.name)}"></td>
-        <td><select class="table-input" data-p="role" data-i="${i}"><option ${p.role==='護理師'?'selected':''}>護理師</option><option ${p.role==='照服員'?'selected':''}>照服員</option><option ${p.role==='其他'?'selected':''}>其他</option></select></td>
-        <td><input class="table-input" data-p="level" data-i="${i}" value="${esc(p.level)}"></td>
-        <td><input class="table-input" data-p="shift" data-i="${i}" value="${esc(p.shift)}"></td>
-        <td><select class="table-input" data-p="mentor" data-i="${i}"><option ${p.mentor==='是'?'selected':''}>是</option><option ${p.mentor==='否'?'selected':''}>否</option></select></td>
-        <td><button class="btn btn-ghost" style="padding:5px 8px" data-person-del="${i}">刪除</button></td>
-      </tr>`).join('');
-    }
-    function renderParsed(){
-      if(!state.parsed.length){$('#parsedBody').innerHTML='<tr><td colspan="6" class="small">尚無解析結果。可先按「載入示範解析結果」查看操作方式。</td></tr>';return}
-      $('#parsedBody').innerHTML=state.parsed.map((r,i)=>`<tr>
-        <td><input class="table-input" data-r="person" data-ri="${i}" value="${esc(r.person)}"></td>
-        <td><input class="table-input" data-r="period" data-ri="${i}" value="${esc(r.period)}"></td>
-        <td><input class="table-input" style="min-width:230px" data-r="rule" data-ri="${i}" value="${esc(r.rule)}"></td>
-        <td><select class="table-input" data-r="type" data-ri="${i}"><option value="hard" ${r.type==='hard'?'selected':''}>硬規則</option><option value="soft" ${r.type==='soft'?'selected':''}>偏好</option></select></td>
-        <td><input type="checkbox" data-r="ok" data-ri="${i}" ${r.ok?'checked':''}></td>
-        <td><button class="btn btn-ghost" style="padding:5px 8px" data-parsed-del="${i}">刪除</button></td>
-      </tr>`).join('');
-    }
-    function renderSchedule(){
-      const days=Array.from({length:31},(_,i)=>i+1);
-      const names=state.people.slice(0,8).map(p=>p.name||'未命名');
-      $('#scheduleWrap').innerHTML=`<table><thead><tr><th>人員</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${names.map((n,idx)=>`<tr><td>${esc(n)}</td>${days.map((d)=>{const cls=(d+idx)%9===0?'off':'';return `<td><div class="shift-cell ${cls}">${cls?'休':'—'}</div></td>`}).join('')}</tr>`).join('')}</tbody></table>`;
-    }
-
-    document.addEventListener('click',e=>{
-      const sw=e.target.closest('[data-rule-switch]'); if(sw){const i=+sw.dataset.ruleSwitch;state.rules[i].on=!state.rules[i].on;renderRules();return}
-      const rd=e.target.closest('[data-rule-del]'); if(rd){state.rules.splice(+rd.dataset.ruleDel,1);renderRules();return}
-      const pd=e.target.closest('[data-person-del]'); if(pd){state.people.splice(+pd.dataset.personDel,1);renderPeople();renderSchedule();return}
-      const xd=e.target.closest('[data-parsed-del]'); if(xd){state.parsed.splice(+xd.dataset.parsedDel,1);renderParsed();return}
-    });
-    document.addEventListener('input',e=>{
-      if(e.target.dataset.p){state.people[+e.target.dataset.i][e.target.dataset.p]=e.target.value;renderSchedule()}
-      if(e.target.dataset.r){const r=state.parsed[+e.target.dataset.ri];r[e.target.dataset.r]=e.target.type==='checkbox'?e.target.checked:e.target.value}
-    });
-
-    $('#addRule').onclick=()=>{state.rules.push({title:'新規則',desc:'請補充規則內容。',type:'soft',on:true});renderRules();toast('已新增規則草案')};
-    $('#addPerson').onclick=()=>{state.people.push({name:'',role:'護理師',level:'',shift:'',mentor:'否'});renderPeople();renderSchedule()};
-    $('#addParsed').onclick=()=>{state.parsed.push({person:'',period:'',rule:'',type:'hard',ok:false});renderParsed()};
-    $('#clearNeeds').onclick=()=>{$('#needs').value=''};
-    $('#aiParse').onclick=()=>toast('目前尚未連接 GAS / OpenAI API，因此沒有送出任何資料。');
-    $('#demoParse').onclick=()=>{
-      state.parsed=[
-        {person:'A',period:'5日',rule:'OFF／預休',type:'hard',ok:true},
-        {person:'A',period:'12日',rule:'只能白班',type:'hard',ok:true},
-        {person:'B',period:'全月',rule:'不排大夜',type:'hard',ok:true},
-        {person:'C',period:'1–15日',rule:'優先小夜並安排帶新人',type:'soft',ok:false},
-        {person:'D',period:'20日',rule:'出差8H，不排班',type:'hard',ok:true}
-      ];
-      renderParsed();toast('已載入示範解析結果，僅供確認畫面流程。');
-    };
-    $('#confirmParsed').onclick=()=>{
-      if(!state.parsed.length)return toast('目前沒有可確認的解析結果。');
-      const un=state.parsed.filter(r=>!r.ok).length;
-      toast(un?`尚有 ${un} 條規則未勾選確認。`:'本月規則已確認（V1 尚未送往排班引擎）。');
-    };
-    $('#saveDraft').onclick=()=>{
-      const payload={state,month:$('#month').value,unit:$('#unit').value,mode:$('#mode').value,needs:$('#needs').value};
-      localStorage.setItem('shiftSchedulerV1',JSON.stringify(payload));toast('已儲存在這台裝置的瀏覽器。');
-    };
-    $('#resetPreview').onclick=()=>{renderSchedule();toast('已重設班表預覽')};
-
-    function restore(){
-      try{const p=JSON.parse(localStorage.getItem('shiftSchedulerV1'));if(!p)return;Object.assign(state,p.state||{});$('#month').value=p.month||nextMonth();$('#unit').value=p.unit||'11B';$('#mode').value=p.mode||'正式排班';$('#needs').value=p.needs||''}catch(e){}
-    }
-    restore();renderRules();renderPeople();renderParsed();renderSchedule();
-  </script>
-</body>
-</html>
+document.addEventListener('input',e=>{if(e.target.dataset.p){let p=S.people[+e.target.dataset.i],k=e.target.dataset.p;p[k]=e.target.type==='checkbox'?e.target.checked:e.target.value;renderPeople()}if(e.target.dataset.c){let c=S.constraints[+e.target.dataset.ci];c[e.target.dataset.c]=e.target.value}if(e.target.dataset.r){let r=S.parsed[+e.target.dataset.ri];r[e.target.dataset.r]=e.target.type==='checkbox'?e.target.checked:e.target.value}});
+document.addEventListener('click',e=>{if(e.target.dataset.delPerson!==undefined){S.people.splice(+e.target.dataset.delPerson,1);renderPeople()}if(e.target.dataset.delC!==undefined){S.constraints.splice(+e.target.dataset.delC,1);renderConstraints()}if(e.target.dataset.delR!==undefined){S.parsed.splice(+e.target.dataset.delR,1);renderParsed()}if(e.target.dataset.switch!==undefined){let r=S.rules[+e.target.dataset.switch];r.on=!r.on;renderRules()}});
+$('#addPerson').onclick=()=>{S.people.push({active:true,name:'',role:'護理師',level:'一般',shift:'不限',mentor:'否'});renderPeople()};
+$('#importNames').onclick=()=>{let names=$('#bulkNames').value.split(/\n/).map(x=>x.trim()).filter(Boolean);if(!names.length)return toast('請先貼入姓名');let existing=new Set(S.people.map(p=>p.name));names.forEach(name=>{if(!existing.has(name))S.people.push({active:true,name,role:'護理師',level:'一般',shift:'不限',mentor:'否'})});$('#bulkNames').value='';renderPeople();toast(`已匯入 ${names.length} 筆姓名`)};
+$('#clearPeople').onclick=()=>{S.people=[];S.constraints=[];S.parsed=[];renderPeople();toast('人員主檔已清空')};
+$('#addConstraint').onclick=()=>{let p=S.people.find(x=>x.active&&x.name);if(!p)return toast('請先建立人員主檔');S.constraints.push({person:p.name,rule:'不可單獨值班',type:'hard',note:''});renderConstraints()};
+$('#addParsed').onclick=()=>{let p=S.people.find(x=>x.active&&x.name);if(!p)return toast('請先建立人員主檔');S.parsed.push({person:p.name,period:'',rule:'',type:'hard',ok:false});renderParsed()};
+$('#ai').onclick=()=>toast('目前尚未接 GAS / OpenAI API，沒有送出資料。');
+$('#demo').onclick=()=>{let n=S.people.filter(p=>p.active&&p.name).map(p=>p.name);if(!n.length)return toast('請先建立人員主檔');S.parsed=[{person:n[0],period:'5日',rule:'OFF／預休',type:'hard',ok:true},{person:n[1]||n[0],period:'全月',rule:'禁止大夜',type:'hard',ok:true},{person:n[2]||n[0],period:'1–15日',rule:'優先小夜',type:'soft',ok:false}];renderParsed();toast('已用目前人員主檔載入示範解析')};
+$('#confirm').onclick=()=>{if(!S.parsed.length)return toast('目前沒有解析結果');let u=S.parsed.filter(x=>!x.ok).length;toast(u?`尚有 ${u} 條未確認`:'已確認；正式版會套用到排班引擎')};
+$('#save').onclick=()=>{localStorage.setItem('shiftSchedulerV11',JSON.stringify({S,month:$('#month').value,unit:$('#unit').value,mode:$('#mode').value,needs:$('#needs').value}));toast('已儲存於這台裝置')};
+function restore(){try{let x=JSON.parse(localStorage.getItem('shiftSchedulerV11'));if(!x)return;Object.assign(S,x.S||{});$('#month').value=x.month||nextMonth();$('#unit').value=x.unit||'11B';$('#mode').value=x.mode||'正式排班';$('#needs').value=x.needs||''}catch(e){}}$('#month').value=nextMonth();restore();renderPeople();renderRules();renderConstraints();renderParsed();renderSchedule();
+</script></body></html>
