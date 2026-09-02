@@ -38,6 +38,23 @@
   const unique=xs=>[...new Set(xs.map(x=>String(x||'').trim()).filter(Boolean))];
   const escapeHtml=s=>String(s||'').replace(/[&<>\"]/g,c=>c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;');
 
+  // 複姓優先判斷；遇到英文、空格、符號等不確定格式時不硬拆姓名。
+  const compoundSurnames=[
+    '歐陽','上官','司馬','諸葛','夏侯','皇甫','司徒','司空','公孫','慕容','令狐','長孫',
+    '宇文','尉遲','東方','西門','南宮','百里','呼延','拓跋','端木','公羊','公冶','仲孫','申屠',
+    '公西','顓孫','壤駟','公良','漆雕','樂正','宰父','穀梁','濮陽','淳于','單于','太叔','梁丘',
+    '左丘','東郭','南門','第五','羊舌','微生','范姜','張簡'
+  ];
+  function mentorGivenName(fullName){
+    const name=String(fullName||'').trim();
+    if(!name) return '';
+    if(!/^[\u3400-\u9FFF]+$/.test(name)) return name;
+    if(name.length<2) return name;
+    const compound=compoundSurnames.find(s=>name.startsWith(s));
+    if(compound && name.length>compound.length) return name.slice(compound.length);
+    return name.slice(1) || name;
+  }
+
   function findHeaderRow(ws){
     const max=Math.min(ws.rowCount,12);
     for(let r=1;r<=max;r++){
@@ -70,6 +87,7 @@
 
   function buildFeedback(group){
     const mentor=group.mentor;
+    const mentorCall=mentorGivenName(mentor) || mentor;
     const students=unique(group.items.map(x=>x['學員']));
     const reasons=unique(group.items.map(x=>x['為什麼值得肯定']));
     const types=unique(group.items.map(x=>x['教學亮點類型']));
@@ -147,7 +165,7 @@
     const closing=closings[stableIndex(`${seed}|closing`,closings.length)];
 
     // 後台判讀只用來決定感謝方向，不直接貼進給老師的文字。
-    return `${mentor}老師您好：\n${opening}\n${focusText}\n${closing}\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
+    return `${mentorCall}老師您好：\n${opening}\n${focusText}\n${closing}\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
   }
 
   function render(groups){
