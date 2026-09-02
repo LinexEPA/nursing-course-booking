@@ -22,7 +22,7 @@
   const norm=v=>cellText(v).replace(/\s+/g,'').replace(/／/g,'/').trim();
   const clip=(s,n=180)=>{s=String(s||'').replace(/\s+/g,' ').trim();return s.length>n?`${s.slice(0,n)}…`:s;};
   const unique=xs=>[...new Set(xs.map(x=>String(x||'').trim()).filter(Boolean))];
-  const escapeHtml=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const escapeHtml=s=>String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
 
   function findHeaderRow(ws){
     const max=Math.min(ws.rowCount,12);
@@ -34,6 +34,26 @@
     return null;
   }
 
+  function stableIndex(text,length){
+    let h=0;
+    for(let i=0;i<text.length;i++) h=((h<<5)-h+text.charCodeAt(i))|0;
+    return Math.abs(h)%length;
+  }
+
+  function teachingFocus(group){
+    const all=[
+      ...group.items.map(x=>x['教學亮點類型']),
+      ...group.items.map(x=>x['為什麼值得肯定']),
+      ...group.items.map(x=>x['具體教學內容摘要'])
+    ].join(' ');
+    if(/臨床推理|判斷|思考|優先|情境|原因|評估/.test(all)) return 'reasoning';
+    if(/情緒|壓力|支持|陪伴|信心|安心|適應/.test(all)) return 'support';
+    if(/示範|操作|技術|步驟|帶著做|練習/.test(all)) return 'practice';
+    if(/回饋|提醒|修正|追問|觀察|追蹤/.test(all)) return 'feedback';
+    if(/獨立|自主|放手|信任|承擔/.test(all)) return 'autonomy';
+    return 'general';
+  }
+
   function buildFeedback(group){
     const mentor=group.mentor;
     const students=unique(group.items.map(x=>x['學員']));
@@ -41,9 +61,56 @@
     const types=unique(group.items.map(x=>x['教學亮點類型']));
     const studentText=students.length ? students.join('、') : '新進同仁';
     const reasonText=reasons.length ? clip(reasons.slice(0,2).join('；'),220) : '您在臨床陪伴中留下了具體且值得肯定的教學行動。';
-    const typeText=types.length ? `在${types.slice(0,2).join('、')}的陪伴上，` : '';
+    const typeText=types.length ? types.slice(0,2).join('、') : '臨床陪伴';
+    const seed=`${mentor}|${studentText}|${typeText}|${reasonText}`;
 
-    return `${mentor}老師您好：\n\n感謝您在繁忙的臨床工作中，仍願意投入新進同仁的陪伴與教學。\n\n從本月的輔導紀錄中，我們看見您陪伴${studentText}學習的過程。${typeText}${reasonText}\n\n謝謝您願意把臨床經驗轉化成實際的引導與支持，讓學員能在一次次練習與回饋中，逐步建立能力與信心。\n\n感謝您的付出，也謝謝您與我們一起，陪著新進同仁一步一步走得更穩，讓臨床教學這條路一起走得更遠。\n\n護理部教學委員會 敬上`;
+    const openings=[
+      `感謝您在繁忙的臨床工作中，仍願意為新進同仁保留一段可以學習、提問與被回饋的空間。`,
+      `從本月的輔導紀錄裡，可以看見您不是只把工作教完，而是持續陪著新進同仁把每一步做得更穩。`,
+      `謝謝您願意把日常臨床中的經驗留下來，成為新進同仁可以理解、可以練習，也可以再往前走的方向。`,
+      `臨床教學常發生在最忙碌的時候，而您仍願意停下來看見學員的需要，這份投入很值得被肯定。`
+    ];
+
+    const focusMessages={
+      reasoning:[
+        `在${typeText}的陪伴上，您不只是提供答案，也幫助${studentText}理解判斷背後的原因，讓經驗慢慢轉化成可以帶走的思考方式。`,
+        `您把臨床上的判斷與思路說得更具體，讓${studentText}有機會從「知道怎麼做」走向「理解為什麼這樣做」。`
+      ],
+      support:[
+        `您在${typeText}的陪伴中，既看見學習任務，也留意學員當下的感受與承受度；這樣的支持能讓${studentText}更有餘裕累積信心。`,
+        `除了教會事情本身，您也讓${studentText}在需要時知道有人可以討論、有人願意陪著整理，這份安全感很珍貴。`
+      ],
+      practice:[
+        `在${typeText}的教學裡，您把經驗拆成可以實際操作與反覆練習的步驟，讓${studentText}能從跟著做，逐漸走向自己完成。`,
+        `您願意示範、觀察，再把練習機會交還給學員，讓${studentText}不是只看過，而是真的有機會把能力做出來。`
+      ],
+      feedback:[
+        `您給出的提醒與回饋具有具體方向，讓${studentText}知道哪裡已經做得不錯、下一步又可以怎麼調整。`,
+        `從紀錄中能看見您持續觀察學員的變化，也願意在適當時機給出提醒，讓${studentText}的進步有跡可循。`
+      ],
+      autonomy:[
+        `您在支持與放手之間拿捏得很細緻，讓${studentText}可以在需要時獲得協助，也逐步練習承擔與獨立完成。`,
+        `您沒有急著替學員把事情做好，而是留下思考與嘗試的空間，讓${studentText}能逐漸建立自己的判斷與信心。`
+      ],
+      general:[
+        `在${typeText}的陪伴上，您把自己的臨床經驗轉化成具體可理解的引導，讓${studentText}有機會在實際工作中一步一步累積能力。`,
+        `您的教學不只存在於當下的提醒，也透過持續觀察與陪伴，讓${studentText}知道下一步可以怎麼做得更好。`
+      ]
+    };
+
+    const closings=[
+      `這樣的教學未必轟轟烈烈，卻會在一次次被理解、被提醒與被相信的經驗裡，慢慢成為學員成長的一部分。謝謝您的投入。`,
+      `謝謝您讓臨床經驗不只停留在自己身上，而是成為下一位護理師可以接得住、用得上的能力。`,
+      `能被好好陪著學習，是新進同仁建立專業感的重要過程。謝謝您持續做這件不容易、但很有價值的事。`,
+      `謝謝您願意在每天的工作裡多做一點觀察、多留一點回饋，這些看似細小的陪伴，往往正是學員走穩的重要力量。`
+    ];
+
+    const opening=openings[stableIndex(seed,openings.length)];
+    const focusSet=focusMessages[teachingFocus(group)];
+    const focus=focusSet[stableIndex(`${seed}|focus`,focusSet.length)];
+    const closing=closings[stableIndex(`${seed}|closing`,closings.length)];
+
+    return `${mentor}老師您好：\n\n${opening}\n\n本月特別值得被看見的是：${reasonText}\n\n${focus}\n\n${closing}\n\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
   }
 
   function render(groups){
