@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const RULE_VERSION = 'v1.1';
+  const RULE_VERSION = 'v1.2';
   const textField = '陪伴訓練紀錄';
   const rx = (source) => new RegExp(source, 'i');
   const has = (text, source) => rx(source).test(text || '');
@@ -60,20 +60,30 @@
     }
   ];
 
+  function actualSafetyEvent(t){
+    return has(t,
+      'near\\s*miss|病安事件|異常事件|事件檢討|事件通報|已通報|跌倒|針扎|針刺|給錯|誤給|錯給|漏給|誤拔|放錯.{0,8}(藥|床|病人)|給藥錯誤|醫療錯誤|造成.{0,12}(傷害|影響)|病人.{0,8}(受傷|傷害)'
+    );
+  }
+
   function managementSignals(row,t){
     const issues=[];
     const leaveDays=Number(norm(row['學員連續請假天數']).replace(/[^0-9.-]/g,''))||0;
     const stopReason=[row['停止輔導原因'],row['其他結案說明'],row['離職類別'],row['其他離職說明']].map(norm).join(' ');
-    const med=has(t,'給藥|藥物|藥盒|三讀五對|點滴|化療|藥品')&&has(t,'錯|誤|放置別床|遺漏|漏|未|near\s*miss|異常|事件');
-    const safety=has(t,'病人安全|病患安全|病安|near\s*miss|跌倒|針扎|事件檢討|異常事件');
-    const invasive=has(t,'侵入性|導管|鼻胃管|尿管|引流')&&has(t,'錯|未|權責|事件|異常|自行|不確定');
+
+    const medContext=has(t,'給藥|藥物|藥盒|三讀五對|點滴|化療|藥品');
+    const medEvent=medContext && has(t,'給錯|誤給|錯給|漏給|給藥錯誤|放錯.{0,8}(藥|床|病人)|near\\s*miss|異常事件|事件通報|已通報');
+    const safety=actualSafetyEvent(t);
+    const invasive=has(t,'侵入性|導管|鼻胃管|尿管|引流') && has(t,'誤拔|錯置|放錯|異常事件|事件通報|已通報|造成.{0,12}(傷害|影響)');
     const manager=has(t,'護理長|阿長|主管|與.*討論後.*班別|調整.*班別|異動班別');
     const conflict=has(t,'口角|爭執|衝突|跨單位|交班事件|抱怨');
     const adaptation=has(t,'無法適應|工作適應')&&has(t,'主管|護理長|班別|持續|反覆|影響');
     const emotionWork=has(t,'哭泣|情緒|壓力|憂鬱')&&has(t,'完成臨床工作|影響工作|主管|護理長|調整班別');
     const turnover=has(stopReason,'離職|轉調|調職|生涯規劃')||has(t,'離職|轉調|調職');
-    if(med) issues.push('給藥／病安事件'); else if(safety) issues.push('病人安全');
-    if(invasive) issues.push('侵入性處置');
+
+    if(medEvent) issues.push('給藥／病安事件');
+    else if(safety) issues.push('病人安全事件');
+    if(invasive) issues.push('侵入性處置事件');
     if(manager) issues.push('主管／管理介入');
     if(conflict) issues.push('溝通／跨單位事件');
     if(adaptation) issues.push('工作適應／教學支持');
@@ -87,7 +97,7 @@
     const managerKnown=has(t,'護理長|阿長|主管|事件檢討|PDCA|通報|晨會|已處理|已調整|已介入');
     let state=managerKnown?'已見主管／制度處理訊號':'現有紀錄無法確認主管／制度是否已處理';
     let question='確認主管是否知悉、目前處理狀態及是否需要後續追蹤。';
-    if(issues.some(x=>/給藥|病人安全/.test(x))){
+    if(issues.some(x=>/給藥|病人安全事件/.test(x))){
       const hasOutcome=has(t,'未造成|無傷害|病人無|病患無|已給入|未給入|立即停止|處置|通報|事件檢討|PDCA');
       if(!hasOutcome){ state='事件訊號明確，但影響／處理資訊不足'; question='確認事件是否到達病人、影響、即時處置、制度處理及後續追蹤。'; }
       else question='確認事件釐清結果、制度處理與改善措施是否持續落實。';
@@ -98,10 +108,10 @@
   }
 
   function keyContentGap(t,managementIssues){
-    if(!managementIssues.some(x=>/給藥|病人安全/.test(x))) return false;
-    const eventWords=has(t,'錯誤|給錯|放錯|near\s*miss|病安|病人安全|事件');
+    if(!managementIssues.some(x=>/給藥|病人安全事件/.test(x))) return false;
+    if(!actualSafetyEvent(t)) return false;
     const followWords=has(t,'通報|處置|未造成|無傷害|事件檢討|PDCA|主管|護理長|改善|追蹤|已處理');
-    return eventWords&&!followWords;
+    return !followWords;
   }
 
   function highlightAnalysis(t){
@@ -109,8 +119,8 @@
     if(has(t,'示範|示教|逐步帶領|床邊陪同|陪同完成|依SOP')) signals.push('示範／實作帶領');
     if(has(t,'引導.*思考|個案討論|案例討論|共同討論|提問')) signals.push('引導臨床思考');
     if(has(t,'立即回饋|即時回饋|給予回饋|共同檢視|修正建議')) signals.push('即時回饋');
-    if(has(t,'學員回饋|學員表示|能說出|能逐漸|信心.*提升|願意調整|內化')) signals.push('看見學員反應／改變');
-    if(has(t,'反思|省思|PDCA|晨會導讀|知識分享')) signals.push('反思／團隊學習');
+    if(has(t,'學員回饋|學員表示|能說出|能逐漸|信心.*提升|願意調整|內化|適時尋求協助')) signals.push('看見學員反應／改變');
+    if(has(t,'反思|省思|PDCA|晨會導讀|知識分享|了解自身|此次經驗')) signals.push('反思／團隊學習');
     const unique=[...new Set(signals)];
     const score=unique.length+(t.length>=180?1:0);
     const yes=score>=3&&unique.some(x=>/學員反應|即時回饋|反思/.test(x));
