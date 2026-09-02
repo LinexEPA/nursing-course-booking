@@ -6,8 +6,9 @@
   <title>新手導師輔導紀錄分析</title>
   <style>
     :root{
-      --teal:#4f8f8a;--teal-deep:#35736f;--navy:#324b5d;--ink:#37434c;--muted:#758087;
-      --line:#e5e0d8;--bg:#f7f4ef;--card:#fffdf9;--soft:#f4eee6;--soft-teal:#eef6f4;
+      --teal:#6f9e96;--teal-deep:#4d7f78;--navy:#566879;--ink:#4a5158;--muted:#7d8388;
+      --line:#eadfdc;--bg:#faf6f3;--card:#fffdfa;--soft:#f7efeb;--soft-teal:#f0f7f5;
+      --rose:#f7ecef;--peach:#fbf0e7;--sage:#edf4ed;--blue:#eef3f7;--lavender:#f2eef7;
       --warn:#fff7e8;--ok:#eef7f2;
     }
     *{box-sizing:border-box}
@@ -15,73 +16,88 @@
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;
       background:
-        radial-gradient(circle at top left,rgba(220,235,231,.65),transparent 34%),
-        radial-gradient(circle at bottom right,rgba(244,231,215,.65),transparent 38%),
+        radial-gradient(circle at 8% 4%,rgba(232,216,222,.58),transparent 28%),
+        radial-gradient(circle at 92% 12%,rgba(218,235,229,.62),transparent 30%),
+        radial-gradient(circle at 82% 92%,rgba(246,226,208,.48),transparent 34%),
         var(--bg);
       color:var(--ink);
       min-height:100vh;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:54px 22px 72px}
-    .hero{margin-bottom:24px;padding:0 4px}
+    .wrap{max-width:980px;margin:0 auto;padding:56px 22px 74px}
+    .hero{margin-bottom:26px;padding:0 6px}
     .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;padding:7px 12px;
-      border-radius:999px;background:rgba(255,253,249,.78);border:1px solid rgba(79,143,138,.22);
+      display:inline-flex;align-items:center;gap:8px;margin-bottom:13px;padding:8px 13px;
+      border-radius:999px;background:rgba(255,253,250,.84);border:1px solid rgba(111,158,150,.22);
       color:var(--teal-deep);font-size:13px;font-weight:700;letter-spacing:.04em;
+      box-shadow:0 5px 14px rgba(92,96,103,.04);
     }
-    .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal)}
-    .hero h1{margin:0 0 12px;font-size:32px;line-height:1.3;color:var(--navy);letter-spacing:.01em}
-    .hero p{margin:0;max-width:800px;color:var(--muted);line-height:1.9;font-size:15.5px}
+    .eyebrow .spark{font-size:14px;color:#c4979f}
+    .hero h1{margin:0 0 13px;font-size:32px;line-height:1.3;color:var(--navy);letter-spacing:.01em}
+    .hero p{margin:0;max-width:830px;color:var(--muted);line-height:1.9;font-size:15.5px}
+    .hero p .line2{color:#6c7f7b}
     .card{
-      position:relative;background:rgba(255,253,249,.94);border:1px solid rgba(229,224,216,.95);
-      border-radius:24px;padding:28px;box-shadow:0 18px 50px rgba(74,82,87,.08);
+      position:relative;background:rgba(255,253,250,.96);border:1px solid rgba(234,223,220,.95);
+      border-radius:26px;padding:29px;box-shadow:0 20px 55px rgba(89,86,88,.085);
+      overflow:hidden;
     }
     .card::before{
-      content:"";position:absolute;left:26px;right:26px;top:0;height:3px;border-radius:0 0 8px 8px;
-      background:linear-gradient(90deg,var(--teal),#9ab9ad,#d8bda1);opacity:.65;
+      content:"";position:absolute;left:28px;right:28px;top:0;height:4px;border-radius:0 0 10px 10px;
+      background:linear-gradient(90deg,#d9aeb7,#efc9a8,#a9c8b7,#a8bdcf,#c9b8d8);opacity:.72;
     }
     .drop{
-      border:1.5px dashed #abc9c4;border-radius:20px;padding:30px 24px;text-align:center;
-      background:linear-gradient(180deg,#f7fbfa 0%,#f3f8f6 100%);transition:.2s;
+      border:1.5px dashed #b7cfc9;border-radius:21px;padding:31px 24px;text-align:center;
+      background:linear-gradient(180deg,#fbfdfc 0%,#f4f9f7 100%);transition:.2s;
     }
-    .drop.drag{background:#eaf6f3;border-color:var(--teal)}
+    .drop.drag{background:#edf7f4;border-color:var(--teal)}
     input[type=file]{display:none}
     .pick{
-      display:inline-block;padding:12px 20px;border-radius:12px;background:var(--teal-deep);color:#fff;
-      font-weight:750;cursor:pointer;box-shadow:0 7px 18px rgba(53,115,111,.16);transition:.18s;
+      display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:13px;background:var(--teal-deep);color:#fff;
+      font-weight:750;cursor:pointer;box-shadow:0 8px 20px rgba(77,127,120,.17);transition:.18s;
     }
-    .pick:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(53,115,111,.2)}
+    .pick:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(77,127,120,.21)}
     .filemeta{margin-top:12px;color:var(--muted);font-size:14px}
     .status{
-      margin-top:18px;padding:14px 17px;border-radius:14px;background:var(--soft);color:#5e666b;
-      line-height:1.6;border:1px solid rgba(229,224,216,.9);
+      margin-top:18px;padding:14px 17px;border-radius:15px;background:var(--soft);color:#666c70;
+      line-height:1.6;border:1px solid rgba(234,223,220,.9);
     }
-    .status.ok{background:var(--ok);color:#2f6950;border-color:#dbece2}
+    .status.ok{background:var(--ok);color:#47725d;border-color:#dbece2}
     .status.warn{background:var(--warn);color:#8a5a00;border-color:#f0dfba}
-    .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0}
+    .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:21px 0}
     .metric{
-      padding:16px 14px;border:1px solid var(--line);border-radius:16px;background:#fff;
-      box-shadow:0 6px 18px rgba(74,82,87,.035);min-height:86px;
+      position:relative;padding:15px 14px 16px;border:1px solid rgba(230,222,220,.8);border-radius:18px;
+      box-shadow:0 7px 20px rgba(88,82,84,.035);min-height:104px;transition:.18s;
     }
-    .metric b{display:block;margin-bottom:4px;font-size:25px;color:var(--navy);font-weight:760}
-    .metric span{font-size:12.5px;color:var(--muted);line-height:1.4}
+    .metric:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(88,82,84,.055)}
+    .metric:nth-child(1){background:var(--blue)}
+    .metric:nth-child(2){background:var(--peach)}
+    .metric:nth-child(3){background:var(--rose)}
+    .metric:nth-child(4){background:var(--sage)}
+    .metric:nth-child(5){background:var(--lavender)}
+    .metric-icon{
+      display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin-bottom:8px;
+      border-radius:10px;background:rgba(255,255,255,.62);font-size:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+    }
+    .metric b{display:block;margin-bottom:3px;font-size:25px;color:var(--navy);font-weight:760}
+    .metric .label{font-size:12.5px;color:#747a7f;line-height:1.4}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
     .btn{
-      border:0;border-radius:14px;padding:15px 18px;font-size:16px;font-weight:780;cursor:pointer;transition:.18s;
+      border:0;border-radius:15px;padding:15px 18px;font-size:16px;font-weight:780;cursor:pointer;transition:.18s;
     }
     .btn:hover:not(:disabled){transform:translateY(-1px)}
     .btn:disabled{opacity:.45;cursor:not-allowed}
-    .btn.detail{background:var(--navy);color:#fff;box-shadow:0 8px 20px rgba(50,75,93,.14)}
-    .btn.supervisor{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(79,143,138,.16)}
+    .btn.detail{background:#65788a;color:#fff;box-shadow:0 8px 20px rgba(86,104,121,.14)}
+    .btn.supervisor{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(111,158,150,.18)}
     .helper{
-      margin-top:16px;text-align:center;color:#7b8589;font-size:13.5px;line-height:1.7;
+      margin-top:17px;text-align:center;color:#7b8185;font-size:13.5px;line-height:1.7;
     }
+    .helper .heart{color:#c7939f;margin-right:4px}
     .note{
-      margin-top:20px;padding:15px 17px;border-radius:14px;background:#fbf7f1;color:#667075;
-      line-height:1.7;font-size:13.5px;border:1px solid #eee4d7;
+      margin-top:20px;padding:15px 17px;border-radius:15px;background:#fcf7f3;color:#6d7275;
+      line-height:1.7;font-size:13.5px;border:1px solid #eee2dc;
     }
-    .note strong{color:#526168}
+    .note strong{color:#66777a}
     @media(max-width:720px){
-      .wrap{padding:34px 16px 48px}.card{padding:22px 18px}.summary{grid-template-columns:repeat(2,1fr)}
+      .wrap{padding:36px 16px 50px}.card{padding:22px 18px}.summary{grid-template-columns:repeat(2,1fr)}
       .actions{grid-template-columns:1fr}.hero h1{font-size:27px}.hero p{font-size:15px}
     }
   </style>
@@ -89,14 +105,17 @@
 <body>
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">每月輔導紀錄整理</div>
+      <div class="eyebrow"><span class="spark">✦</span> 每月輔導紀錄整理</div>
       <h1>新手導師輔導紀錄分析</h1>
-      <p>上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點，供人工審閱與確認，並產生審閱用 Excel。</p>
+      <p>
+        上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br>
+        <span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>
+      </p>
     </section>
 
     <section class="card">
       <div id="dropZone" class="drop">
-        <label class="pick" for="fileInput">選擇本月 Excel</label>
+        <label class="pick" for="fileInput"><span>📎</span> 選擇本月 Excel</label>
         <input id="fileInput" type="file" accept=".xlsx,.xls" />
         <div class="filemeta" id="fileMeta">也可以直接把 .xlsx 拖曳到這裡</div>
       </div>
@@ -104,11 +123,11 @@
       <div id="status" class="status">尚未載入檔案，選擇本月清冊後即可開始。</div>
 
       <div class="summary" aria-label="分析摘要">
-        <div class="metric"><b id="mTotal">—</b><span>總紀錄</span></div>
-        <div class="metric"><b id="mText">—</b><span>需文字檢視</span></div>
-        <div class="metric"><b id="mApproval">—</b><span>需主管審批</span></div>
-        <div class="metric"><b id="mMgmt">—</b><span>管理確認</span></div>
-        <div class="metric"><b id="mHighlight">—</b><span>教學亮點候選</span></div>
+        <div class="metric"><span class="metric-icon">📋</span><b id="mTotal">—</b><span class="label">總紀錄</span></div>
+        <div class="metric"><span class="metric-icon">✎</span><b id="mText">—</b><span class="label">需文字檢視</span></div>
+        <div class="metric"><span class="metric-icon">✓</span><b id="mApproval">—</b><span class="label">需主管審批</span></div>
+        <div class="metric"><span class="metric-icon">◎</span><b id="mMgmt">—</b><span class="label">管理確認</span></div>
+        <div class="metric"><span class="metric-icon">✨</span><b id="mHighlight">—</b><span class="label">教學亮點候選</span></div>
       </div>
 
       <div class="actions">
@@ -116,17 +135,17 @@
         <button id="supervisorBtn" class="btn supervisor" disabled>產生主管審閱版 Excel</button>
       </div>
 
-      <div class="helper">系統先幫忙整理，最後仍由人工審閱與確認。</div>
+      <div class="helper"><span class="heart">♡</span>系統先幫忙整理，最後仍由人工審閱與確認。</div>
       <div class="note"><strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。</div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="./rules.js?v=20260903-1"></script>
-  <script src="./rules-v14-patch.js?v=20260903-1"></script>
-  <script src="./rules-v15-patch.js?v=20260903-1"></script>
-  <script src="./app-v2.js?v=20260903-1"></script>
-  <script src="./public-mode.js?v=20260903-1"></script>
-  <script src="./supervisor-public.js?v=20260903-1"></script>
+  <script src="./rules.js?v=20260903-2"></script>
+  <script src="./rules-v14-patch.js?v=20260903-2"></script>
+  <script src="./rules-v15-patch.js?v=20260903-2"></script>
+  <script src="./app-v2.js?v=20260903-2"></script>
+  <script src="./public-mode.js?v=20260903-2"></script>
+  <script src="./supervisor-public.js?v=20260903-2"></script>
 </body>
 </html>
