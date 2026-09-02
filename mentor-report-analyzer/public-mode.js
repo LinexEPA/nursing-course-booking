@@ -8,7 +8,7 @@
 
   // 正式使用介面：不顯示開發／驗證術語。
   const heroText = document.querySelector('.hero p');
-  if (heroText) heroText.textContent = '上傳每月輔導紀錄清冊，系統協助整理需退回修正、管理確認及教學亮點，並產生審閱用 Excel。';
+  if (heroText) heroText.textContent = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點，供人工審閱與確認，並產生審閱用 Excel。';
 
   const note = document.querySelector('.note');
   if (note) note.textContent = '資料處理說明：上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';
