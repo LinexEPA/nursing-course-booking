@@ -46,11 +46,18 @@
     .drop.drag{background:#f9eef1;border-color:var(--rose)}
     input[type=file]{display:none}
     .pick{
-      display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:13px;
+      display:inline-flex;align-items:center;gap:10px;padding:9px 20px 9px 10px;border-radius:14px;
       background:var(--rose-deep);color:#fff;font-weight:750;cursor:pointer;
       box-shadow:0 8px 18px rgba(169,116,130,.14);transition:.18s;
     }
+    .pick > span{
+      display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+      border-radius:11px;background:#efd8df;font-size:22px;line-height:1;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 3px 8px rgba(113,76,87,.10);
+      transform:rotate(-7deg);
+    }
     .pick:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(169,116,130,.18)}
+    .pick:hover > span{transform:rotate(-3deg) scale(1.04)}
     .filemeta{margin-top:12px;color:var(--muted);font-size:14px}
     .status{
       margin-top:18px;padding:14px 17px;border-radius:15px;background:var(--soft);color:#746e72;
