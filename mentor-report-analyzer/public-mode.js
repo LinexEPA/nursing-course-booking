@@ -11,7 +11,7 @@
   const heroText = hero?.querySelector('p');
   if (heroText) heroText.innerHTML = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';
 
-  // 使用慈濟官方會徽，放在主標題左側。
+  // 使用透明背景慈濟會徽，放在主標題左側。
   if (hero && !hero.querySelector('.brand-head')) {
     const title = hero.querySelector('h1');
     const desc = hero.querySelector('p');
@@ -20,7 +20,7 @@
       brand.className = 'brand-head';
       const logo = document.createElement('img');
       logo.className = 'tzuchi-logo';
-      logo.src = 'https://imagedelivery.net/JVmYbduioNVkRm0SvNGcew/90ce573b-e83c-4d56-bf1d-2fb7ddfc7b00/Desktop';
+      logo.src = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Tzu%20Chi%20Foundation%20logo.svg';
       logo.alt = '慈濟會徽';
       logo.loading = 'eager';
       logo.referrerPolicy = 'no-referrer';
@@ -39,7 +39,7 @@
     .brand-head{display:flex;align-items:center;gap:18px;margin-top:1px}
     .brand-copy{min-width:0}
     .brand-copy h1{margin-top:0}
-    .tzuchi-logo{width:62px;height:62px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 5px 10px rgba(77,127,120,.08))}
+    .tzuchi-logo{width:64px;height:64px;object-fit:contain;flex:0 0 auto;background:transparent;box-shadow:none;filter:none}
     @media(max-width:720px){.brand-head{gap:12px;align-items:flex-start}.tzuchi-logo{width:50px;height:50px;margin-top:2px}}
   `;
   document.head.appendChild(brandingStyle);
