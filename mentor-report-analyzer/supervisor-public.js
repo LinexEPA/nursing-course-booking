@@ -25,7 +25,6 @@
     left:{style:'thin',color:{argb:'FFD8E2E8'}}, right:{style:'thin',color:{argb:'FFD8E2E8'}}
   };
   const fill = argb => ({type:'pattern',pattern:'solid',fgColor:{argb}});
-  const unique = xs => [...new Set(xs.filter(Boolean))];
   const clip = (s,n=220) => { s=String(s||'').trim(); return s.length>n ? `${s.slice(0,n)}…` : s; };
 
   function styleRow(row, opts={}) {
@@ -144,17 +143,21 @@
     });
     mg.autoFilter={from:'A3',to:'J3'}; mg.views=[{state:'frozen',ySplit:3}];
 
-    // 4. 教學亮點附件
+    // 4. 教學亮點附件：主管只需確認是否納入教委會感謝回饋，不必決定後續信件形式。
     const hi=wb.addWorksheet('教學亮點附件');
-    setWidths(hi,[10,9,12,12,26,46,36,28,22,24]);
-    mergeTitle(hi,'A1:J1','教學亮點附件');
+    setWidths(hi,[10,9,12,12,26,46,36,28,20,22,24]);
+    mergeTitle(hi,'A1:K1','教學亮點附件');
     hi.addRow([]);
-    addHeader(hi,['單位','案例','學員','導師','教學亮點類型','具體教學內容摘要','為什麼值得肯定','護理部建議回饋方式','主管確認回饋方式','主管備註']);
+    addHeader(hi,['單位','案例','學員','導師','教學亮點類型','具體教學內容摘要','為什麼值得肯定','護理部建議回饋方式','教委會感謝回饋','主管確認回饋方式','主管備註']);
     highlights.forEach(a=>{
-      const row=hi.addRow([a.row['單位']||'待補',a.caseId,a.row['學員姓名']||'',a.row['導師姓名']||'',a.highlightType||'',clip(a.row['陪伴訓練紀錄']||'',280),a.highlightReason||'',a.highlightFeedback||'','','']);
+      const row=hi.addRow([
+        a.row['單位']||'待補',a.caseId,a.row['學員姓名']||'',a.row['導師姓名']||'',a.highlightType||'',
+        clip(a.row['陪伴訓練紀錄']||'',280),a.highlightReason||'',a.highlightFeedback||'','','',''
+      ]);
+      row.getCell(9).dataValidation={type:'list',allowBlank:true,formulae:['"納入,本次不納入"']};
       styleRow(row,{height:68});
     });
-    hi.autoFilter={from:'A3',to:'J3'}; hi.views=[{state:'frozen',ySplit:3}];
+    hi.autoFilter={from:'A3',to:'K3'}; hi.views=[{state:'frozen',ySplit:3}];
 
     // 5. 錯字附件：主管可選擇查看，不混入主要審批頁。
     const ty=wb.addWorksheet('錯字附件');
@@ -189,12 +192,12 @@
       const parsed=await parseCurrentFile();
       const {counts}=buildWorkbook(parsed);
       const mText=$('mText'),mApproval=$('mApproval'),mMgmt=$('mMgmt'),mHighlight=$('mHighlight'),mTotal=$('mTotal');
-      if (mTotal) mTotal.textContent=counts.total;
-      if (mText) mText.textContent=counts.review;
-      if (mApproval) mApproval.textContent=counts.approval;
-      if (mMgmt) mMgmt.textContent=counts.mgmt;
-      if (mHighlight) mHighlight.textContent=counts.highlight;
-      const textLabel=mText?.parentElement?.querySelector('span');
+      if (mTotal) { mTotal.textContent=counts.total; mTotal.classList.remove('placeholder'); }
+      if (mText) { mText.textContent=counts.review; mText.classList.remove('placeholder'); }
+      if (mApproval) { mApproval.textContent=counts.approval; mApproval.classList.remove('placeholder'); }
+      if (mMgmt) { mMgmt.textContent=counts.mgmt; mMgmt.classList.remove('placeholder'); }
+      if (mHighlight) { mHighlight.textContent=counts.highlight; mHighlight.classList.remove('placeholder'); }
+      const textLabel=mText?.parentElement?.querySelector('.label');
       if (textLabel) textLabel.textContent='語句／內容案件';
     } catch (_) {}
   }
