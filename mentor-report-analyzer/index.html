@@ -23,7 +23,7 @@
       color:var(--ink);
       min-height:100vh;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:56px 22px 74px}
+    .wrap{max-width:980px;margin:0 auto;padding:56px 22px 42px}
     .hero{margin-bottom:26px;padding:0 6px}
     .eyebrow{
       display:inline-flex;align-items:center;gap:8px;margin-bottom:13px;padding:8px 13px;
@@ -87,18 +87,26 @@
     .btn:disabled{opacity:.45;cursor:not-allowed}
     .btn.detail{background:#65788a;color:#fff;box-shadow:0 8px 20px rgba(86,104,121,.14)}
     .btn.supervisor{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(111,158,150,.18)}
-    .helper{
-      margin-top:17px;text-align:center;color:#7b8185;font-size:13.5px;line-height:1.7;
-    }
+    .helper{margin-top:17px;text-align:center;color:#7b8185;font-size:13.5px;line-height:1.7}
     .helper .heart{color:#c7939f;margin-right:4px}
     .note{
       margin-top:20px;padding:15px 17px;border-radius:15px;background:#fcf7f3;color:#6d7275;
       line-height:1.7;font-size:13.5px;border:1px solid #eee2dc;
     }
     .note strong{color:#66777a}
+    .footer{
+      margin:24px 6px 0;padding:18px 8px 0;border-top:1px solid rgba(213,199,194,.72);
+      text-align:center;color:#8b8587;font-size:12.5px;line-height:1.9;
+    }
+    .footer .copyright{color:#746f71;font-weight:650}
+    .footer .meta{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:2px}
+    .footer .version{display:inline-flex;padding:2px 9px;border-radius:999px;background:rgba(255,255,255,.58);color:#758783;border:1px solid rgba(111,158,150,.16)}
+    .footer a{color:#6f8e89;text-decoration:none;border-bottom:1px dotted #9db5b0}
+    .footer a:hover{color:var(--teal-deep)}
     @media(max-width:720px){
-      .wrap{padding:36px 16px 50px}.card{padding:22px 18px}.summary{grid-template-columns:repeat(2,1fr)}
+      .wrap{padding:36px 16px 34px}.card{padding:22px 18px}.summary{grid-template-columns:repeat(2,1fr)}
       .actions{grid-template-columns:1fr}.hero h1{font-size:27px}.hero p{font-size:15px}
+      .footer{font-size:12px}
     }
   </style>
 </head>
@@ -138,14 +146,22 @@
       <div class="helper"><span class="heart">♡</span>系統先幫忙整理，最後仍由人工審閱與確認。</div>
       <div class="note"><strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。</div>
     </section>
+
+    <footer class="footer">
+      <div class="copyright">© 台中慈濟醫院護理部教學委員會｜版權所有</div>
+      <div class="meta">
+        <span class="version">版本 V1｜2026.09</span>
+        <span>製作／維護聯繫：<a href="mailto:tc150149@tzuchi.com.tw">tc150149@tzuchi.com.tw</a></span>
+      </div>
+    </footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="./rules.js?v=20260903-2"></script>
-  <script src="./rules-v14-patch.js?v=20260903-2"></script>
-  <script src="./rules-v15-patch.js?v=20260903-2"></script>
-  <script src="./app-v2.js?v=20260903-2"></script>
-  <script src="./public-mode.js?v=20260903-2"></script>
-  <script src="./supervisor-public.js?v=20260903-2"></script>
+  <script src="./rules.js?v=20260903-3"></script>
+  <script src="./rules-v14-patch.js?v=20260903-3"></script>
+  <script src="./rules-v15-patch.js?v=20260903-3"></script>
+  <script src="./app-v2.js?v=20260903-3"></script>
+  <script src="./public-mode.js?v=20260903-3"></script>
+  <script src="./supervisor-public.js?v=20260903-3"></script>
 </body>
 </html>
