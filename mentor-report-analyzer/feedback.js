@@ -8,6 +8,20 @@
   const countBox=document.getElementById('feedbackCount');
   if (!input || !meta || !status || !results || typeof ExcelJS==='undefined') return;
 
+  // 第二部分改為「一個畫面讀完」：保留個人化內容，但縮短卡片與文字區高度。
+  const compactStyle=document.createElement('style');
+  compactStyle.textContent=`
+    .feedback-card{padding:17px 18px !important}
+    .feedback-card-head{margin-bottom:10px !important}
+    .feedback-highlight{padding:10px 12px !important;margin-bottom:11px !important}
+    .feedback-highlight p{margin-top:5px !important}
+    .feedback-copy-label{margin-bottom:5px !important}
+    .feedback-textarea{min-height:172px !important;max-height:230px;line-height:1.68 !important;padding:12px 14px !important}
+    .feedback-actions{margin-top:8px !important}
+    @media(max-width:720px){.feedback-textarea{min-height:205px !important;max-height:260px}}
+  `;
+  document.head.appendChild(compactStyle);
+
   const cellText=v=>{
     if(v==null) return '';
     if(v instanceof Date) return v.toISOString().slice(0,10);
@@ -59,58 +73,59 @@
     const students=unique(group.items.map(x=>x['學員']));
     const reasons=unique(group.items.map(x=>x['為什麼值得肯定']));
     const types=unique(group.items.map(x=>x['教學亮點類型']));
-    const studentText=students.length ? students.join('、') : '新進同仁';
-    const reasonText=reasons.length ? clip(reasons.slice(0,2).join('；'),220) : '您在臨床陪伴中留下了具體且值得肯定的教學行動。';
+    const studentText=students.length ? students.slice(0,2).join('、') : '新進同仁';
+    const reasonText=reasons.length ? clip(reasons[0],78) : '您把臨床經驗轉化成具體且可以被學員帶走的教學。';
     const typeText=types.length ? types.slice(0,2).join('、') : '臨床陪伴';
     const seed=`${mentor}|${studentText}|${typeText}|${reasonText}`;
 
-    const openings=[
-      `感謝您在繁忙的臨床工作中，仍願意為新進同仁保留一段可以學習、提問與被回饋的空間。`,
-      `從本月的輔導紀錄裡，可以看見您不是只把工作教完，而是持續陪著新進同仁把每一步做得更穩。`,
-      `謝謝您願意把日常臨床中的經驗留下來，成為新進同仁可以理解、可以練習，也可以再往前走的方向。`,
-      `臨床教學常發生在最忙碌的時候，而您仍願意停下來看見學員的需要，這份投入很值得被肯定。`
+    const praiseIntros=[
+      '本月特別想謝謝您：',
+      '這個月特別想肯定您：',
+      '從本月紀錄裡，我們特別看見：',
+      '這個月值得被看見的是：'
     ];
 
     const focusMessages={
       reasoning:[
-        `在${typeText}的陪伴上，您不只是提供答案，也幫助${studentText}理解判斷背後的原因，讓經驗慢慢轉化成可以帶走的思考方式。`,
-        `您把臨床上的判斷與思路說得更具體，讓${studentText}有機會從「知道怎麼做」走向「理解為什麼這樣做」。`
+        `您把判斷背後的原因說清楚，讓${studentText}不只知道怎麼做，也更理解為什麼。`,
+        `您把臨床思路說得更具體，讓${studentText}能把一次經驗慢慢轉成自己的判斷。`
       ],
       support:[
-        `您在${typeText}的陪伴中，既看見學習任務，也留意學員當下的感受與承受度；這樣的支持能讓${studentText}更有餘裕累積信心。`,
-        `除了教會事情本身，您也讓${studentText}在需要時知道有人可以討論、有人願意陪著整理，這份安全感很珍貴。`
+        `您在教學之外也留意學員的狀態，讓${studentText}能在被支持的情況下慢慢建立信心。`,
+        `您讓${studentText}知道遇到困難時有人可以討論，也有人願意陪著整理，這份支持很珍貴。`
       ],
       practice:[
-        `在${typeText}的教學裡，您把經驗拆成可以實際操作與反覆練習的步驟，讓${studentText}能從跟著做，逐漸走向自己完成。`,
-        `您願意示範、觀察，再把練習機會交還給學員，讓${studentText}不是只看過，而是真的有機會把能力做出來。`
+        `您願意示範、觀察再讓學員練習，讓${studentText}有機會把能力真正做出來。`,
+        `您把經驗拆成可以練習的步驟，讓${studentText}從跟著做，逐步走向自己完成。`
       ],
       feedback:[
-        `您給出的提醒與回饋具有具體方向，讓${studentText}知道哪裡已經做得不錯、下一步又可以怎麼調整。`,
-        `從紀錄中能看見您持續觀察學員的變化，也願意在適當時機給出提醒，讓${studentText}的進步有跡可循。`
+        `您的提醒有具體方向，讓${studentText}知道哪裡做得好、下一步又能怎麼調整。`,
+        `您持續觀察學員的變化，也在適當時機給回饋，讓${studentText}的進步有跡可循。`
       ],
       autonomy:[
-        `您在支持與放手之間拿捏得很細緻，讓${studentText}可以在需要時獲得協助，也逐步練習承擔與獨立完成。`,
-        `您沒有急著替學員把事情做好，而是留下思考與嘗試的空間，讓${studentText}能逐漸建立自己的判斷與信心。`
+        `您在協助與放手之間保留空間，讓${studentText}逐步練習判斷與獨立完成。`,
+        `您沒有急著替學員完成，而是留下思考與嘗試的空間，讓${studentText}慢慢建立自己的信心。`
       ],
       general:[
-        `在${typeText}的陪伴上，您把自己的臨床經驗轉化成具體可理解的引導，讓${studentText}有機會在實際工作中一步一步累積能力。`,
-        `您的教學不只存在於當下的提醒，也透過持續觀察與陪伴，讓${studentText}知道下一步可以怎麼做得更好。`
+        `您把經驗轉成具體引導，讓${studentText}在實際工作中一步一步把能力建立起來。`,
+        `您的陪伴不只停在當下提醒，也讓${studentText}更清楚下一次可以怎麼做得更好。`
       ]
     };
 
     const closings=[
-      `這樣的教學未必轟轟烈烈，卻會在一次次被理解、被提醒與被相信的經驗裡，慢慢成為學員成長的一部分。謝謝您的投入。`,
-      `謝謝您讓臨床經驗不只停留在自己身上，而是成為下一位護理師可以接得住、用得上的能力。`,
-      `能被好好陪著學習，是新進同仁建立專業感的重要過程。謝謝您持續做這件不容易、但很有價值的事。`,
-      `謝謝您願意在每天的工作裡多做一點觀察、多留一點回饋，這些看似細小的陪伴，往往正是學員走穩的重要力量。`
+      '謝謝您持續把經驗留給下一位護理師。',
+      '這些看似細小的陪伴，正是學員走穩的重要力量。謝謝您。',
+      '謝謝您讓好的臨床經驗，能一點一點被學員接住。',
+      '謝謝您持續做這件不容易、但很有價值的事。'
     ];
 
-    const opening=openings[stableIndex(seed,openings.length)];
+    const intro=praiseIntros[stableIndex(seed,praiseIntros.length)];
     const focusSet=focusMessages[teachingFocus(group)];
     const focus=focusSet[stableIndex(`${seed}|focus`,focusSet.length)];
     const closing=closings[stableIndex(`${seed}|closing`,closings.length)];
 
-    return `${mentor}老師您好：\n\n${opening}\n\n本月特別值得被看見的是：${reasonText}\n\n${focus}\n\n${closing}\n\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
+    // 問候＋三個短句＋兩行署名；貼到常用訊息畫面時不用長篇往下滑。
+    return `${mentor}老師您好：\n${intro}${reasonText}\n${focus}\n${closing}\n\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
   }
 
   function render(groups){
@@ -125,11 +140,11 @@
     countBox.hidden=false;
     countBox.innerHTML=`本月有 <strong>${groups.length}</strong> 位教師值得被看見 <span>♡</span>`;
     status.className='feedback-status feedback-ok';
-    status.textContent='已整理完成。可先閱讀每位教師的教學亮點，再視需要修改文字並一鍵複製。';
+    status.textContent='已整理完成。回饋已壓成單畫面閱讀版，可直接修改後複製。';
 
     groups.forEach((group,index)=>{
       const students=unique(group.items.map(x=>x['學員']));
-      const summaries=unique(group.items.map(x=>x['具體教學內容摘要'])).slice(0,3);
+      const summaries=unique(group.items.map(x=>x['具體教學內容摘要'])).slice(0,1);
       const types=unique(group.items.map(x=>x['教學亮點類型']));
       const text=buildFeedback(group);
       const card=document.createElement('article');
@@ -145,7 +160,7 @@
         </div>
         <div class="feedback-highlight">
           <strong>本月值得被看見的教學</strong>
-          ${summaries.map(s=>`<p>${escapeHtml(clip(s,210))}</p>`).join('')}
+          ${summaries.map(s=>`<p>${escapeHtml(clip(s,135))}</p>`).join('')}
         </div>
         <label class="feedback-copy-label" for="feedbackText${index}">感謝回饋內容</label>
         <textarea id="feedbackText${index}" class="feedback-textarea">${escapeHtml(text)}</textarea>
