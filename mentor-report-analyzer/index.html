@@ -6,107 +6,99 @@
   <title>新手導師輔導紀錄分析</title>
   <style>
     :root{
-      --teal:#6f9e96;--teal-deep:#4d7f78;--navy:#566879;--ink:#4a5158;--muted:#7d8388;
-      --line:#eadfdc;--bg:#faf6f3;--card:#fffdfa;--soft:#f7efeb;--soft-teal:#f0f7f5;
-      --rose:#f7ecef;--peach:#fbf0e7;--sage:#edf4ed;--blue:#eef3f7;--lavender:#f2eef7;
-      --warn:#fff7e8;--ok:#eef7f2;
+      --rose:#c995a2;--rose-deep:#a97482;--rose-soft:#f8f0f2;--rose-soft-2:#fbf5f6;
+      --ink:#545158;--title:#655d66;--muted:#8a8489;--line:#eadfe1;--bg:#fbf8f7;
+      --card:#fffdfc;--soft:#f8f3f2;--ok:#f1f7f3;--warn:#fff8ec;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;
       background:
-        radial-gradient(circle at 8% 4%,rgba(232,216,222,.58),transparent 28%),
-        radial-gradient(circle at 92% 12%,rgba(218,235,229,.62),transparent 30%),
-        radial-gradient(circle at 82% 92%,rgba(246,226,208,.48),transparent 34%),
+        radial-gradient(circle at 10% 0%,rgba(238,220,225,.42),transparent 31%),
+        radial-gradient(circle at 94% 16%,rgba(244,230,232,.32),transparent 28%),
         var(--bg);
-      color:var(--ink);
-      min-height:100vh;
+      color:var(--ink);min-height:100vh;
     }
     .wrap{max-width:980px;margin:0 auto;padding:56px 22px 42px}
-    .hero{margin-bottom:26px;padding:0 6px}
+    .hero{margin-bottom:27px;padding:0 6px}
     .eyebrow{
       display:inline-flex;align-items:center;gap:8px;margin-bottom:13px;padding:8px 13px;
-      border-radius:999px;background:rgba(255,253,250,.84);border:1px solid rgba(111,158,150,.22);
-      color:var(--teal-deep);font-size:13px;font-weight:700;letter-spacing:.04em;
-      box-shadow:0 5px 14px rgba(92,96,103,.04);
+      border-radius:999px;background:rgba(255,253,252,.82);border:1px solid #eadcdf;
+      color:var(--rose-deep);font-size:13px;font-weight:700;letter-spacing:.04em;
     }
-    .eyebrow .spark{font-size:14px;color:#c4979f}
-    .hero h1{margin:0 0 13px;font-size:32px;line-height:1.3;color:var(--navy);letter-spacing:.01em}
-    .hero p{margin:0;max-width:830px;color:var(--muted);line-height:1.9;font-size:15.5px}
-    .hero p .line2{color:#6c7f7b}
+    .eyebrow .spark{font-size:14px;color:var(--rose)}
+    .hero h1{margin:0 0 13px;font-size:32px;line-height:1.3;color:var(--title);letter-spacing:.01em}
+    .hero p{margin:0;max-width:840px;color:var(--muted);line-height:1.95;font-size:15.5px}
+    .hero p .line2{color:#81777d}
     .card{
-      position:relative;background:rgba(255,253,250,.96);border:1px solid rgba(234,223,220,.95);
-      border-radius:26px;padding:29px;box-shadow:0 20px 55px rgba(89,86,88,.085);
-      overflow:hidden;
+      position:relative;background:rgba(255,253,252,.97);border:1px solid var(--line);
+      border-radius:26px;padding:29px;box-shadow:0 18px 48px rgba(108,88,94,.065);overflow:hidden;
     }
     .card::before{
-      content:"";position:absolute;left:28px;right:28px;top:0;height:4px;border-radius:0 0 10px 10px;
-      background:linear-gradient(90deg,#d9aeb7,#efc9a8,#a9c8b7,#a8bdcf,#c9b8d8);opacity:.72;
+      content:"";position:absolute;left:30px;right:30px;top:0;height:3px;border-radius:0 0 10px 10px;
+      background:#dfbcc5;opacity:.72;
     }
     .drop{
-      border:1.5px dashed #b7cfc9;border-radius:21px;padding:31px 24px;text-align:center;
-      background:linear-gradient(180deg,#fbfdfc 0%,#f4f9f7 100%);transition:.2s;
+      border:1.5px dashed #d8bdc4;border-radius:21px;padding:31px 24px;text-align:center;
+      background:linear-gradient(180deg,#fffcfc 0%,#fbf5f6 100%);transition:.2s;
     }
-    .drop.drag{background:#edf7f4;border-color:var(--teal)}
+    .drop.drag{background:#f9eef1;border-color:var(--rose)}
     input[type=file]{display:none}
     .pick{
-      display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:13px;background:var(--teal-deep);color:#fff;
-      font-weight:750;cursor:pointer;box-shadow:0 8px 20px rgba(77,127,120,.17);transition:.18s;
+      display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:13px;
+      background:var(--rose-deep);color:#fff;font-weight:750;cursor:pointer;
+      box-shadow:0 8px 18px rgba(169,116,130,.14);transition:.18s;
     }
-    .pick:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(77,127,120,.21)}
+    .pick:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(169,116,130,.18)}
     .filemeta{margin-top:12px;color:var(--muted);font-size:14px}
     .status{
-      margin-top:18px;padding:14px 17px;border-radius:15px;background:var(--soft);color:#666c70;
-      line-height:1.6;border:1px solid rgba(234,223,220,.9);
+      margin-top:18px;padding:14px 17px;border-radius:15px;background:var(--soft);color:#746e72;
+      line-height:1.6;border:1px solid #eee4e5;
     }
-    .status.ok{background:var(--ok);color:#47725d;border-color:#dbece2}
-    .status.warn{background:var(--warn);color:#8a5a00;border-color:#f0dfba}
+    .status.ok{background:var(--ok);color:#557063;border-color:#e0ebe4}
+    .status.warn{background:var(--warn);color:#86652d;border-color:#f0e2c7}
     .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:21px 0}
     .metric{
-      position:relative;padding:15px 14px 16px;border:1px solid rgba(230,222,220,.8);border-radius:18px;
-      box-shadow:0 7px 20px rgba(88,82,84,.035);min-height:104px;transition:.18s;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+      padding:17px 12px 16px;border:1px solid #eadfe1;border-radius:18px;
+      background:var(--rose-soft-2);box-shadow:0 6px 16px rgba(103,85,91,.025);min-height:126px;transition:.18s;
     }
-    .metric:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(88,82,84,.055)}
-    .metric:nth-child(1){background:var(--blue)}
-    .metric:nth-child(2){background:var(--peach)}
-    .metric:nth-child(3){background:var(--rose)}
-    .metric:nth-child(4){background:var(--sage)}
-    .metric:nth-child(5){background:var(--lavender)}
+    .metric:nth-child(even){background:#faf2f4}
+    .metric:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(103,85,91,.045)}
     .metric-icon{
-      display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin-bottom:8px;
-      border-radius:10px;background:rgba(255,255,255,.62);font-size:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+      display:flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:9px;
+      border-radius:14px;background:#f1e3e7;color:var(--rose-deep);
     }
-    .metric b{display:block;margin-bottom:3px;font-size:25px;color:var(--navy);font-weight:760}
-    .metric .label{font-size:12.5px;color:#747a7f;line-height:1.4}
+    .metric-icon svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .metric b{display:block;min-height:34px;margin:0 0 4px;font-size:27px;line-height:1.2;color:#6d6268;font-weight:760;text-align:center}
+    .metric b.placeholder{font-size:24px;color:#b8a9ae;letter-spacing:.12em;font-weight:500}
+    .metric .label{font-size:12.5px;color:#81787d;line-height:1.4}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
-    .btn{
-      border:0;border-radius:15px;padding:15px 18px;font-size:16px;font-weight:780;cursor:pointer;transition:.18s;
-    }
+    .btn{border:0;border-radius:15px;padding:15px 18px;font-size:16px;font-weight:780;cursor:pointer;transition:.18s}
     .btn:hover:not(:disabled){transform:translateY(-1px)}
-    .btn:disabled{opacity:.45;cursor:not-allowed}
-    .btn.detail{background:#65788a;color:#fff;box-shadow:0 8px 20px rgba(86,104,121,.14)}
-    .btn.supervisor{background:var(--teal);color:#fff;box-shadow:0 8px 20px rgba(111,158,150,.18)}
-    .helper{margin-top:17px;text-align:center;color:#7b8185;font-size:13.5px;line-height:1.7}
-    .helper .heart{color:#c7939f;margin-right:4px}
+    .btn:disabled{opacity:.42;cursor:not-allowed}
+    .btn.detail{background:#7d747b;color:#fff;box-shadow:0 7px 17px rgba(93,82,89,.11)}
+    .btn.supervisor{background:var(--rose);color:#fff;box-shadow:0 7px 17px rgba(201,149,162,.15)}
+    .helper{margin-top:17px;text-align:center;color:#888085;font-size:13.5px;line-height:1.7}
+    .helper .heart{color:var(--rose);margin-right:4px}
     .note{
-      margin-top:20px;padding:15px 17px;border-radius:15px;background:#fcf7f3;color:#6d7275;
-      line-height:1.7;font-size:13.5px;border:1px solid #eee2dc;
+      margin-top:20px;padding:15px 17px;border-radius:15px;background:#fbf7f6;color:#777074;
+      line-height:1.7;font-size:13.5px;border:1px solid #eee4e4;
     }
-    .note strong{color:#66777a}
+    .note strong{color:#76666d}
     .footer{
-      margin:24px 6px 0;padding:18px 8px 0;border-top:1px solid rgba(213,199,194,.72);
-      text-align:center;color:#8b8587;font-size:12.5px;line-height:1.9;
+      margin:24px 6px 0;padding:18px 8px 0;border-top:1px solid #e8dcdf;
+      text-align:center;color:#928b8f;font-size:12.5px;line-height:1.9;
     }
-    .footer .copyright{color:#746f71;font-weight:650}
+    .footer .copyright{color:#7e7479;font-weight:650}
     .footer .meta{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:2px}
-    .footer .version{display:inline-flex;padding:2px 9px;border-radius:999px;background:rgba(255,255,255,.58);color:#758783;border:1px solid rgba(111,158,150,.16)}
-    .footer a{color:#6f8e89;text-decoration:none;border-bottom:1px dotted #9db5b0}
-    .footer a:hover{color:var(--teal-deep)}
+    .footer .version{display:inline-flex;padding:2px 9px;border-radius:999px;background:#fffafa;color:#927780;border:1px solid #eadcdf}
+    .footer a{color:#9b7480;text-decoration:none;border-bottom:1px dotted #cbb0b8}
+    .footer a:hover{color:var(--rose-deep)}
     @media(max-width:720px){
       .wrap{padding:36px 16px 34px}.card{padding:22px 18px}.summary{grid-template-columns:repeat(2,1fr)}
-      .actions{grid-template-columns:1fr}.hero h1{font-size:27px}.hero p{font-size:15px}
-      .footer{font-size:12px}
+      .actions{grid-template-columns:1fr}.hero h1{font-size:27px}.hero p{font-size:15px}.footer{font-size:12px}
     }
   </style>
 </head>
@@ -123,7 +115,7 @@
 
     <section class="card">
       <div id="dropZone" class="drop">
-        <label class="pick" for="fileInput"><span>📎</span> 選擇本月 Excel</label>
+        <label class="pick" for="fileInput"><span>＋</span> 選擇本月 Excel</label>
         <input id="fileInput" type="file" accept=".xlsx,.xls" />
         <div class="filemeta" id="fileMeta">也可以直接把 .xlsx 拖曳到這裡</div>
       </div>
@@ -131,11 +123,26 @@
       <div id="status" class="status">尚未載入檔案，選擇本月清冊後即可開始。</div>
 
       <div class="summary" aria-label="分析摘要">
-        <div class="metric"><span class="metric-icon">📋</span><b id="mTotal">—</b><span class="label">總紀錄</span></div>
-        <div class="metric"><span class="metric-icon">✎</span><b id="mText">—</b><span class="label">需文字檢視</span></div>
-        <div class="metric"><span class="metric-icon">✓</span><b id="mApproval">—</b><span class="label">需主管審批</span></div>
-        <div class="metric"><span class="metric-icon">◎</span><b id="mMgmt">—</b><span class="label">管理確認</span></div>
-        <div class="metric"><span class="metric-icon">✨</span><b id="mHighlight">—</b><span class="label">教學亮點候選</span></div>
+        <div class="metric">
+          <span class="metric-icon"><svg viewBox="0 0 24 24"><path d="M9 5h6M9 3h6a1 1 0 0 1 1 1v2H8V4a1 1 0 0 1 1-1Z"/><path d="M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M7 11h10M7 15h7"/></svg></span>
+          <b id="mTotal" class="placeholder">⋯</b><span class="label">總紀錄</span>
+        </div>
+        <div class="metric">
+          <span class="metric-icon"><svg viewBox="0 0 24 24"><path d="M4 6h12M4 10h12M4 14h7"/><path d="m14 18 5-5 2 2-5 5-3 1 1-3Z"/></svg></span>
+          <b id="mText" class="placeholder">⋯</b><span class="label">需文字檢視</span>
+        </div>
+        <div class="metric">
+          <span class="metric-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.3 2.4 4.9-5"/></svg></span>
+          <b id="mApproval" class="placeholder">⋯</b><span class="label">需主管審批</span>
+        </div>
+        <div class="metric">
+          <span class="metric-icon"><svg viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.2c0 4.6 3.1 8 7.5 9.8 4.4-1.8 7.5-5.2 7.5-9.8V6L12 3Z"/><path d="M9 12h6M12 9v6"/></svg></span>
+          <b id="mMgmt" class="placeholder">⋯</b><span class="label">管理確認</span>
+        </div>
+        <div class="metric">
+          <span class="metric-icon"><svg viewBox="0 0 24 24"><path d="m12 3 2.2 4.7 5.1.7-3.7 3.6.9 5.1-4.5-2.4-4.5 2.4.9-5.1-3.7-3.6 5.1-.7L12 3Z"/></svg></span>
+          <b id="mHighlight" class="placeholder">⋯</b><span class="label">教學亮點候選</span>
+        </div>
       </div>
 
       <div class="actions">
@@ -151,17 +158,17 @@
       <div class="copyright">© 台中慈濟醫院護理部教學委員會｜版權所有</div>
       <div class="meta">
         <span class="version">版本 V1｜2026.09</span>
-        <span>製作／維護聯繫：<a href="mailto:tc150149@tzuchi.com.tw">tc150149@tzuchi.com.tw</a></span>
+        <span>製作／維護：吳東芸 護理長　｜　聯繫：<a href="mailto:tc150149@tzuchi.com.tw">tc150149@tzuchi.com.tw</a></span>
       </div>
     </footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="./rules.js?v=20260903-3"></script>
-  <script src="./rules-v14-patch.js?v=20260903-3"></script>
-  <script src="./rules-v15-patch.js?v=20260903-3"></script>
-  <script src="./app-v2.js?v=20260903-3"></script>
-  <script src="./public-mode.js?v=20260903-3"></script>
-  <script src="./supervisor-public.js?v=20260903-3"></script>
+  <script src="./rules.js?v=20260903-4"></script>
+  <script src="./rules-v14-patch.js?v=20260903-4"></script>
+  <script src="./rules-v15-patch.js?v=20260903-4"></script>
+  <script src="./app-v2.js?v=20260903-4"></script>
+  <script src="./public-mode.js?v=20260903-4"></script>
+  <script src="./supervisor-public.js?v=20260903-4"></script>
 </body>
 </html>
