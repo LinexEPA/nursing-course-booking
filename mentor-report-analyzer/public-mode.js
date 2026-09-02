@@ -6,6 +6,14 @@
   const detailBtn = $('detailBtn');
   const fileInput = $('fileInput');
 
+  // 載入下載完成感謝圖卡。
+  if (!document.querySelector('script[data-thank-you-loader]')) {
+    const thankYouScript = document.createElement('script');
+    thankYouScript.src = './thank-you.js?v=20260903-5';
+    thankYouScript.dataset.thankYouLoader = 'true';
+    document.head.appendChild(thankYouScript);
+  }
+
   // 正式使用介面：保留柔和版的分行說明。
   const hero = document.querySelector('.hero');
   const heroText = hero?.querySelector('p');
