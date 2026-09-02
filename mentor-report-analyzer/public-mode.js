@@ -6,17 +6,17 @@
   const detailBtn = $('detailBtn');
   const fileInput = $('fileInput');
 
-  // 正式使用介面：不顯示開發／驗證術語。
+  // 正式使用介面：保留柔和版的分行說明。
   const heroText = document.querySelector('.hero p');
-  if (heroText) heroText.textContent = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點，供人工審閱與確認，並產生審閱用 Excel。';
+  if (heroText) heroText.innerHTML = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';
 
   const note = document.querySelector('.note');
-  if (note) note.textContent = '資料處理說明：上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';
+  if (note) note.innerHTML = '<strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';
 
   const version = document.querySelector('.version');
   if (version) version.style.display = 'none';
 
-  const textMetric = $('mText')?.parentElement?.querySelector('span');
+  const textMetric = $('mText')?.parentElement?.querySelector('.label');
   if (textMetric) textMetric.textContent = '需文字檢視';
 
   function publicStatusText(text) {
