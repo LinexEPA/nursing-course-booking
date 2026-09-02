@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>新手導師輔導紀錄分析</title>
+  <style>
+    :root{--teal:#0d8f98;--navy:#203b63;--ink:#22313f;--muted:#667085;--line:#d8e2e8;--bg:#f5f8fa;--card:#fff;--warn:#fff7e6;--ok:#eef9f3}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
+    .wrap{max-width:960px;margin:0 auto;padding:40px 20px 64px}.hero{margin-bottom:22px}.hero h1{margin:0 0 8px;font-size:30px;color:var(--navy)}.hero p{margin:0;color:var(--muted);line-height:1.7}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(32,59,99,.05)}
+    .drop{border:2px dashed #9fc9cd;border-radius:16px;padding:26px;text-align:center;background:#f8fcfc;transition:.2s}.drop.drag{background:#eaf8f8;border-color:var(--teal)}
+    input[type=file]{display:none}.pick{display:inline-block;padding:11px 18px;border-radius:10px;background:var(--teal);color:#fff;font-weight:700;cursor:pointer}.filemeta{margin-top:12px;color:var(--muted);font-size:14px}
+    .status{margin-top:18px;padding:14px 16px;border-radius:12px;background:#f2f5f7;color:#475467;line-height:1.6}.status.ok{background:var(--ok);color:#17633a}.status.warn{background:var(--warn);color:#8a5a00}
+    .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}.metric{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff}.metric b{display:block;font-size:24px;color:var(--navy)}.metric span{font-size:12px;color:var(--muted)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.btn{border:0;border-radius:12px;padding:15px 18px;font-size:16px;font-weight:800;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.detail{background:#203b63;color:#fff}.btn.supervisor{background:#0d8f98;color:#fff}
+    .note{margin-top:18px;padding:14px 16px;border-left:4px solid var(--teal);background:#f8fbfc;color:#475467;line-height:1.7;font-size:14px}.version{margin-top:14px;color:#98a2b3;font-size:12px;text-align:right}
+    @media(max-width:720px){.summary{grid-template-columns:repeat(2,1fr)}.actions{grid-template-columns:1fr}.hero h1{font-size:25px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>新手導師輔導紀錄分析</h1>
+      <p>上傳每月「輔導紀錄清冊」Excel，由固定規則先進行第一輪分類，再產生細緻分析版與主管審閱版。檔案只在目前瀏覽器記憶體中處理，不上傳到 GitHub。</p>
+    </section>
+
+    <section class="card">
+      <div id="dropZone" class="drop">
+        <label class="pick" for="fileInput">選擇 Excel</label>
+        <input id="fileInput" type="file" accept=".xlsx,.xls" />
+        <div class="filemeta" id="fileMeta">可拖曳 .xlsx 到此處</div>
+      </div>
+
+      <div id="status" class="status">尚未載入檔案。</div>
+
+      <div class="summary" aria-label="分析摘要">
+        <div class="metric"><b id="mTotal">—</b><span>總紀錄</span></div>
+        <div class="metric"><b id="mText">—</b><span>文字／內容案件</span></div>
+        <div class="metric"><b id="mApproval">—</b><span>需主管審批</span></div>
+        <div class="metric"><b id="mMgmt">—</b><span>管理確認</span></div>
+        <div class="metric"><b id="mHighlight">—</b><span>教學亮點候選</span></div>
+      </div>
+
+      <div class="actions">
+        <button id="detailBtn" class="btn detail" disabled>產生細緻分析版 Excel</button>
+        <button id="supervisorBtn" class="btn supervisor" disabled>產生主管審閱版 Excel</button>
+      </div>
+
+      <div class="note">
+        第一版刻意不接 AI：固定規則能明確判斷的直接分類；語意不確定者標成「人工確認」。之後可用同一批資料與 Codex 平行比對，再決定哪些類型需要 AI 第二層分析。
+      </div>
+      <div class="version">Rule engine v1.0｜2026-09</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="./rules.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
