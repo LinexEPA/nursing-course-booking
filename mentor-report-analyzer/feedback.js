@@ -22,7 +22,7 @@
   const norm=v=>cellText(v).replace(/\s+/g,'').replace(/／/g,'/').trim();
   const clip=(s,n=180)=>{s=String(s||'').replace(/\s+/g,' ').trim();return s.length>n?`${s.slice(0,n)}…`:s;};
   const unique=xs=>[...new Set(xs.map(x=>String(x||'').trim()).filter(Boolean))];
-  const escapeHtml=s=>String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+  const escapeHtml=s=>String(s||'').replace(/[&<>\"]/g,c=>c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;');
 
   function findHeaderRow(ws){
     const max=Math.min(ws.rowCount,12);
