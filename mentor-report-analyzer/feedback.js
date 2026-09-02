@@ -8,7 +8,7 @@
   const countBox=document.getElementById('feedbackCount');
   if (!input || !meta || !status || !results || typeof ExcelJS==='undefined') return;
 
-  // 第二部分改為「一個畫面讀完」：保留個人化內容，但縮短卡片與文字區高度。
+  // 第二部分採單行換行，讓訊息在一個畫面內更容易讀完。
   const compactStyle=document.createElement('style');
   compactStyle.textContent=`
     .feedback-card{padding:17px 18px !important}
@@ -16,9 +16,9 @@
     .feedback-highlight{padding:10px 12px !important;margin-bottom:11px !important}
     .feedback-highlight p{margin-top:5px !important}
     .feedback-copy-label{margin-bottom:5px !important}
-    .feedback-textarea{min-height:172px !important;max-height:230px;line-height:1.68 !important;padding:12px 14px !important}
+    .feedback-textarea{min-height:150px !important;max-height:205px;line-height:1.5 !important;padding:11px 14px !important}
     .feedback-actions{margin-top:8px !important}
-    @media(max-width:720px){.feedback-textarea{min-height:205px !important;max-height:260px}}
+    @media(max-width:720px){.feedback-textarea{min-height:175px !important;max-height:225px}}
   `;
   document.head.appendChild(compactStyle);
 
@@ -124,8 +124,8 @@
     const focus=focusSet[stableIndex(`${seed}|focus`,focusSet.length)];
     const closing=closings[stableIndex(`${seed}|closing`,closings.length)];
 
-    // 問候＋三個短句＋兩行署名；貼到常用訊息畫面時不用長篇往下滑。
-    return `${mentor}老師您好：\n${intro}${reasonText}\n${focus}\n${closing}\n\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
+    // 每句只換一行，不再插入空白段落。
+    return `${mentor}老師您好：\n${intro}${reasonText}\n${focus}\n${closing}\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
   }
 
   function render(groups){
@@ -140,7 +140,7 @@
     countBox.hidden=false;
     countBox.innerHTML=`本月有 <strong>${groups.length}</strong> 位教師值得被看見 <span>♡</span>`;
     status.className='feedback-status feedback-ok';
-    status.textContent='已整理完成。回饋已壓成單畫面閱讀版，可直接修改後複製。';
+    status.textContent='已整理完成。回饋採單行換行，可直接修改後複製。';
 
     groups.forEach((group,index)=>{
       const students=unique(group.items.map(x=>x['學員']));
