@@ -7,15 +7,54 @@
   const fileInput = $('fileInput');
 
   // 正式使用介面：保留柔和版的分行說明。
-  const heroText = document.querySelector('.hero p');
+  const hero = document.querySelector('.hero');
+  const heroText = hero?.querySelector('p');
   if (heroText) heroText.innerHTML = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';
+
+  // 使用慈濟官方會徽，放在主標題左側。
+  if (hero && !hero.querySelector('.brand-head')) {
+    const title = hero.querySelector('h1');
+    const desc = hero.querySelector('p');
+    if (title && desc) {
+      const brand = document.createElement('div');
+      brand.className = 'brand-head';
+      const logo = document.createElement('img');
+      logo.className = 'tzuchi-logo';
+      logo.src = 'https://imagedelivery.net/JVmYbduioNVkRm0SvNGcew/90ce573b-e83c-4d56-bf1d-2fb7ddfc7b00/Desktop';
+      logo.alt = '慈濟會徽';
+      logo.loading = 'eager';
+      logo.referrerPolicy = 'no-referrer';
+      const copy = document.createElement('div');
+      copy.className = 'brand-copy';
+      brand.appendChild(logo);
+      brand.appendChild(copy);
+      title.parentNode.insertBefore(brand, title);
+      copy.appendChild(title);
+      copy.appendChild(desc);
+    }
+  }
+
+  const brandingStyle = document.createElement('style');
+  brandingStyle.textContent = `
+    .brand-head{display:flex;align-items:center;gap:18px;margin-top:1px}
+    .brand-copy{min-width:0}
+    .brand-copy h1{margin-top:0}
+    .tzuchi-logo{width:62px;height:62px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 5px 10px rgba(77,127,120,.08))}
+    @media(max-width:720px){.brand-head{gap:12px;align-items:flex-start}.tzuchi-logo{width:50px;height:50px;margin-top:2px}}
+  `;
+  document.head.appendChild(brandingStyle);
 
   const note = document.querySelector('.note');
   if (note) note.innerHTML = '<strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';
 
-  const version = document.querySelector('.version');
-  if (version) version.style.display = 'none';
+  // 頁尾正式資訊。
+  const footerMeta = document.querySelector('.footer .meta');
+  if (footerMeta) {
+    const contact = footerMeta.querySelector('span:not(.version)');
+    if (contact) contact.innerHTML = '製作／維護：吳東芸 護理長　｜　聯繫：<a href="mailto:tc150149@tzuchi.com.tw">tc150149@tzuchi.com.tw</a>';
+  }
 
+  // 正式版需保留頁尾版本資訊，不再隱藏 .version。
   const textMetric = $('mText')?.parentElement?.querySelector('.label');
   if (textMetric) textMetric.textContent = '需文字檢視';
 
@@ -129,7 +168,6 @@
     }
   }
 
-  // 以正式版細緻輸出取代原本含驗證欄位的下載。
   detailBtn.addEventListener('click', e => {
     e.preventDefault();
     e.stopImmediatePropagation();
