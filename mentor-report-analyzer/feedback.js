@@ -73,17 +73,38 @@
     const students=unique(group.items.map(x=>x['學員']));
     const reasons=unique(group.items.map(x=>x['為什麼值得肯定']));
     const types=unique(group.items.map(x=>x['教學亮點類型']));
+    const summaries=unique(group.items.map(x=>x['具體教學內容摘要']));
     const studentText=students.length ? students.slice(0,2).join('、') : '新進同仁';
-    const reasonText=reasons.length ? clip(reasons[0],78) : '您把臨床經驗轉化成具體且可以被學員帶走的教學。';
     const typeText=types.length ? types.slice(0,2).join('、') : '臨床陪伴';
-    const seed=`${mentor}|${studentText}|${typeText}|${reasonText}`;
+    const seed=`${mentor}|${studentText}|${typeText}|${reasons.join('|')}|${summaries.join('|')}`;
+    const focus=teachingFocus(group);
 
-    const praiseIntros=[
-      '本月特別想謝謝您：',
-      '這個月特別想肯定您的投入：',
-      '從本月紀錄裡，我們特別感受到您的用心：',
-      '這個月，我們特別想謝謝您的陪伴與投入：'
-    ];
+    const warmOpenings={
+      reasoning:[
+        '謝謝您願意在忙碌的臨床工作中，多留一點時間陪學員把事情想清楚。',
+        '謝謝您不只告訴學員怎麼做，也願意陪他一起理解背後的原因。'
+      ],
+      support:[
+        '謝謝您在帶教的同時，也一直留意學員當下的需要與感受。',
+        '謝謝您在忙碌的工作裡，仍願意給學員一份可以安心學習的支持。'
+      ],
+      practice:[
+        '謝謝您願意把自己的經驗一步一步示範給學員看，也把練習的機會留給他。',
+        '謝謝您把熟悉的臨床經驗拆成學員能跟得上、也能真正練習的步驟。'
+      ],
+      feedback:[
+        '謝謝您願意持續觀察學員的變化，在需要的時候給出剛剛好的提醒。',
+        '謝謝您不只看見學員做得不夠的地方，也願意把下一步怎麼調整說清楚。'
+      ],
+      autonomy:[
+        '謝謝您願意在陪伴與放手之間，替學員留下一點自己思考與嘗試的空間。',
+        '謝謝您在學員需要時接住他，也在適當的時候相信他可以自己往前走。'
+      ],
+      general:[
+        '謝謝您在日常工作裡，持續把自己的臨床經驗分享給新進同仁。',
+        '謝謝您在繁忙的臨床工作中，仍願意多停一下、多帶一步，陪學員把事情做得更穩。'
+      ]
+    };
 
     const focusMessages={
       reasoning:[
@@ -91,7 +112,7 @@
         `您把臨床思路說得更具體，讓${studentText}能把一次經驗慢慢轉成自己的判斷。`
       ],
       support:[
-        `您在教學之外也留意學員的狀態，讓${studentText}能在被支持的情況下慢慢建立信心。`,
+        `這樣的陪伴，讓${studentText}在學習過程中多了一份安心，也更有空間慢慢建立信心。`,
         `您讓${studentText}知道遇到困難時有人可以討論，也有人願意陪著整理，這份支持很珍貴。`
       ],
       practice:[
@@ -119,13 +140,14 @@
       '謝謝您持續做這件不容易、但很有價值的事。'
     ];
 
-    const intro=praiseIntros[stableIndex(seed,praiseIntros.length)];
-    const focusSet=focusMessages[teachingFocus(group)];
-    const focus=focusSet[stableIndex(`${seed}|focus`,focusSet.length)];
+    const openingSet=warmOpenings[focus];
+    const opening=openingSet[stableIndex(`${seed}|opening`,openingSet.length)];
+    const focusSet=focusMessages[focus];
+    const focusText=focusSet[stableIndex(`${seed}|focus`,focusSet.length)];
     const closing=closings[stableIndex(`${seed}|closing`,closings.length)];
 
-    // 每句只換一行，不再插入空白段落。
-    return `${mentor}老師您好：\n${intro}${reasonText}\n${focus}\n${closing}\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
+    // 後台判讀只用來決定感謝方向，不直接貼進給老師的文字。
+    return `${mentor}老師您好：\n${opening}\n${focusText}\n${closing}\n台中慈濟醫院\n護理部｜教學委員會 ♡`;
   }
 
   function render(groups){
@@ -140,7 +162,7 @@
     countBox.hidden=false;
     countBox.innerHTML=`本月有 <strong>${groups.length}</strong> 位教師值得被看見 <span>♡</span>`;
     status.className='feedback-status feedback-ok';
-    status.textContent='已整理完成。回饋採單行換行，可直接修改後複製。';
+    status.textContent='已整理完成。回饋採自然短句，可直接修改後複製。';
 
     groups.forEach((group,index)=>{
       const students=unique(group.items.map(x=>x['學員']));
@@ -159,7 +181,7 @@
           <div class="feedback-badge">${group.items.length} 筆亮點</div>
         </div>
         <div class="feedback-highlight">
-          <strong>本月值得被看見的教學</strong>
+          <strong>這個月的教學亮點</strong>
           ${summaries.map(s=>`<p>${escapeHtml(clip(s,135))}</p>`).join('')}
         </div>
         <label class="feedback-copy-label" for="feedbackText${index}">感謝回饋內容</label>
