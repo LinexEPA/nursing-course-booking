@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#FAF8F7">
 <title>臨床教學回饋小助手｜Nursing Learning Hub</title>
 <style>
-:root{--bg:#FAF8F7;--card:#fff;--primary:#739F99;--primary-dark:#527F79;--primary-soft:#EAF3F1;--rose:#D9A6A6;--rose-dark:#936B6B;--rose-soft:#F8EDED;--yellow:#E8C98F;--yellow-soft:#FBF4E7;--text:#33383D;--muted:#7C8185;--line:#ECE9E7;--shadow:0 14px 40px rgba(76,72,70,.08)}
-*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--text);background:radial-gradient(circle at 90% 0,rgba(217,166,166,.16),transparent 28%),radial-gradient(circle at 0 10%,rgba(115,159,153,.14),transparent 32%),var(--bg);min-height:100vh}.shell{width:min(960px,100%);margin:0 auto;padding:0 20px}.top{padding:18px 0}.back{display:inline-flex;align-items:center;gap:8px;color:var(--primary-dark);font-size:13px;font-weight:800;text-decoration:none}.hero{padding:28px 0 25px}.eyebrow{display:inline-flex;padding:7px 12px;border-radius:999px;background:var(--primary-soft);color:var(--primary-dark);font-size:11px;font-weight:900;letter-spacing:.08em}.hero h1{margin:14px 0 10px;font-size:clamp(31px,6vw,48px);letter-spacing:-.04em}.hero p{margin:0;max-width:760px;color:var(--muted);line-height:1.85}.promise{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.promise span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#746d71;font-size:12px;font-weight:700}.panel{margin:12px 0 42px;padding:24px;border:1px solid var(--line);border-radius:26px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}.label{display:block;margin:0 0 8px;color:#655e62;font-size:13px;font-weight:900}.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}.mode{border:1px solid var(--line);border-radius:15px;padding:12px 8px;background:#fff;color:#706a6d;font-weight:800;cursor:pointer}.mode.active{border-color:rgba(115,159,153,.45);background:var(--primary-soft);color:var(--primary-dark)}textarea{width:100%;min-height:190px;padding:16px;border:1px solid var(--line);border-radius:17px;background:#fffdfd;color:var(--text);font:inherit;font-size:14px;line-height:1.75;resize:vertical;outline:none}textarea:focus{border-color:#b9d1cd;box-shadow:0 0 0 3px rgba(115,159,153,.08)}.hint{margin:8px 2px 0;color:#999094;font-size:12px;line-height:1.65}.go{width:100%;margin-top:15px;padding:14px;border:0;border-radius:15px;background:var(--primary);color:white;font-size:15px;font-weight:900;cursor:pointer}.result{display:none;margin-top:22px}.result.show{display:block}.result-head{padding:16px 17px;border-radius:17px;background:var(--rose-soft)}.result-head strong{display:block;color:var(--rose-dark);font-size:16px}.result-head p{margin:5px 0 0;color:#7d6d72;font-size:13px;line-height:1.7}.guide-list{display:grid;gap:10px;margin-top:14px}.guide{padding:15px 16px;border:1px solid var(--line);border-radius:17px;background:#fff}.guide.ok{background:#f3f8f6;border-color:#ddebe7}.guide.warn{background:#fffaf1;border-color:#efe2c8}.guide strong{display:block;margin-bottom:5px;color:#655e62;font-size:13px}.guide p{margin:0;color:#777074;font-size:13.5px;line-height:1.75}.guide .think{margin-top:9px;padding:10px 11px;border-radius:12px;background:#f8f5f4;color:#766e72;font-size:12.5px;line-height:1.7}.guide .think b{color:#6d6669}.note{margin-top:17px;padding:13px 14px;border-radius:14px;background:var(--primary-soft);color:#58766f;font-size:12.5px;line-height:1.7}.footer{padding:0 0 38px;text-align:center;color:#9b9698;font-size:11px}@media(max-width:660px){.modes{grid-template-columns:repeat(2,1fr)}.panel{padding:18px;border-radius:21px}.hero{padding-top:15px}}
+:root{--bg:#FAF8F7;--primary:#739F99;--primary-dark:#527F79;--primary-soft:#EAF3F1;--rose:#D9A6A6;--rose-dark:#936B6B;--rose-soft:#F8EDED;--yellow-soft:#FBF4E7;--text:#33383D;--muted:#7C8185;--line:#ECE9E7;--shadow:0 14px 40px rgba(76,72,70,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--text);background:radial-gradient(circle at 90% 0,rgba(217,166,166,.16),transparent 28%),radial-gradient(circle at 0 10%,rgba(115,159,153,.14),transparent 32%),var(--bg);min-height:100vh}.shell{width:min(960px,100%);margin:0 auto;padding:0 20px}.top{padding:18px 0}.back{display:inline-flex;color:var(--primary-dark);font-size:13px;font-weight:800;text-decoration:none}.hero{padding:28px 0 25px}.eyebrow{display:inline-flex;padding:7px 12px;border-radius:999px;background:var(--primary-soft);color:var(--primary-dark);font-size:11px;font-weight:900;letter-spacing:.08em}.hero h1{margin:14px 0 10px;font-size:clamp(31px,6vw,48px);letter-spacing:-.04em}.hero p{margin:0;max-width:760px;color:var(--muted);line-height:1.85}.promise{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.promise span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#746d71;font-size:12px;font-weight:700}.panel{margin:12px 0 42px;padding:24px;border:1px solid var(--line);border-radius:26px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}.label{display:block;margin:0 0 8px;color:#655e62;font-size:13px;font-weight:900}.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}.mode{border:1px solid var(--line);border-radius:15px;padding:12px 8px;background:#fff;color:#706a6d;font-weight:800;cursor:pointer}.mode.active{border-color:rgba(115,159,153,.45);background:var(--primary-soft);color:var(--primary-dark)}textarea{width:100%;min-height:190px;padding:16px;border:1px solid var(--line);border-radius:17px;background:#fffdfd;color:var(--text);font:inherit;font-size:14px;line-height:1.75;resize:vertical;outline:none}textarea:focus{border-color:#b9d1cd;box-shadow:0 0 0 3px rgba(115,159,153,.08)}.hint{margin:8px 2px 0;color:#999094;font-size:12px;line-height:1.65}.go{width:100%;margin-top:15px;padding:14px;border:0;border-radius:15px;background:var(--primary);color:white;font-size:15px;font-weight:900;cursor:pointer}.result{display:none;margin-top:22px}.result.show{display:block}.result-head{padding:16px 17px;border-radius:17px;background:var(--rose-soft)}.result-head strong{display:block;color:var(--rose-dark);font-size:16px}.result-head p{margin:5px 0 0;color:#7d6d72;font-size:13px;line-height:1.7}.guide-list{display:grid;gap:10px;margin-top:14px}.guide{padding:15px 16px;border:1px solid var(--line);border-radius:17px;background:#fff}.guide.ok{background:#f3f8f6;border-color:#ddebe7}.guide.warn{background:#fffaf1;border-color:#efe2c8}.guide strong{display:block;margin-bottom:5px;color:#655e62;font-size:13px}.guide p{margin:0;color:#777074;font-size:13.5px;line-height:1.75}.think{margin-top:9px;padding:10px 11px;border-radius:12px;background:#f8f5f4;color:#766e72;font-size:12.5px;line-height:1.7}.think b{color:#6d6669}.note{margin-top:17px;padding:13px 14px;border-radius:14px;background:var(--primary-soft);color:#58766f;font-size:12.5px;line-height:1.7}.footer{padding:0 0 38px;text-align:center;color:#9b9698;font-size:11px}@media(max-width:660px){.modes{grid-template-columns:repeat(2,1fr)}.panel{padding:18px;border-radius:21px}.hero{padding-top:15px}}
 </style>
 </head>
 <body>
@@ -22,20 +22,20 @@
 
   <section class="panel">
     <label class="label">1. 這次是什麼教學情境？</label>
-    <div class="modes" id="modes">
-      <button class="mode active" data-mode="dops">DOPS</button>
-      <button class="mode" data-mode="adhoc">Ad-hoc</button>
-      <button class="mode" data-mode="epa">EPA</button>
-      <button class="mode" data-mode="general">一般臨床帶教</button>
+    <div class="modes">
+      <button type="button" class="mode active" data-mode="dops">DOPS</button>
+      <button type="button" class="mode" data-mode="adhoc">Ad-hoc</button>
+      <button type="button" class="mode" data-mode="epa">EPA</button>
+      <button type="button" class="mode" data-mode="general">一般臨床帶教</button>
     </div>
 
     <label class="label" for="draft">2. 把你原本想寫的內容貼上來</label>
     <textarea id="draft" placeholder="例如：學員技術還需要加強，遇到事情容易緊張，已提醒要注意工作順序。"></textarea>
     <div class="hint">不用先修飾，也不用寫完整。請保留你原本會寫的方式。</div>
-    <button class="go" id="go">幫我看看哪裡可以再清楚一點</button>
+    <button type="button" class="go" id="go">幫我看看哪裡可以再清楚一點</button>
 
-    <div class="result" id="result">
-      <div class="result-head"><strong id="resultTitle">先看看你已經寫到什麼</strong><p id="resultLead"></p></div>
+    <div class="result" id="result" aria-live="polite">
+      <div class="result-head"><strong id="resultTitle"></strong><p id="resultLead"></p></div>
       <div class="guide-list" id="guideList"></div>
       <div class="note">♡ 這裡不會替你補內容。只有你真的看過、問過、教過或確認過的事情，才需要寫進紀錄。</div>
     </div>
@@ -43,71 +43,133 @@
   <div class="footer">Nursing Education Learning Hub · Clinical Teaching Feedback Coach</div>
 </div>
 <script>
-(() => {
-  const draft=document.getElementById('draft');
-  const go=document.getElementById('go');
-  const result=document.getElementById('result');
-  const resultTitle=document.getElementById('resultTitle');
-  const resultLead=document.getElementById('resultLead');
-  const guideList=document.getElementById('guideList');
-  let mode='dops';
+document.addEventListener('DOMContentLoaded', function () {
+  var draft = document.getElementById('draft');
+  var go = document.getElementById('go');
+  var result = document.getElementById('result');
+  var resultTitle = document.getElementById('resultTitle');
+  var resultLead = document.getElementById('resultLead');
+  var guideList = document.getElementById('guideList');
+  var mode = 'dops';
 
-  document.querySelectorAll('.mode').forEach(btn=>btn.addEventListener('click',()=>{
-    document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));
-    btn.classList.add('active'); mode=btn.dataset.mode;
-  }));
+  document.querySelectorAll('.mode').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.mode').forEach(function (x) { x.classList.remove('active'); });
+      btn.classList.add('active');
+      mode = btn.getAttribute('data-mode');
+    });
+  });
 
-  const has=(t,re)=>re.test(t);
-  const add=(title,text,think='',ok=false)=>{
-    const box=document.createElement('div'); box.className='guide '+(ok?'ok':'warn');
-    box.innerHTML=`<strong>${title}</strong><p>${text}</p>${think?`<div class="think"><b>可以想想：</b>${think}</div>`:''}`;
+  var prompts = {
+    dops: {
+      observe: '你實際看到學員做到哪一步？是哪個步驟需要提醒？',
+      action: '你當時示範、提醒或修正了什麼？',
+      change: '提醒後，學員有沒有重新完成或調整？'
+    },
+    adhoc: {
+      observe: '剛才是哪一個情境讓你想給回饋？你實際看到什麼？',
+      action: '你當下問了什麼、提醒了什麼，或和學員討論了什麼？',
+      change: '學員當下怎麼回應？有沒有說出自己的想法或下一步？'
+    },
+    epa: {
+      observe: '這次任務中，哪個可觀察行為讓你願意放手，或仍需要你介入？',
+      action: '你在哪一個環節需要提示、確認或接手？',
+      change: '下一次你最想再觀察哪一件事，才會更放心？'
+    },
+    general: {
+      observe: '你說的「好、需要加強、容易忘記」是在哪一個實際情境出現？',
+      action: '你實際怎麼陪、怎麼提醒或怎麼教？',
+      change: '後來學員有什麼反應、改變，或還需要追蹤什麼？'
+    }
+  };
+
+  function has(text, regex) { return regex.test(text); }
+
+  function addGuide(title, text, think, ok) {
+    var box = document.createElement('div');
+    box.className = 'guide ' + (ok ? 'ok' : 'warn');
+    var strong = document.createElement('strong');
+    strong.textContent = title;
+    var p = document.createElement('p');
+    p.textContent = text;
+    box.appendChild(strong);
+    box.appendChild(p);
+    if (think) {
+      var t = document.createElement('div');
+      t.className = 'think';
+      var b = document.createElement('b');
+      b.textContent = '可以想想：';
+      t.appendChild(b);
+      t.appendChild(document.createTextNode(think));
+      box.appendChild(t);
+    }
     guideList.appendChild(box);
-  };
+  }
 
-  const modePrompts={
-    dops:{observe:'你實際看到學員做到哪一步？是哪個步驟需要提醒？',action:'你當時示範、提醒或修正了什麼？',change:'提醒後，學員有沒有重新完成或調整？'},
-    adhoc:{observe:'剛才是哪一個情境讓你想給回饋？你實際看到什麼？',action:'你當下問了什麼、提醒了什麼，或和學員討論了什麼？',change:'學員當下怎麼回應？有沒有說出自己的想法或下一步？'},
-    epa:{observe:'這次任務中，哪個可觀察行為讓你願意放手，或仍需要你介入？',action:'你在哪一個環節需要提示、確認或接手？',change:'下一次你最想再觀察哪一件事，才會更放心？'},
-    general:{observe:'你說的「好、需要加強、容易忘記」是在哪一個實際情境出現？',action:'你實際怎麼陪、怎麼提醒或怎麼教？',change:'後來學員有什麼反應、改變，或還需要追蹤什麼？'}
-  };
+  go.addEventListener('click', function () {
+    var text = (draft.value || '').trim();
+    guideList.innerHTML = '';
+    result.classList.add('show');
 
-  go.addEventListener('click',()=>{
-    const t=draft.value.trim(); guideList.innerHTML='';
-    if(!t){result.classList.add('show');resultTitle.textContent='先貼上你原本想寫的內容';resultLead.textContent='不用先整理，原本怎麼寫就怎麼貼。';return;}
-
-    const vague=has(t,/(表現良好|很好|不錯|需加強|需要加強|要加強|容易忘|常忘|較被動|不主動|容易緊張|容易慌|進步很多|明顯進步|態度不好|散漫|粗心|大而化之|漫無章法|無頭蒼蠅)/);
-    const concrete=has(t,/(例如|當時|本次|此次|在.*時|執行|給藥|交班|評估|溝通|紀錄|操作|照護|通報|醫囑|管路|病人|步驟|漏|遺漏|忘記.*[事項內容])/);
-    const teacher=has(t,/(提醒|指導|示範|討論|陪同|回顧|詢問|追問|說明|分享|協助|回饋|引導|鼓勵|傾聽|確認)/);
-    const learner=has(t,/(學員.*(表示|能|可|願意|理解|說出|完成|調整|改善|進步|主動)|提醒後|指導後|經.*後|後續.*(能|可|願意|改善|追蹤))/);
-    const next=has(t,/(後續|下次|持續|下一步|再觀察|追蹤|加強|目標)/);
-    const label=has(t,/(懶惰|散漫|不用心|沒責任感|大而化之|無頭蒼蠅|個性.*(差|不好|內向|被動)|態度很差)/);
-    const errorVague=has(t,/(錯誤|疏忽|遺漏)/) && !has(t,/(給藥|交班|紀錄|評估|醫囑|管路|藥物|姓名|時間|劑量|病人|檢查|備物|引流|跌倒|壓傷)/);
-
-    const complete=[concrete,teacher,learner].filter(Boolean).length;
-    if(complete===3 && !label && !errorVague){
-      resultTitle.textContent='這段已經很有內容，不需要為了更漂亮而改';
-      resultLead.textContent='看得到實際情境、你的教學行動，也看得到學員的反應。保留你的語氣就很好。';
-      add('已經寫得夠具體','如果內容都是真實觀察，就可以直接使用。不是每一段都一定要再加更多。','',true);
-      if(mode==='epa' && !next) add('EPA 可以再想一個「下一次觀察點」','不是一定要補；如果這次的信賴程度還沒有完全穩定，可以留下一個下次最想看的行為。',modePrompts[mode].change);
-    }else{
-      resultTitle.textContent='再多一點點，就會更容易讓人理解';
-      resultLead.textContent='不是要把文字變漂亮，而是讓看到紀錄的人知道「你真的看到了什麼」。';
-      if(vague && !concrete) add('目前比較像整體感受','這些話可以保留，但如果只有「需加強、容易緊張、較被動」等描述，主管或學員可能不知道你指的是哪一次。',modePrompts[mode].observe);
-      else if(!concrete) add('可以補一個實際情境','不用寫很長，只要讓人知道這個回饋是從哪個行為或事件觀察到的。',modePrompts[mode].observe);
-      else add('情境已經看得出來','你已經有寫到實際發生的內容，這部分可以保留。','',true);
-
-      if(!teacher) add('還看不太到「你怎麼帶」','目前較像在描述學員。如果當時你有做過提醒、示範、提問或陪同，可以補你真的做過的那一小段。',modePrompts[mode].action);
-      else add('已經看得到你的教學行動','有寫到提醒、指導、討論或陪同，這會讓紀錄更有教學價值。','',true);
-
-      if(!learner) add('如果有觀察到學員反應，可以再補','不需要硬寫「進步」。只有真的看到學員回應、重新操作、說出理解或行為改變時才補。',modePrompts[mode].change);
-      else add('已經有學員反應或改變','這會讓回饋不只停在「老師有教」，也知道教學之後發生了什麼。','',true);
+    if (!text) {
+      resultTitle.textContent = '先貼上你原本想寫的內容';
+      resultLead.textContent = '不用先整理，原本怎麼寫就怎麼貼。';
+      return;
     }
 
-    if(label) add('這句可能比較像在定義一個人','可以先不要急著刪掉你的原意，但請回想：你真正看到的是哪個行為？正式紀錄盡量寫可觀察的事情，而不是把人定義成某種個性。','例如，不是想「他是不是散漫」，而是想「哪一件事情沒有按預期完成？當時發生什麼？」');
-    if(errorVague) add('「錯誤／疏忽」可以再具體一點','這類字眼會影響後續判讀。如果方便，請補你實際指的是哪一類事情；不要用系統猜。','是哪一項工作？有沒有造成影響？你當時怎麼處理？');
-    result.classList.add('show');
+    var vague = has(text, /(表現良好|很好|不錯|需加強|需要加強|要加強|容易忘|常忘|較被動|不主動|容易緊張|容易慌|進步很多|明顯進步|態度不好|散漫|粗心|大而化之|漫無章法|無頭蒼蠅)/);
+    var concrete = has(text, /(例如|當時|本次|此次|執行|給藥|交班|評估|溝通|紀錄|操作|照護|通報|醫囑|管路|病人|步驟|漏掉|遺漏|忘記)/);
+    var teacher = has(text, /(提醒|指導|示範|討論|陪同|回顧|詢問|追問|說明|分享|協助|回饋|引導|鼓勵|傾聽|確認)/);
+    var learner = has(text, /(學員.{0,20}(表示|能|可|願意|理解|說出|完成|調整|改善|進步|主動)|提醒後|指導後|經.{0,12}後|後續.{0,20}(能|可|願意|改善|追蹤))/);
+    var next = has(text, /(後續|下次|持續|下一步|再觀察|追蹤|加強|目標)/);
+    var label = has(text, /(懶惰|散漫|不用心|沒責任感|大而化之|無頭蒼蠅|個性.{0,6}(差|不好|內向|被動)|態度很差)/);
+    var errorVague = has(text, /(錯誤|疏忽|遺漏)/) && !has(text, /(給藥|交班|紀錄|評估|醫囑|管路|藥物|姓名|時間|劑量|病人|檢查|備物|引流|跌倒|壓傷)/);
+
+    var complete = [concrete, teacher, learner].filter(Boolean).length;
+
+    if (complete === 3 && !label && !errorVague) {
+      resultTitle.textContent = '這段已經很有內容，不需要為了更漂亮而改';
+      resultLead.textContent = '看得到實際情境、你的教學行動，也看得到學員的反應。保留你的語氣就很好。';
+      addGuide('已經寫得夠具體', '如果內容都是真實觀察，就可以直接使用。不是每一段都一定要再加更多。', '', true);
+      if (mode === 'epa' && !next) {
+        addGuide('EPA 可以再想一個「下一次觀察點」', '不是一定要補；如果這次的信賴程度還沒有完全穩定，可以留下一個下次最想看的行為。', prompts[mode].change, false);
+      }
+    } else {
+      resultTitle.textContent = '再多一點點，就會更容易讓人理解';
+      resultLead.textContent = '不是要把文字變漂亮，而是讓看到紀錄的人知道「你真的看到了什麼」。';
+
+      if (vague && !concrete) {
+        addGuide('目前比較像整體感受', '這些話可以保留，但如果只有「需加強、容易緊張、較被動」等描述，看到紀錄的人可能不知道你指的是哪一次。', prompts[mode].observe, false);
+      } else if (!concrete) {
+        addGuide('可以補一個實際情境', '不用寫很長，只要讓人知道這個回饋是從哪個行為或事件觀察到的。', prompts[mode].observe, false);
+      } else {
+        addGuide('情境已經看得出來', '你已經有寫到實際發生的內容，這部分可以保留。', '', true);
+      }
+
+      if (!teacher) {
+        addGuide('還看不太到「你怎麼帶」', '目前比較像在描述學員。如果當時你有做過提醒、示範、提問或陪同，可以補你真的做過的那一小段。', prompts[mode].action, false);
+      } else {
+        addGuide('已經看得到你的教學行動', '有寫到提醒、指導、討論或陪同，這會讓紀錄更有教學價值。', '', true);
+      }
+
+      if (!learner) {
+        addGuide('如果有觀察到學員反應，可以再補', '不需要硬寫「進步」。只有真的看到學員回應、重新操作、說出理解或行為改變時才補。', prompts[mode].change, false);
+      } else {
+        addGuide('已經有學員反應或改變', '這會讓回饋不只停在「老師有教」，也知道教學之後發生了什麼。', '', true);
+      }
+    }
+
+    if (label) {
+      addGuide('這句可能比較像在定義一個人', '可以先不要急著刪掉原意，但請回想：你真正看到的是哪個行為？正式紀錄盡量寫可觀察的事情。', '不是想「他是不是散漫」，而是想「哪一件事情沒有按預期完成？當時發生什麼？」', false);
+    }
+
+    if (errorVague) {
+      addGuide('「錯誤／疏忽」可以再具體一點', '這類字眼會影響後續判讀。如果方便，請補你實際指的是哪一類事情；不要讓系統替你猜。', '是哪一項工作？有沒有造成影響？你當時怎麼處理？', false);
+    }
+
+    result.scrollIntoView({behavior:'smooth', block:'nearest'});
   });
-})();
+});
 </script>
 </body>
 </html>
