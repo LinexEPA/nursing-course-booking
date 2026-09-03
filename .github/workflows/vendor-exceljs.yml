@@ -1,0 +1,43 @@
+name: Vendor ExcelJS locally
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vendor-exceljs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download pinned ExcelJS 4.4.0 package
+        run: |
+          set -euo pipefail
+          curl -fsSL https://registry.npmjs.org/exceljs/-/exceljs-4.4.0.tgz -o /tmp/exceljs.tgz
+          mkdir -p /tmp/exceljs
+          tar -xzf /tmp/exceljs.tgz -C /tmp/exceljs
+          test -f /tmp/exceljs/package/dist/exceljs.min.js
+          mkdir -p mentor-report-analyzer/vendor
+          cp /tmp/exceljs/package/dist/exceljs.min.js mentor-report-analyzer/vendor/exceljs-4.4.0.min.js
+          if [ -f /tmp/exceljs/package/LICENSE ]; then
+            cp /tmp/exceljs/package/LICENSE mentor-report-analyzer/vendor/EXCELJS-LICENSE.txt
+          fi
+
+      - name: Commit vendored dependency
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mentor-report-analyzer/vendor/
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Vendor ExcelJS 4.4.0 for local browser use'
+            git push
+          fi
