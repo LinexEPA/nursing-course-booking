@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self';" />
   <title>新手導師輔導紀錄分析</title>
   <style>
     :root{
@@ -148,16 +149,16 @@
       <div class="eyebrow"><span class="spark">✦</span> 每月輔導紀錄整理</div>
       <h1>新手導師輔導紀錄分析</h1>
       <p>
-        上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br>
+        載入本機的每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br>
         <span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>
       </p>
     </section>
 
     <section class="card">
       <div id="dropZone" class="drop">
-        <label class="pick" for="fileInput"><span>📎</span> 選擇本月 Excel</label>
+        <label class="pick" for="fileInput"><span>📎</span> 載入本機 Excel</label>
         <input id="fileInput" type="file" accept=".xlsx,.xls" />
-        <div class="filemeta" id="fileMeta">也可以直接把 .xlsx 拖曳到這裡</div>
+        <div class="filemeta" id="fileMeta">也可以直接把本機 .xlsx 拖曳到這裡</div>
       </div>
 
       <div id="status" class="status">尚未載入檔案，選擇本月清冊後即可開始。</div>
@@ -191,7 +192,7 @@
       </div>
 
       <div class="helper"><span class="heart">♡</span>系統先幫忙整理，最後仍由人工審閱與確認。</div>
-      <div class="note"><strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。</div>
+      <div class="note"><strong>資料安全：</strong>本工具僅在目前使用的電腦瀏覽器中讀取與分析 Excel。檔案不會上傳至外部平台、伺服器或資料庫，也不會提供給其他使用者；目前版本不使用 AI 或外部分析服務，分析結果會直接下載至目前裝置。</div>
     </section>
 
     <section class="feedback-section" aria-labelledby="feedbackTitle">
@@ -203,16 +204,16 @@
       <div class="feedback-panel">
         <div class="feedback-upload">
           <div class="feedback-upload-copy">
-            <strong>帶入本月審閱結果</strong>
+            <strong>載入本機審閱結果</strong>
             <span>請使用由本系統產生、並已完成「教委會感謝回饋」確認的主管審閱版 Excel。</span>
           </div>
           <div>
-            <label class="feedback-pick" for="feedbackFileInput"><span class="clip">📎</span> 帶入本月審閱結果</label>
+            <label class="feedback-pick" for="feedbackFileInput"><span class="clip">📎</span> 載入本機審閱結果</label>
             <input id="feedbackFileInput" type="file" accept=".xlsx,.xls" />
             <div id="feedbackMeta" class="feedback-filemeta">尚未選擇檔案</div>
           </div>
         </div>
-        <div id="feedbackStatus" class="feedback-status">帶入後會自動整理，不需要再按下一步。</div>
+        <div id="feedbackStatus" class="feedback-status">載入後會在目前瀏覽器中自動整理，不需要再按下一步。</div>
         <div id="feedbackCount" class="feedback-count" hidden></div>
         <div id="feedbackResults" class="feedback-results"></div>
       </div>
@@ -220,14 +221,15 @@
 
     <footer class="footer">
       <div class="copyright">© 台中慈濟醫院護理部教學委員會｜版權所有</div>
+      <div>本工具供院內業務使用；未經授權請勿重製、修改、散布或以本院名義對外使用。</div>
       <div class="meta">
-        <span class="version">版本 V1｜2026.09</span>
+        <span class="version">版本 V1.1｜2026.09</span>
         <span>製作／維護：吳東芸 護理長　｜　聯繫：<a href="mailto:tc150149@tzuchi.com.tw">tc150149@tzuchi.com.tw</a></span>
       </div>
     </footer>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="./vendor/exceljs-4.4.0.min.js?v=4.4.0"></script>
   <script src="./rules.js?v=20260903-6"></script>
   <script src="./rules-v14-patch.js?v=20260903-6"></script>
   <script src="./rules-v15-patch.js?v=20260903-6"></script>

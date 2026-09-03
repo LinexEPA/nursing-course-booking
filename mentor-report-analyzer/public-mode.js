@@ -17,10 +17,10 @@
   // 正式使用介面：保留柔和版的分行說明。
   const hero = document.querySelector('.hero');
   const heroText = hero?.querySelector('p');
-  if (heroText) heroText.innerHTML = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';
+  if (heroText) heroText.innerHTML = '載入本機的每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class="line2">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';
 
   const note = document.querySelector('.note');
-  if (note) note.innerHTML = '<strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';
+  if (note) note.innerHTML = '<strong>資料安全：</strong>本工具僅在目前使用的電腦瀏覽器中讀取與分析 Excel。檔案不會上傳至外部平台、伺服器或資料庫，也不會提供給其他使用者；目前版本不使用 AI 或外部分析服務，分析結果會直接下載至目前裝置。';
 
   // 頁尾正式資訊。
   const footerMeta = document.querySelector('.footer .meta');
