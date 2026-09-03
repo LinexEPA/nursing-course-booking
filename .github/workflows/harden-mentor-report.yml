@@ -1,0 +1,81 @@
+name: Harden mentor report local processing
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/harden-mentor-report.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update local-processing wording and browser policy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index = Path('mentor-report-analyzer/index.html')
+          s = index.read_text(encoding='utf-8')
+
+          csp = "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self';\" />\n"
+          marker = '  <meta name="viewport" content="width=device-width,initial-scale=1" />\n'
+          if 'Content-Security-Policy' not in s:
+              s = s.replace(marker, marker + csp)
+
+          replacements = {
+            '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。': '載入本機的每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。',
+            '<label class="pick" for="fileInput"><span>📎</span> 選擇本月 Excel</label>': '<label class="pick" for="fileInput"><span>📎</span> 載入本機 Excel</label>',
+            '也可以直接把 .xlsx 拖曳到這裡': '也可以直接把本機 .xlsx 拖曳到這裡',
+            '<div class="note"><strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。</div>': '<div class="note"><strong>資料安全：</strong>本工具僅在目前使用的電腦瀏覽器中讀取與分析 Excel。檔案不會上傳至外部平台、伺服器或資料庫，也不會提供給其他使用者；目前版本不使用 AI 或外部分析服務，分析結果會直接下載至目前裝置。</div>',
+            '<strong>帶入本月審閱結果</strong>': '<strong>載入本機審閱結果</strong>',
+            '<label class="feedback-pick" for="feedbackFileInput"><span class="clip">📎</span> 帶入本月審閱結果</label>': '<label class="feedback-pick" for="feedbackFileInput"><span class="clip">📎</span> 載入本機審閱結果</label>',
+            '<div id="feedbackStatus" class="feedback-status">帶入後會自動整理，不需要再按下一步。</div>': '<div id="feedbackStatus" class="feedback-status">載入後會在目前瀏覽器中自動整理，不需要再按下一步。</div>',
+            '<div class="copyright">© 台中慈濟醫院護理部教學委員會｜版權所有</div>': '<div class="copyright">© 台中慈濟醫院護理部教學委員會｜版權所有</div>\n      <div>本工具供院內業務使用；未經授權請勿重製、修改、散布或以本院名義對外使用。</div>',
+            '<span class="version">版本 V1｜2026.09</span>': '<span class="version">版本 V1.1｜2026.09</span>',
+            '<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>': '<script src="./vendor/exceljs-4.4.0.min.js?v=4.4.0"></script>'
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  print('WARN missing index string:', old[:80])
+              s = s.replace(old, new)
+          index.write_text(s, encoding='utf-8')
+
+          public = Path('mentor-report-analyzer/public-mode.js')
+          p = public.read_text(encoding='utf-8')
+          p = p.replace(
+            "if (heroText) heroText.innerHTML = '上傳每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class=\"line2\">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';",
+            "if (heroText) heroText.innerHTML = '載入本機的每月輔導紀錄清冊，系統先行整理可能需要關注的文字、管理事項與教學亮點。<br><span class=\"line2\">整理結果提供人工審閱與確認，並可產生審閱用 Excel。</span>';"
+          )
+          p = p.replace(
+            "if (note) note.innerHTML = '<strong>資料處理：</strong>上傳檔案僅於目前瀏覽器中處理，本系統不儲存上傳檔案；產出的 Excel 會直接下載至您的裝置。';",
+            "if (note) note.innerHTML = '<strong>資料安全：</strong>本工具僅在目前使用的電腦瀏覽器中讀取與分析 Excel。檔案不會上傳至外部平台、伺服器或資料庫，也不會提供給其他使用者；目前版本不使用 AI 或外部分析服務，分析結果會直接下載至目前裝置。';"
+          )
+          public.write_text(p, encoding='utf-8')
+          PY
+
+      - name: Verify no external runtime dependency remains
+        run: |
+          set -euo pipefail
+          test -f mentor-report-analyzer/vendor/exceljs-4.4.0.min.js
+          ! grep -R "cdn.jsdelivr.net\|unpkg.com\|cdnjs.cloudflare.com" mentor-report-analyzer/index.html mentor-report-analyzer/*.js
+          grep -q "connect-src 'none'" mentor-report-analyzer/index.html
+          grep -q "./vendor/exceljs-4.4.0.min.js" mentor-report-analyzer/index.html
+
+      - name: Commit changes
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mentor-report-analyzer/index.html mentor-report-analyzer/public-mode.js
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Clarify local-only data processing and remove external CDN runtime'
+            git push
+          fi
