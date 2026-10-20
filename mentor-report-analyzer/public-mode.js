@@ -82,19 +82,10 @@
     if (!file) throw new Error('請先選擇 Excel。');
     const wb = new ExcelJS.Workbook();
     await wb.xlsx.load(await file.arrayBuffer());
-    const ws = wb.worksheets[0];
-    if (!ws) throw new Error('找不到工作表。');
-    const headers = [];
-    ws.getRow(1).eachCell({includeEmpty:true}, (c,col) => headers[col] = h(c.value));
-    const rows = [];
-    for (let r=2; r<=ws.rowCount; r++) {
-      const obj = {};
-      headers.forEach((name,c) => { if (name) obj[name] = cellText(ws.getRow(r).getCell(c).value); });
-      if (!(obj['學員姓名'] || obj['導師姓名'])) continue;
-      rows.push({sourceRow:r, data:obj});
-    }
-    if (!rows.length) throw new Error('沒有讀到可分析的輔導紀錄。');
-    return {file, rows, analyses:rows.map(x => MentorRules.analyzeRecord(x.data, x.sourceRow))};
+    if (!window.MentorInputAdapter) throw new Error('欄位辨識元件未載入，請重新整理頁面後再試。');
+    const parsed = window.MentorInputAdapter.parseWorkbook(wb);
+    const rows = parsed.rows;
+    return {file, rows, mapping:parsed.mapping, analyses:rows.map(x => MentorRules.analyzeRecord(x.data, x.sourceRow))};
   }
 
   async function makePublicDetailed() {
