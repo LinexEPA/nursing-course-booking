@@ -33,21 +33,14 @@
     try{
       setStatus('正在讀取 Excel…');
       const wb=new ExcelJS.Workbook(); await wb.xlsx.load(await file.arrayBuffer());
-      const ws=wb.worksheets[0]; if(!ws)throw new Error('找不到工作表。');
-      const headers=[]; ws.getRow(1).eachCell({includeEmpty:true},(c,col)=>headers[col]=h(c.value));
-      const headerSet=new Set(headers.filter(Boolean));
-      const missing=REQUIRED.filter(x=>!headerSet.has(h(x))); if(missing.length)throw new Error(`來源格式不符，缺少欄位：${missing.join('、')}`);
-      const rows=[];
-      for(let r=2;r<=ws.rowCount;r++){
-        const obj={}; headers.forEach((name,c)=>{if(name)obj[name]=cellText(ws.getRow(r).getCell(c).value)});
-        if(!(obj['學員姓名']||obj['導師姓名']))continue;
-        rows.push({sourceRow:r,data:obj});
-      }
-      if(!rows.length)throw new Error('沒有讀到可分析的輔導紀錄。');
+      if(!window.MentorInputAdapter)throw new Error('欄位辨識元件未載入，請重新整理頁面後再試。');
+      const parsed=window.MentorInputAdapter.parseWorkbook(wb);
+      const rows=parsed.rows;
       state.fileName=file.name; state.rows=rows; state.year=rows[0].data['年度']||''; state.month=rows[0].data['月份']||rows[0].data['輔導月份']||'';
       state.analyses=rows.map(x=>MentorRules.analyzeRecord(x.data,x.sourceRow));
       updateSummary(); els.meta.textContent=`${file.name}｜${rows.length} 筆紀錄`; els.detail.disabled=false; els.supervisor.disabled=false;
-      setStatus(`分析完成：固定規則 ${MentorRules.RULE_VERSION} 已完成第一輪分類。`,'ok');
+      const mapped=parsed.mapping?.record ? `｜已辨識紀錄欄：「${parsed.mapping.record}」` : '';
+      setStatus(`分析完成：固定規則 ${MentorRules.RULE_VERSION} 已完成第一輪分類${mapped}。`,'ok');
     }catch(err){console.error(err);state.rows=[];state.analyses=[];els.detail.disabled=true;els.supervisor.disabled=true;setStatus(`讀取失敗：${err.message||err}`,'warn');}
   }
 
