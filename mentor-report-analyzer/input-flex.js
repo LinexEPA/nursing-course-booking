@@ -61,11 +61,7 @@
   }
 
   function detectRecordColumn(ws, headers, headerRow) {
-    const exact = matchHeader(headers, aliases.record);
-    if (exact > 0 && !answerLike.test(headers[exact])) {
-      return { col: exact, reason: '欄位名稱辨識' };
-    }
-
+    const named = [];
     const candidates = [];
     for (let c = 1; c < headers.length; c++) {
       const header = headers[c] || '';
@@ -73,12 +69,25 @@
       if ([...aliases.student, ...aliases.mentor, ...aliases.unit, ...aliases.year, ...aliases.month].some(rx => rx.test(header))) continue;
 
       const values = columnSamples(ws, c, headerRow);
-      if (values.length < 1) continue;
+      if (!values.length || values.every(value => /^(是|否|yes|no|true|false|0|1|已完成|未完成)$/i.test(value.trim()))) continue;
+
+      if (aliases.record.some(pattern => pattern.test(header))) {
+        named.push({ col: c, header });
+      }
       const avg = avgTextLength(values);
       const longRatio = values.filter(v => v.length >= 30).length / values.length;
       if (avg >= 35 || longRatio >= 0.45) {
         candidates.push({ col: c, header, avg, longRatio });
       }
+    }
+
+    const exact = named.find(({ header }) => aliases.record[0].test(header));
+    if (exact) return { col: exact.col, reason: '完整欄名辨識' };
+
+    const namedRecord = named.find(({ col }) => candidates.some(candidate => candidate.col === col));
+    if (namedRecord) return { col: namedRecord.col, reason: '欄位名稱與內容辨識' };
+    if (named.length === 1 && !candidates.length) {
+      return { col: named[0].col, reason: '欄位名稱辨識' };
     }
 
     candidates.sort((a, b) => (b.avg + b.longRatio * 40) - (a.avg + a.longRatio * 40));
