@@ -119,6 +119,13 @@
           '教學亮點候選':a.highlight?'是':'否','教學亮點類型':a.highlightType||'','備註':''
         });
         out.eachCell({includeEmpty:true}, c => { c.alignment={vertical:'top',wrapText:true}; c.border=border; });
+        if (a.managementIssue?.split('、').includes('續輔與停止原因不一致')) {
+          for (const column of [13, 14, 15]) {
+            const cell = out.getCell(column);
+            cell.font = { ...cell.font, bold: true, color: { argb: 'FF9C0006' } };
+            cell.fill = fill('FFFFE3E3');
+          }
+        }
         out.height=72;
       });
 
