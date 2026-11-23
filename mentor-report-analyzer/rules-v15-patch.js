@@ -63,10 +63,9 @@
 
     const continueMentoring = txt(row?.['下個月是否持續輔導']).trim();
     const hasStopReason = Boolean(txt(row?.['停止輔導原因']).trim());
-    const hasClosureDetails = hasStopReason || Boolean(txt(row?.['其他結案說明']).trim());
     let followUpWarning = '';
-    if (continueMentoring === '是' && hasClosureDetails) {
-      followUpWarning = '已選擇持續輔導，但有填寫停止原因或結案說明，請確認下月是否續輔。';
+    if (continueMentoring === '是' && hasStopReason) {
+      followUpWarning = '已選擇持續輔導，但有填寫停止輔導原因，請確認下月是否續輔。';
     } else if (continueMentoring === '否' && !hasStopReason) {
       followUpWarning = '已選擇不再持續輔導，請補填停止輔導原因。';
     }
@@ -88,5 +87,5 @@
     return out;
   };
 
-  M.RULE_VERSION = 'v1.6';
+  M.RULE_VERSION = 'v1.7';
 })();
