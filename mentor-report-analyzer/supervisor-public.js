@@ -91,7 +91,9 @@
     const typoCases=analyses.filter(a=>a.typoAlert);
     const reviewCases=analyses.filter(nonTypoReview);
     const approvalCases=reviewCases.filter(a=>a.needsApproval);
-    const mgmtCases=analyses.filter(a=>a.management);
+    const hasContinuationWarning = a => a.managementIssue?.split('、').includes('續輔與停止原因不一致') ?? false;
+    const mgmtCases=analyses.filter(a=>a.management)
+      .sort((a, b) => Number(hasContinuationWarning(b)) - Number(hasContinuationWarning(a)));
     const highlights=analyses.filter(a=>a.highlight);
 
     const wb=new ExcelJS.Workbook();
@@ -128,6 +130,13 @@
     mgmtCases.forEach(a=>{
       const row=mg.addRow([a.row['單位']||'待補',a.caseId,a.row['學員姓名']||'',a.row['導師姓名']||'',a.managementIssue||'',a.managementState||'',a.managementQuestion||'','','','']);
       styleRow(row,{height:64});
+      if (hasContinuationWarning(a)) {
+        for (const column of [5, 6, 7]) {
+          const cell = row.getCell(column);
+          cell.font = { ...cell.font, bold: true, color: { argb: 'FF9C0006' } };
+          cell.fill = fill('FFFFE3E3');
+        }
+      }
     });
     mg.autoFilter={from:'A3',to:'J3'}; mg.views=[{state:'frozen',ySplit:3}];
 
