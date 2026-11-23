@@ -34,6 +34,27 @@
     }
   }
 
+  function addLearningRecordSuggestions(out, text) {
+    const suggestions = [];
+    const vagueLearning = text.match(/偶爾還是會漏(?=[，。；、\s]|$)|偶爾仍會漏(?=[，。；、\s]|$)|(?:提醒後|指導後)[，、\s]*(?:目前可以|已有改善)(?=[，。；、\s]|$)/);
+    if (vagueLearning) {
+      suggestions.push(`學習歷程｜「${vagueLearning[0]}」請補充學員在哪一步遇到困難，以及提醒後能做到哪一步。若尚未再觀察，可寫下次要確認的項目。`);
+    }
+
+    const vagueGuidance = text.match(/(?:^|[，。；、\s])(?:導師|老師|教師)?(?:已|有再|再次)(?:提醒|指導|衛教)(?=[，。；、\s]|$)/);
+    const concreteGuidance = /(?:導師|老師|教師)[^，。；\n]{0,30}(?:示範|提問|陪同|引導|(?:用|依照|對照).{1,12}(?:提示|提醒))/.test(text);
+    if (vagueGuidance && !concreteGuidance) {
+      const phrase = vagueGuidance[0].replace(/^[，。；、\s]+/, '');
+      suggestions.push(`教師輔導｜「${phrase}」請寫明提醒的內容，或補充你如何示範、提問或引導學員練習。`);
+    }
+
+    if (!suggestions.length) return;
+    out.textIssue = true;
+    out.textType ||= '輔導紀錄建議補充';
+    out.textReason ||= '紀錄中的學員表現或教師輔導方式可再寫具體。';
+    out.textSuggestion = [out.textSuggestion, ...suggestions].filter(Boolean).join('\n');
+  }
+
   M.analyzeRecord = function(row, sourceRow) {
     const out = baseAnalyze(row, sourceRow);
     const t = txt(row?.['陪伴訓練紀錄']).trim();
@@ -83,9 +104,10 @@
       out.managementQuestion = '';
     }
 
+    addLearningRecordSuggestions(out, t);
     out.confidence = out.textIssue || out.management ? (out.needsApproval ? '高' : '中') : '高';
     return out;
   };
 
-  M.RULE_VERSION = 'v1.7';
+  M.RULE_VERSION = 'v1.8';
 })();
