@@ -133,5 +133,10 @@
   }
 
   els.input.addEventListener('change',e=>loadFile(e.target.files?.[0]));els.detail.addEventListener('click',makeDetailed);els.supervisor.addEventListener('click',makeSupervisor);
-  ['dragenter','dragover'].forEach(evt=>els.drop.addEventListener(evt,e=>{e.preventDefault();els.drop.classList.add('drag')}));['dragleave','drop'].forEach(evt=>els.drop.addEventListener(evt,e=>{e.preventDefault();els.drop.classList.remove('drag')}));els.drop.addEventListener('drop',e=>loadFile(e.dataTransfer?.files?.[0]));
+  ['dragenter','dragover'].forEach(evt=>els.drop.addEventListener(evt,e=>{e.preventDefault();els.drop.classList.add('drag')}));['dragleave','drop'].forEach(evt=>els.drop.addEventListener(evt,e=>{e.preventDefault();els.drop.classList.remove('drag')}));els.drop.addEventListener('drop', e => {
+    const files = e.dataTransfer?.files;
+    if (!files?.length) return;
+    els.input.files = files;
+    loadFile(files[0]);
+  });
 })();
