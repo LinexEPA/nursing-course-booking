@@ -19,22 +19,11 @@
 
   <section class="card hidden" id="closed"><h2>本次補查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
 
-  <section class="card" id="loginCard">
-    <h2>護理長身分驗證</h2>
-    <div class="field"><label for="email">院內信箱 <span class="req">*</span></label><input class="control" id="email" type="email" inputmode="email" autocomplete="email" placeholder="請輸入 @tzuchi.com.tw 信箱"></div>
-    <button class="button wide" id="sendCode" type="button">寄送驗證碼</button>
-    <div id="codeArea" class="hidden">
-      <div class="divider"></div>
-      <div class="field"><label for="otp">信箱驗證碼</label><input class="control" id="otp" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 位數驗證碼"><div class="hint">驗證碼有效 10 分鐘。</div></div>
-      <button class="button wide" id="verifyCode" type="button">確認身分</button>
-    </div>
-    <div class="status" id="loginStatus" role="status" aria-live="polite"></div>
-  </section>
-
-  <form id="creditForm" class="hidden" autocomplete="off">
+  <form id="creditForm" autocomplete="off">
     <section class="card">
-      <h2>教師資料</h2>
-      <div class="verified"><i class="dot"></i><span id="managerText"></span></div>
+      <h2>登記資料</h2>
+      <div class="field"><label for="unit">單位 <span class="req">*</span></label><input class="control" id="unit" required maxlength="40" placeholder="請輸入單位"></div>
+      <div class="field"><label for="managerName">護理長全名 <span class="req">*</span></label><input class="control" id="managerName" required maxlength="40" placeholder="請輸入全名"></div>
       <div class="field"><label for="teacherName">臨床教師全名 <span class="req">*</span></label><input class="control" id="teacherName" required maxlength="40" placeholder="請輸入全名" autocomplete="off"></div>
       <div class="field"><label for="nationalId">臨床教師身分證字號 <span class="req">*</span></label><div class="inline"><input class="control" id="nationalId" required type="password" maxlength="12" placeholder="請輸入完整身分證字號" autocomplete="new-password" autocapitalize="characters" spellcheck="false"><button id="toggleId" class="button secondary" type="button">顯示／隱藏</button></div><div class="hint">僅用於辨識同名教師；完整原文不儲存於試算表。</div></div>
     </section>
@@ -57,6 +46,7 @@
         <label class="option"><input name="course2" type="radio" value="已收到尚未填答"><span>已收到，尚未填答</span></label>
         <label class="option"><input name="course2" type="radio" value="無須補查"><span>無須補查</span></label>
       </div>
+      <p class="tiny" style="margin-top:14px">第一、二堂學分將依實際簽到單核對。</p>
     </section>
 
     <section class="card">
@@ -68,11 +58,11 @@
         <label class="option"><input name="course3" type="radio" value="無須補查"><span>無須補查</span></label>
       </div>
       <div class="field hidden" id="pgyArea" style="margin-top:18px"><label for="pgyName">接受評核的 PGY 學員全名 <span class="req">*</span></label><input class="control" id="pgyName" maxlength="40" placeholder="請輸入學員全名"></div>
-      <p class="tiny" style="margin-top:16px">第三堂須教師及 PGY 學員親筆簽名、護理長核章，並繳回紙本後才可認列學分。</p>
+      <p class="tiny" style="margin-top:16px">第三堂以繳回承辦人的紙本評核表核對，需有臨床教師與 PGY 學員親筆簽名，並經護理長核章。</p>
     </section>
 
     <section class="card">
-      <div class="privacy"><span aria-hidden="true">🔒</span><span>資料僅供本次學分補查使用。教師身分證字號於伺服端轉為不可逆比對碼，試算表不保存完整號碼。</span></div>
+      <div class="privacy"><span aria-hidden="true">🔒</span><span>送出僅代表申請補查，不等於直接入學分。教師身分證字號僅用於識別，試算表不保存完整號碼。</span></div>
       <button id="submit" class="button wide" type="submit">確認送出</button>
       <div id="formStatus" class="status" role="status" aria-live="polite"></div>
     </section>
@@ -85,7 +75,6 @@
   <p class="footer">115年度護理部 EPAs 系列課程</p>
 </main>
 <script>
-  let sessionToken = '';
   let submitting = false;
   const $ = id => document.getElementById(id);
   const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
@@ -95,44 +84,11 @@
   }
   function hideStatus(id) { $(id).className = 'status'; $(id).textContent = ''; }
   function fail(id, error) { status(id, error && error.message ? error.message : '連線失敗，請稍後再試。', 'err'); }
-  function isEmail(email) { return /^[A-Za-z0-9._%+-]+@tzuchi\.com\.tw$/i.test(email); }
-
   google.script.run.withSuccessHandler(result => {
-    if (!result.open) { show('closed', true); show('loginCard', false); }
+    if (!result.open) { show('closed', true); show('creditForm', false); }
   }).withFailureHandler(() => {
-    status('loginStatus', '暫時無法確認系統狀態，請稍後再試。', 'err');
+    show('creditForm', false); show('closed', true);
   }).getFormStatus();
-
-  $('sendCode').addEventListener('click', () => {
-    const email = $('email').value.trim();
-    if (!isEmail(email)) { status('loginStatus', '請輸入正確的院內信箱。', 'err'); return; }
-    $('sendCode').disabled = true;
-    status('loginStatus', '正在寄送驗證碼…', 'wait');
-    google.script.run.withSuccessHandler(result => {
-      $('sendCode').disabled = false;
-      show('codeArea', true);
-      status('loginStatus', result.message, 'ok');
-    }).withFailureHandler(error => {
-      $('sendCode').disabled = false; fail('loginStatus', error);
-    }).requestOtp(email);
-  });
-
-  $('verifyCode').addEventListener('click', () => {
-    const email = $('email').value.trim();
-    const code = $('otp').value.trim();
-    if (!/^\d{6}$/.test(code)) { status('loginStatus', '請輸入 6 位數驗證碼。', 'err'); return; }
-    $('verifyCode').disabled = true;
-    status('loginStatus', '正在確認身分…', 'wait');
-    google.script.run.withSuccessHandler(result => {
-      sessionToken = result.token;
-      $('managerText').textContent = result.unit + '｜' + result.manager + ' 護理長';
-      $('otp').value = '';
-      show('loginCard', false); show('creditForm', true);
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }).withFailureHandler(error => {
-      $('verifyCode').disabled = false; fail('loginStatus', error);
-    }).verifyOtp(email, code);
-  });
 
   document.querySelectorAll('input[name="course3"]').forEach(input => input.addEventListener('change', () => {
     const value = document.querySelector('input[name="course3"]:checked')?.value || '';
@@ -151,6 +107,7 @@
     if (submitting) return;
     if (!$('creditForm').reportValidity()) return;
     const payload = {
+      unit: $('unit').value.trim(), managerName: $('managerName').value.trim(),
       teacherName: $('teacherName').value.trim(), nationalId: $('nationalId').value.trim(),
       course1: document.querySelector('input[name="course1"]:checked')?.value || '',
       course2: document.querySelector('input[name="course2"]:checked')?.value || '',
@@ -162,18 +119,20 @@
     google.script.run.withSuccessHandler(result => {
       submitting = false; $('submit').disabled = false;
       $('nationalId').value = ''; payload.nationalId = '';
-      $('doneText').textContent = result.message + ' 這筆資料將由承辦人查核。';
+      $('doneText').textContent = result.message;
       show('creditForm', false); show('done', true);
       window.scrollTo({top: 0, behavior: 'smooth'});
     }).withFailureHandler(error => {
       submitting = false; $('submit').disabled = false;
       payload.nationalId = '';
       fail('formStatus', error);
-    }).submitCreditRecord(sessionToken, payload);
+    }).submitCreditRecord(payload);
   });
 
   $('again').addEventListener('click', () => {
+    const unit = $('unit').value, managerName = $('managerName').value;
     $('creditForm').reset(); $('nationalId').type = 'password';
+    $('unit').value = unit; $('managerName').value = managerName;
     show('pgyArea', false); $('pgyName').required = false;
     hideStatus('formStatus'); show('done', false); show('creditForm', true);
     window.scrollTo({top: 0, behavior: 'smooth'});
