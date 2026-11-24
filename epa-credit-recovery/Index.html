@@ -19,7 +19,15 @@
 
   <section class="card hidden" id="closed"><h2>本次補查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
 
-  <form id="creditForm" autocomplete="off">
+  <section class="card" id="accessGate">
+    <h2>請輸入護理長共用碼</h2>
+    <div class="field"><label for="accessCode">共用碼</label><input class="control" id="accessCode" type="password" maxlength="64" placeholder="請輸入共用碼" autocomplete="off" spellcheck="false"></div>
+    <button id="unlock" class="button wide" type="button">進入補查表單</button>
+    <div id="gateStatus" class="status" role="status" aria-live="polite"></div>
+    <p class="tiny" style="margin-top:13px">共用碼請由護理長保管，勿轉傳同仁。</p>
+  </section>
+
+  <form id="creditForm" class="hidden" autocomplete="off">
     <section class="card">
       <h2>登記資料</h2>
       <div class="field"><label for="unit">單位 <span class="req">*</span></label><input class="control" id="unit" required maxlength="40" placeholder="請輸入單位"></div>
@@ -76,6 +84,7 @@
 </main>
 <script>
   let submitting = false;
+  let sharedAccessCode = '';
   const $ = id => document.getElementById(id);
   const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
   function status(id, message, type) {
@@ -85,10 +94,31 @@
   function hideStatus(id) { $(id).className = 'status'; $(id).textContent = ''; }
   function fail(id, error) { status(id, error && error.message ? error.message : '連線失敗，請稍後再試。', 'err'); }
   google.script.run.withSuccessHandler(result => {
-    if (!result.open) { show('closed', true); show('creditForm', false); }
+    if (!result.open) { show('closed', true); show('accessGate', false); show('creditForm', false); }
   }).withFailureHandler(() => {
-    show('creditForm', false); show('closed', true);
+    show('creditForm', false); show('accessGate', false); show('closed', true);
   }).getFormStatus();
+
+  function unlockForm() {
+    const code = $('accessCode').value.trim().toUpperCase();
+    if (!code) { status('gateStatus', '請輸入共用碼。', 'err'); return; }
+    $('unlock').disabled = true;
+    status('gateStatus', '正在確認…', 'wait');
+    google.script.run.withSuccessHandler(() => {
+      sharedAccessCode = code;
+      $('accessCode').value = '';
+      $('unlock').disabled = false;
+      hideStatus('gateStatus'); show('accessGate', false); show('creditForm', true);
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }).withFailureHandler(error => {
+      $('unlock').disabled = false;
+      fail('gateStatus', error);
+    }).verifySharedCode(code);
+  }
+  $('unlock').addEventListener('click', unlockForm);
+  $('accessCode').addEventListener('keydown', event => {
+    if (event.key === 'Enter') { event.preventDefault(); unlockForm(); }
+  });
 
   document.querySelectorAll('input[name="course3"]').forEach(input => input.addEventListener('change', () => {
     const value = document.querySelector('input[name="course3"]:checked')?.value || '';
@@ -107,6 +137,7 @@
     if (submitting) return;
     if (!$('creditForm').reportValidity()) return;
     const payload = {
+      accessCode: sharedAccessCode,
       unit: $('unit').value.trim(), managerName: $('managerName').value.trim(),
       teacherName: $('teacherName').value.trim(), nationalId: $('nationalId').value.trim(),
       course1: document.querySelector('input[name="course1"]:checked')?.value || '',
@@ -119,12 +150,14 @@
     google.script.run.withSuccessHandler(result => {
       submitting = false; $('submit').disabled = false;
       $('nationalId').value = ''; payload.nationalId = '';
+      payload.accessCode = '';
       $('doneText').textContent = result.message;
       show('creditForm', false); show('done', true);
       window.scrollTo({top: 0, behavior: 'smooth'});
     }).withFailureHandler(error => {
       submitting = false; $('submit').disabled = false;
       payload.nationalId = '';
+      payload.accessCode = '';
       fail('formStatus', error);
     }).submitCreditRecord(payload);
   });
