@@ -4,11 +4,12 @@
 
 ## 部署架構
 
-- GitHub Pages 的 `credit-check.html` 僅提供入口，不蒐集教師資料。
-- Google Apps Script 的 `Index.html` 才是實際填寫畫面，透過 HTTPS 把資料傳給 `Code.gs`。
+- GitHub Pages 的 `credit-check.html` 是實際填寫畫面，網址維持 `linexepa.github.io/nursing-course-booking/credit-check.html`。
+- 完整身分證字號只在使用者裝置的瀏覽器暫存，按送出後以 HTTPS 的原生表單 POST **直接**傳至 Google Apps Script；不經 GitHub 伺服器，也不寫入 GitHub 儲存庫。
+- Apps Script `Code.gs` 的 `doPost` 驗證共用碼及送出資料，透過無個資的隱藏 iframe 回覆成功／失敗狀態。`Index.html` 僅作為直接開啟 Apps Script 網址時的備援頁面。
 - 私人 Google 試算表的 `補查資料`、`異動紀錄` 保存補查記錄，未經查核不自動入學分。
 - 完整身分證字號在伺服端計算 HMAC-SHA256，試算表僅保存不可逆比對碼與遮蔽顯示。Script Properties 保存秘密金鑰。
-- 共用碼僅存在 Apps Script 私有 Script Properties 的 `EPA_CREDIT_SHARED_CODE`，GitHub 的公開程式碼不能含有明碼。開啟表單與送出時都會由伺服端核對。
+- 共用碼僅存在 Apps Script 私有 Script Properties 的 `EPA_CREDIT_SHARED_CODE`，GitHub 的公開程式碼不能含有明碼。進入表單與送出時都會由伺服端核對。
 
 ## 回填欄位
 
@@ -31,7 +32,7 @@
 1. 由院內確認以外部 Google Apps Script / 私人 Google Sheets 收集臨床教師完整身分證字號的蒐集告知、必要性、存取及保存期限。
 2. 在獨立 Google Sheet 綁定 Apps Script，貼入 `Code.gs` 與 `Index.html`，從編輯器執行 `initialize()`。至專案設定的「指令碼屬性」設定 `EPA_CREDIT_SHARED_CODE`，填入由承辦人私下交付護理長的共用碼，**不可放入 GitHub**。
 3. Web App 部署「執行身分：我」、「存取：所有人」。開啟表單與提交紀錄皆需通過後端共用碼檢查；仍須以簽到單與紙本表單人工核對。
-4. 以虛構資料測試提交與遮蔽儲存後，移除測試紀錄。將正式 Web App `/exec` URL 配置於 GitHub 的 `credit-check.html`，切換 `OPEN_FOR_REQUESTS` 為 true。
+4. 以虛構資料測試提交與遮蔽儲存後，移除測試紀錄。將正式 Web App `/exec` URL 配置於 GitHub 的 `credit-check.html`；首頁「學分補查」直接指向同網域 `credit-check.html`。
 5. 試算表不可設為公開或「知道連結的任何人」。不可在 GitHub、URL、郵件、前端儲存或日誌留下教師完整身分證字號。
 
 ## 安全限制
