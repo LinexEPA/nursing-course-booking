@@ -28,11 +28,11 @@
   </section>
 </main>
 <script>
-  // 僅填入「獨立的、已完成存取控制」之 Apps Script Web App /exec 連結。
+  // 獨立的 Apps Script Web App /exec 表單網址。
   // 絕不可改用原本的預約 Apps Script URL。
   const SECURE_CREDIT_FORM_URL = 'https://script.google.com/macros/s/AKfycbxyB3dYolmPYp5aE6E2jc-awyUPgdHKIhVG9JFTlNSkaVJRDnWJKSal0XjdolZKrlEB/exec';
-  // 護理長院內信箱名單完成並通過實測後才切換為 true。
-  const OPEN_FOR_REQUESTS = false;
+  // 本次採登記後人工核對簽到單或紙本評核表；不使用信箱或填寫碼。
+  const OPEN_FOR_REQUESTS = true;
   const expired = new Date() > new Date('2026-12-05T23:59:59+08:00');
   if (expired) {
     document.getElementById('openArea').style.display = 'none';
