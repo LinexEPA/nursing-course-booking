@@ -1,227 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>EPAs 學分補查｜護理教育 Learning Hub</title>
   <meta name="robots" content="noindex,nofollow">
+  <title>EPAs 學分補查｜護理教育 Learning Hub</title>
   <style>
-    :root{--bg:#faf9f6;--ink:#2d3540;--muted:#77818b;--blue:#527c9f;--blue-soft:#e5f0f8;--line:#e8e6e3;--rose:#f7e8e6;--white:#fff;--shadow:0 12px 34px rgba(44,60,76,.06)}
-    *{box-sizing:border-box}html{font-size:16px}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.65}
-    .wrap{max-width:780px;margin:auto;padding:30px 20px 80px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}.brand{font-size:.72rem;letter-spacing:.16em;font-weight:850;color:var(--blue)}.deadline{display:inline-flex;padding:6px 11px;border-radius:999px;background:#fff1db;color:#8b6434;font-size:.79rem;font-weight:800}
-    h1{font-size:clamp(2rem,5.5vw,2.8rem);line-height:1.2;letter-spacing:-.04em;margin:0 0 9px}.sub{color:var(--muted);font-size:.9rem;margin:0}.intro{margin-bottom:28px}.card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:25px 26px;margin:13px 0;box-shadow:var(--shadow)}.card h2{font-size:1.09rem;margin:0 0 17px;letter-spacing:-.01em}.eyebrow{font-size:.76rem;letter-spacing:.07em;color:var(--blue);font-weight:900;margin:0 0 7px}.field{margin:0 0 16px}.field:last-child{margin-bottom:0}.field label,.label{display:block;font-size:.91rem;font-weight:780;margin:0 0 7px}.req{color:#b36d74}.control{display:block;width:100%;min-height:52px;background:#fcfcfb;border:1px solid #d9dde2;border-radius:12px;padding:11px 14px;font:inherit;font-size:1rem;color:var(--ink);outline:none}.control:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(82,124,159,.12)}.inline{display:flex;gap:9px}.inline .control{flex:1;min-width:0}.inline button{flex:0 0 auto}.hint{color:var(--muted);font-size:.77rem;margin-top:5px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{position:relative;cursor:pointer}.option input{position:absolute;opacity:0;inset:0}.option span{display:flex;align-items:center;min-height:62px;height:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#4c5661;font-size:.88rem;line-height:1.4}.option input:checked+span{border-color:var(--blue);background:var(--blue-soft);color:#295474;font-weight:800}.option input:focus-visible+span{outline:3px solid #83b3da;outline-offset:2px}.button{border:0;border-radius:12px;padding:13px 17px;min-height:49px;background:var(--blue);color:#fff;font:inherit;font-weight:850;cursor:pointer}.button.secondary{background:#e7edf1;color:#3f6787}.button:disabled{opacity:.5;cursor:default}.button.wide{display:block;width:100%;margin-top:19px}.helper-line{margin-top:10px;color:var(--muted);font-size:.8rem}.tiny{color:var(--muted);font-size:.77rem;line-height:1.7}.status{display:none;border-radius:12px;padding:12px 14px;margin-top:13px;font-size:.87rem}.status.show{display:block}.status.err{color:#8b464d;background:var(--rose)}.status.ok{color:#37695d;background:#e8f3ee}.status.wait{color:#806634;background:#fff4de}.verified{display:flex;align-items:center;gap:10px;background:#edf5fb;border-radius:13px;padding:11px 14px;font-size:.86rem;font-weight:750;margin-bottom:18px}.dot{width:10px;height:10px;border-radius:50%;background:#75a493;flex:0 0 auto}.divider{height:1px;background:var(--line);margin:10px 0 22px}.privacy{display:flex;gap:8px;color:#5c7180;background:#f1f6f8;border-radius:12px;padding:12px 13px;font-size:.78rem;line-height:1.6}.result{text-align:center;padding:48px 26px}.check{width:55px;height:55px;margin:0 auto 15px;border-radius:50%;background:#e5f2e9;color:#42795d;display:grid;place-items:center;font-weight:900;font-size:1.5rem}.hidden{display:none!important}.small-link{display:inline-block;margin-top:14px;border:none;background:transparent;color:var(--blue);font:inherit;font-size:.86rem;text-decoration:underline;cursor:pointer}.footer{color:#a3a5a6;text-align:center;font-size:.74rem;margin:30px 0}
-    @media(max-width:620px){.wrap{padding:20px 12px 60px}.top{margin-bottom:22px}.card{padding:19px 16px;border-radius:17px}.options{grid-template-columns:1fr}.option span{min-height:53px}.inline{flex-direction:column}.inline button{width:100%}h1{font-size:2rem}}
+    :root{--bg:#faf9f6;--ink:#2d3540;--muted:#71808b;--blue:#527c9f;--soft:#e5f0f8;--line:#e4e7ea;--rose:#f7e8e6;--white:#fff}
+    *{box-sizing:border-box}html{font-size:16px}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.6}
+    .wrap{max-width:800px;margin:auto;padding:28px 20px 70px}.back{display:inline-block;margin-bottom:17px;color:var(--blue);text-decoration:none;font-size:.85rem}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}.brand{font-size:.72rem;letter-spacing:.16em;font-weight:850;color:var(--blue)}.deadline{display:inline-flex;padding:6px 11px;border-radius:999px;background:#fff1db;color:#8b6434;font-size:.8rem;font-weight:800}
+    h1{font-size:clamp(2rem,5.5vw,2.7rem);line-height:1.2;letter-spacing:-.03em;margin:0 0 9px}h2{font-size:1.12rem;margin:0 0 16px}.sub{color:var(--muted);font-size:.91rem;margin:0}.intro{margin-bottom:24px}.eyebrow{font-size:.76rem;letter-spacing:.06em;color:var(--blue);font-weight:850;margin:0 0 7px}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:19px;padding:24px 26px;margin:13px 0;box-shadow:0 10px 32px rgba(44,60,76,.04)}.field{margin-bottom:17px}.field:last-child{margin-bottom:0}.field label{display:block;font-size:.92rem;font-weight:760;margin:0 0 7px}.req{color:#b36d74}.control{display:block;width:100%;min-height:51px;background:#fcfcfb;border:1px solid #d6dde3;border-radius:11px;padding:11px 13px;font:inherit;font-size:1rem;color:var(--ink);outline:none}.control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(82,124,159,.12)}.hint{color:var(--muted);font-size:.8rem;margin-top:6px}
+    .button{border:0;border-radius:11px;padding:12px 16px;min-height:49px;background:var(--blue);color:#fff;font:inherit;font-weight:800;cursor:pointer}.button.secondary{background:#eaf0f5;color:#426b8b}.button.wide{display:block;width:100%;margin-top:16px}.button:disabled{opacity:.5;cursor:default}.button.small{min-height:38px;padding:5px 12px;font-size:.82rem}.inline{display:flex;gap:9px}.inline .control{flex:1;min-width:0}
+    .hidden{display:none!important}.status{display:none;border-radius:11px;padding:11px 13px;margin-top:13px;font-size:.87rem}.status.show{display:block}.status.err{color:#8b464d;background:var(--rose)}.status.ok{color:#37695d;background:#e8f3ee}.status.wait{color:#806634;background:#fff4de}.tiny{color:var(--muted);font-size:.8rem;line-height:1.7}
+    .course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.course-choice{border:1px solid #d6e1e9;border-radius:14px;background:#fbfdff;text-align:left;padding:16px 13px;cursor:pointer;min-height:130px;color:var(--ink);font:inherit}.course-choice:hover,.course-choice:focus-visible{border-color:var(--blue);background:var(--soft)}.course-choice b{display:block;color:var(--blue);font-size:.82rem;margin-bottom:9px}.course-choice span{display:block;font-size:1rem;font-weight:800;line-height:1.45}
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.section-head h2{margin-bottom:8px}.teacher-entry{border:1px solid var(--line);background:#fff;border-radius:14px;margin:13px 0;padding:18px 17px}.teacher-entry .field{margin-bottom:13px}.teacher-entry .field:last-child{margin-bottom:0}.teacher-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}.teacher-top strong{color:#436a88;font-size:.92rem}.teacher-top button{background:transparent;color:#9b6266;border:0;font:inherit;font-size:.82rem;cursor:pointer;padding:4px}.add{border:1px dashed #91b1c8;background:#f5f9fc;color:#416b8b;width:100%;border-radius:11px;min-height:49px;font:inherit;font-weight:800;cursor:pointer;margin-top:10px}.privacy{color:#5c7180;background:#f1f6f8;border-radius:11px;padding:12px 14px;font-size:.82rem}.actions{display:flex;gap:10px}.actions>*{flex:1}.done{text-align:center;padding:38px 23px}.check{width:55px;height:55px;margin:0 auto 15px;border-radius:50%;background:#e5f2e9;color:#42795d;display:grid;place-items:center;font-weight:900;font-size:1.5rem}.footer{color:#a3a5a6;text-align:center;font-size:.74rem;margin:30px 0}
+    @media(max-width:620px){.wrap{padding:19px 12px 60px}.top{margin-bottom:20px}.card{padding:19px 16px;border-radius:16px}.course-grid{grid-template-columns:1fr;gap:10px}.course-choice{min-height:75px;padding:12px 15px}.course-choice b{margin-bottom:2px}.inline{flex-direction:column}.inline button{width:100%}.section-head{align-items:center}h1{font-size:2rem}.actions{flex-direction:column}}
   </style>
 </head>
 <body>
 <main class="wrap">
-  <a href="index.html" style="display:inline-block;color:#527c9f;text-decoration:none;font-size:.82rem;margin-bottom:12px">← 返回 Learning Hub</a>
+  <a href="index.html" class="back">← 返回 Learning Hub</a>
   <div class="top"><span class="brand">NURSING LEARNING HUB</span><span class="deadline">12/05 截止</span></div>
-  <div class="intro"><div class="eyebrow">115年度護理部 EPAs 系列課程</div><h1>學分補查登記</h1><p class="sub">請由各單位護理長統一回填，每位教師填寫一筆。</p></div>
-
-  <section class="card hidden" id="closed"><h2>本次補查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
-
-  <section class="card" id="accessGate">
-    <h2>請輸入護理長共用碼</h2>
-    <div class="field"><label for="accessCode">共用碼</label><input class="control" id="accessCode" type="password" maxlength="64" placeholder="請輸入共用碼" autocomplete="off" spellcheck="false"></div>
+  <div class="intro"><div class="eyebrow">115年度護理部 EPAs 系列課程</div><h1>學分補查登記</h1><p class="sub">請由各單位護理長統一登記。</p></div>
+  <section id="closed" class="card hidden"><h2>本次補查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
+  <section id="accessGate" class="card">
+    <h2>護理長專用入口</h2>
+    <div class="field"><label for="accessCode">共用碼</label><input id="accessCode" class="control" type="password" maxlength="64" placeholder="請輸入護理長共用碼" autocomplete="off" spellcheck="false"></div>
     <button id="unlock" class="button wide" type="button">進入補查表單</button>
     <div id="gateStatus" class="status" role="status" aria-live="polite"></div>
-    <p class="tiny" style="margin-top:13px">共用碼請由護理長保管，勿轉傳同仁。</p>
+    <p class="tiny">共用碼僅限護理長使用，請勿告知或轉傳其他同仁。</p>
   </section>
-
+  <section id="coursePicker" class="card hidden">
+    <h2>選擇補查課程</h2>
+    <div class="course-grid">
+      <button class="course-choice" type="button" data-course="1"><b>第一堂</b><span>甚麼學員可以被信賴</span></button>
+      <button class="course-choice" type="button" data-course="2"><b>第二堂</b><span>你以為的，是我以為的？</span></button>
+      <button class="course-choice" type="button" data-course="3"><b>第三堂</b><span>老師～換你上場！</span></button>
+    </div>
+  </section>
   <form id="creditForm" class="hidden" autocomplete="off">
     <section class="card">
-      <h2>登記資料</h2>
-      <div class="field"><label for="unit">單位 <span class="req">*</span></label><input class="control" id="unit" required maxlength="40" placeholder="請輸入單位"></div>
-      <div class="field"><label for="managerName">護理長全名 <span class="req">*</span></label><input class="control" id="managerName" required maxlength="40" placeholder="請輸入全名"></div>
-      <div class="field"><label for="teacherName">臨床教師全名 <span class="req">*</span></label><input class="control" id="teacherName" required maxlength="40" placeholder="請輸入全名" autocomplete="off"></div>
-      <div class="field"><label for="nationalId">臨床教師身分證字號 <span class="req">*</span></label><div class="inline"><input class="control" id="nationalId" required type="password" maxlength="12" placeholder="請輸入完整身分證字號" autocomplete="new-password" autocapitalize="characters" spellcheck="false"><button id="toggleId" class="button secondary" type="button">顯示／隱藏</button></div><div class="hint">僅用於辨識同名教師；完整原文不儲存於試算表。</div></div>
+      <div class="section-head"><div><div class="eyebrow" id="courseNumber"></div><h2 id="courseTitle"></h2></div><button id="changeCourse" type="button" class="button secondary small">更換課程</button></div>
+      <p class="tiny" id="courseHint"></p>
     </section>
-
     <section class="card">
-      <div class="eyebrow">01｜第一堂</div><h2>甚麼學員可以被信賴</h2>
-      <div class="options" role="radiogroup" aria-label="第一堂完成情形">
-        <label class="option"><input required name="course1" type="radio" value="已填答但未入學分"><span>已填答，但未入學分</span></label>
-        <label class="option"><input name="course1" type="radio" value="未收到通知"><span>未收到測驗／滿意度通知</span></label>
-        <label class="option"><input name="course1" type="radio" value="已收到尚未填答"><span>已收到，尚未填答</span></label>
-        <label class="option"><input name="course1" type="radio" value="無須補查"><span>無須補查</span></label>
-      </div>
+      <h2>登記單位</h2>
+      <div class="field"><label for="unit">單位 <span class="req">*</span></label><input id="unit" class="control" required maxlength="40" placeholder="例如：11B"></div>
+      <div class="field"><label for="managerName">護理長全名 <span class="req">*</span></label><input id="managerName" class="control" required maxlength="40" placeholder="請輸入全名"></div>
     </section>
-
     <section class="card">
-      <div class="eyebrow">02｜第二堂</div><h2>你以為的，是我以為的？</h2>
-      <div class="options" role="radiogroup" aria-label="第二堂完成情形">
-        <label class="option"><input required name="course2" type="radio" value="已填答但未入學分"><span>已填答，但未入學分</span></label>
-        <label class="option"><input name="course2" type="radio" value="未收到通知"><span>未收到測驗／滿意度通知</span></label>
-        <label class="option"><input name="course2" type="radio" value="已收到尚未填答"><span>已收到，尚未填答</span></label>
-        <label class="option"><input name="course2" type="radio" value="無須補查"><span>無須補查</span></label>
-      </div>
-      <p class="tiny" style="margin-top:14px">第一、二堂學分將依實際簽到單核對。</p>
+      <h2>臨床教師名單 <span id="teacherCount" class="tiny"></span></h2>
+      <div id="teacherList"></div>
+      <button id="addTeacher" type="button" class="add">＋ 新增一位臨床教師</button>
+      <p class="tiny" style="margin:10px 0 0">每堂課最多可一次登記 30 位教師。</p>
     </section>
-
     <section class="card">
-      <div class="eyebrow">03｜第三堂</div><h2>老師～換你上場！</h2>
-      <div class="options" role="radiogroup" aria-label="第三堂完成情形">
-        <label class="option"><input required name="course3" type="radio" value="已完成並繳交紙本"><span>已完成，並繳交紙本</span></label>
-        <label class="option"><input name="course3" type="radio" value="已完成尚未繳交"><span>已完成，尚未繳交</span></label>
-        <label class="option"><input name="course3" type="radio" value="尚未完成評核"><span>尚未完成評核</span></label>
-        <label class="option"><input name="course3" type="radio" value="無須補查"><span>無須補查</span></label>
-      </div>
-      <div class="field hidden" id="pgyArea" style="margin-top:18px"><label for="pgyName">接受評核的 PGY 學員全名 <span class="req">*</span></label><input class="control" id="pgyName" maxlength="40" placeholder="請輸入學員全名"></div>
-      <p class="tiny" style="margin-top:16px">第三堂以繳回承辦人的紙本評核表核對，需有臨床教師與 PGY 學員親筆簽名，並經護理長核章。</p>
-    </section>
-
-    <section class="card">
-      <div class="privacy"><span aria-hidden="true">🔒</span><span>送出僅代表申請補查，不等於直接入學分。教師身分證字號僅用於識別，試算表不保存完整號碼。</span></div>
-      <button id="submit" class="button wide" type="submit">確認送出</button>
+      <div class="privacy">送出為申請補查，並非直接認列學分。教師完整身分證字號僅用於識別，不儲存於試算表。</div>
+      <button id="submit" class="button wide" type="submit">確認整批送出</button>
       <div id="formStatus" class="status" role="status" aria-live="polite"></div>
     </section>
   </form>
-
-  <section class="card result hidden" id="done">
-    <div class="check">✓</div><h2>已完成登記</h2><p id="doneText" class="sub"></p>
-    <button id="again" type="button" class="button wide">繼續登記下一位教師</button>
+  <section id="done" class="card done hidden">
+    <div class="check">✓</div><h2>登記完成</h2><p id="doneText" class="sub"></p>
+    <div class="actions" style="margin-top:20px"><button id="again" type="button" class="button">繼續登記此堂課</button><button id="anotherCourse" type="button" class="button secondary">登記其他課程</button></div>
   </section>
   <p class="footer">115年度護理部 EPAs 系列課程</p>
 </main>
 <script>
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxyB3dYolmPYp5aE6E2jc-awyUPgdHKIhVG9JFTlNSkaVJRDnWJKSal0XjdolZKrlEB/exec';
-  let submitting = false;
-  let sharedAccessCode = '';
-  let pendingRequest = null;
-  const $ = id => document.getElementById(id);
-  const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
-  function status(id, message, type) {
-    const el = $(id); el.textContent = message;
-    el.className = 'status show ' + (type || 'wait');
-  }
-  function hideStatus(id) { $(id).className = 'status'; $(id).textContent = ''; }
-  function fail(id, error) {
-    status(id, error && error.message ? error.message : '連線失敗，請稍後再試。', 'err');
-  }
+  const COURSES = {
+    '1': {number:'01｜第一堂',title:'甚麼學員可以被信賴',hint:'本堂由承辦人依簽到單核對。'},
+    '2': {number:'02｜第二堂',title:'你以為的，是我以為的？',hint:'本堂由承辦人依簽到單核對。'},
+    '3': {number:'03｜第三堂',title:'老師～換你上場！',hint:'請填寫每位教師評核的 PGY 學員全名。需繳回教師與學員親筆簽名、護理長核章的紙本評核表，承辦人將依紙本核對。'}
+  };
+  const $=id=>document.getElementById(id);
+  const show=(id,on)=>$(id).classList.toggle('hidden',!on);
+  let sharedAccessCode='',selectedCourse='',submitting=false,pendingRequest=null;
+  function status(id,message,type){const el=$(id);el.textContent=message;el.className='status show '+(type||'wait');}
+  function hideStatus(id){const el=$(id);el.textContent='';el.className='status';}
+  function fail(id,error){status(id,error&&error.message?error.message:'連線失敗，請稍後再試。','err');}
 
-  // 真正的資料透過瀏覽器原生 HTTPS POST 直送 Google Apps Script。
-  // 不使用 CORS 受限的 fetch，也不把教師資料放在網址或 GitHub。
-  function sendToBackend(action, values) {
-    if (pendingRequest) return Promise.reject(new Error('上一筆資料仍在處理，請稍候。'));
-    const words = new Uint32Array(4);
-    window.crypto.getRandomValues(words);
-    const id = Array.from(words, n => n.toString(16).padStart(8, '0')).join('');
-    return new Promise((resolve, reject) => {
-      const frame = document.createElement('iframe');
-      frame.name = 'epa_response_' + id;
-      frame.tabIndex = -1;
-      frame.setAttribute('aria-hidden', 'true');
-      frame.style.cssText = 'position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none';
-      const post = document.createElement('form');
-      post.method = 'POST';
-      post.action = ENDPOINT;
-      post.target = frame.name;
-      post.acceptCharset = 'UTF-8';
-      post.style.display = 'none';
-      post.referrerPolicy = 'no-referrer';
-      for (const [name, value] of Object.entries({action, requestId: id, ...values})) {
-        const field = document.createElement('input');
-        field.type = 'hidden'; field.name = name; field.value = String(value == null ? '' : value);
-        post.appendChild(field);
-      }
-      const timer = window.setTimeout(() => {
-        if (pendingRequest && pendingRequest.id === id) {
-          pendingRequest = null;
-          frame.remove();
-          reject(new Error('連線逾時，請確認網路後再試；如曾按送出，請先向承辦人確認是否已登記。'));
-        }
-      }, 30000);
-      pendingRequest = {id, frame, timer, resolve, reject};
-      document.body.append(frame, post);
-      post.submit();
-      post.remove();
+  // 原生 HTTPS POST 直送 Google Apps Script；GitHub 只存放空白表單程式。
+  function sendToBackend(action,values){
+    if(pendingRequest)return Promise.reject(new Error('上一筆資料仍在處理，請稍候。'));
+    const words=new Uint32Array(4);window.crypto.getRandomValues(words);
+    const id=Array.from(words,n=>n.toString(16).padStart(8,'0')).join('');
+    return new Promise((resolve,reject)=>{
+      const frame=document.createElement('iframe');frame.name='epa_response_'+id;frame.tabIndex=-1;frame.setAttribute('aria-hidden','true');frame.style.cssText='position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none';
+      const post=document.createElement('form');post.method='POST';post.action=ENDPOINT;post.target=frame.name;post.acceptCharset='UTF-8';post.style.display='none';post.referrerPolicy='no-referrer';
+      for(const [name,value] of Object.entries({action,requestId:id,...values})){const field=document.createElement('input');field.type='hidden';field.name=name;field.value=String(value==null?'':value);post.appendChild(field);}
+      const timer=window.setTimeout(()=>{if(pendingRequest&&pendingRequest.id===id){pendingRequest=null;frame.remove();reject(new Error('連線逾時。若已按送出，請先向承辦人確認是否已登記。'));}},30000);
+      pendingRequest={id,frame,timer,resolve,reject};document.body.append(frame,post);post.submit();post.remove();
     });
   }
-  window.addEventListener('message', event => {
-    const origin = event.origin;
-    const trusted = origin === 'https://script.google.com' ||
-      /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/i.test(origin);
-    const data = event.data;
-    if (!trusted || !pendingRequest || !data || data.app !== 'epa-credit-recovery' ||
-        data.requestId !== pendingRequest.id || typeof data.ok !== 'boolean') return;
-    const current = pendingRequest; pendingRequest = null;
-    window.clearTimeout(current.timer);
-    current.frame.remove();
-    if (data.ok) current.resolve(data);
-    else current.reject(new Error(String(data.message || '處理失敗，請稍後再試。')));
+  window.addEventListener('message',event=>{
+    const trusted=event.origin==='https://script.google.com'||/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/i.test(event.origin);
+    const data=event.data;
+    if(!trusted||!pendingRequest||!data||data.app!=='epa-credit-recovery'||data.requestId!==pendingRequest.id||typeof data.ok!=='boolean')return;
+    const request=pendingRequest;pendingRequest=null;window.clearTimeout(request.timer);request.frame.remove();
+    if(data.ok)request.resolve(data);else request.reject(new Error(String(data.message||'處理失敗，請稍後再試。')));
   });
-
-  if (new Date() > new Date('2026-12-05T23:59:59+08:00')) {
-    show('closed', true); show('accessGate', false); show('creditForm', false);
+  if(new Date()>new Date('2026-12-05T23:59:59+08:00')){show('closed',true);show('accessGate',false);}
+  async function unlockForm(){
+    const code=$('accessCode').value.trim().toUpperCase();
+    if(!code){status('gateStatus','請輸入共用碼。','err');return;}
+    $('unlock').disabled=true;status('gateStatus','正在確認…','wait');
+    try{await sendToBackend('verify',{accessCode:code});sharedAccessCode=code;$('accessCode').value='';hideStatus('gateStatus');show('accessGate',false);show('coursePicker',true);}
+    catch(err){fail('gateStatus',err);}finally{$('unlock').disabled=false;}
   }
-  function unlockForm() {
-    const code = $('accessCode').value.trim().toUpperCase();
-    if (!code) { status('gateStatus', '請輸入共用碼。', 'err'); return; }
-    $('unlock').disabled = true;
-    status('gateStatus', '正在確認…', 'wait');
-    sendToBackend('verify', {accessCode: code}).then(() => {
-      sharedAccessCode = code;
-      $('accessCode').value = '';
-      $('unlock').disabled = false;
-      hideStatus('gateStatus'); show('accessGate', false); show('creditForm', true);
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }).catch(error => {
-      $('unlock').disabled = false;
-      fail('gateStatus', error);
-    });
+  $('unlock').addEventListener('click',unlockForm);
+  $('accessCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();unlockForm();}});
+
+  function renumberTeachers(){
+    const entries=[...$('teacherList').children];$('teacherCount').textContent='（'+entries.length+' 位）';
+    entries.forEach((el,i)=>{el.querySelector('.teacherIndex').textContent='教師 '+(i+1);el.querySelector('.removeTeacher').hidden=entries.length===1;});
+    $('addTeacher').disabled=entries.length>=30;
   }
-  $('unlock').addEventListener('click', unlockForm);
-  $('accessCode').addEventListener('keydown', event => {
-    if (event.key === 'Enter') { event.preventDefault(); unlockForm(); }
+  function addTeacher(){
+    if($('teacherList').children.length>=30)return;
+    const node=document.createElement('div');node.className='teacher-entry';
+    node.innerHTML='<div class="teacher-top"><strong class="teacherIndex"></strong><button type="button" class="removeTeacher">移除</button></div>'+
+      '<div class="field"><label>臨床教師全名 <span class="req">*</span></label><input class="control teacherName" required maxlength="40" placeholder="請輸入全名" autocomplete="off"></div>'+
+      '<div class="field"><label>教師完整身分證字號 <span class="req">*</span></label><div class="inline"><input class="control nationalId" required type="password" maxlength="12" placeholder="請輸入完整身分證字號" autocomplete="new-password" autocapitalize="characters" spellcheck="false"><button class="button secondary small toggleId" type="button">顯示／隱藏</button></div></div>'+
+      (selectedCourse==='3'?'<div class="field"><label>接受評核的 PGY 學員全名 <span class="req">*</span></label><input class="control pgyName" required maxlength="40" placeholder="請輸入學員全名" autocomplete="off"></div>':'');
+    node.querySelector('.removeTeacher').addEventListener('click',()=>{node.remove();renumberTeachers();});
+    node.querySelector('.toggleId').addEventListener('click',()=>{const field=node.querySelector('.nationalId');field.type=field.type==='password'?'text':'password';});
+    $('teacherList').appendChild(node);renumberTeachers();
+  }
+  $('addTeacher').addEventListener('click',addTeacher);
+  function pickCourse(course){
+    selectedCourse=course;const c=COURSES[course];$('courseNumber').textContent=c.number;$('courseTitle').textContent=c.title;$('courseHint').textContent=c.hint;
+    $('teacherList').replaceChildren();addTeacher();hideStatus('formStatus');show('coursePicker',false);show('done',false);show('creditForm',true);window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-course]').forEach(button=>button.addEventListener('click',()=>pickCourse(button.dataset.course)));
+  $('changeCourse').addEventListener('click',()=>{
+    if(submitting)return;
+    if([...$('teacherList').querySelectorAll('input')].some(input=>input.value.trim())&&!window.confirm('尚未送出的教師名單將清除，確定要更換課程嗎？'))return;
+    show('creditForm',false);show('coursePicker',true);window.scrollTo({top:0,behavior:'smooth'});
   });
-
-  document.querySelectorAll('input[name="course3"]').forEach(input => input.addEventListener('change', () => {
-    const value = document.querySelector('input[name="course3"]:checked')?.value || '';
-    const completed = value === '已完成並繳交紙本' || value === '已完成尚未繳交';
-    show('pgyArea', completed);
-    $('pgyName').required = completed;
-    if (!completed) $('pgyName').value = '';
-  }));
-  $('toggleId').addEventListener('click', () => {
-    $('nationalId').type = $('nationalId').type === 'password' ? 'text' : 'password';
+  $('creditForm').addEventListener('submit',async event=>{
+    event.preventDefault();if(submitting||!$('creditForm').reportValidity())return;
+    const entries=[...$('teacherList').children];
+    const records=entries.map(el=>({teacherName:el.querySelector('.teacherName').value.trim(),nationalId:el.querySelector('.nationalId').value.trim(),pgyName:el.querySelector('.pgyName')?.value.trim()||''}));
+    const ids=records.map(r=>r.nationalId.toUpperCase().replace(/[\s-]/g,''));
+    if(new Set(ids).size!==ids.length){status('formStatus','名單中有重複的教師身分證字號，請確認。','err');return;}
+    submitting=true;$('submit').disabled=true;$('addTeacher').disabled=true;status('formStatus','正在送出 '+records.length+' 位教師…','wait');
+    try{
+      const result=await sendToBackend('submitBatch',{accessCode:sharedAccessCode,unit:$('unit').value.trim(),managerName:$('managerName').value.trim(),course:selectedCourse,recordsJson:JSON.stringify(records)});
+      $('doneText').textContent=result.message;show('creditForm',false);show('done',true);window.scrollTo({top:0,behavior:'smooth'});
+      $('teacherList').replaceChildren();
+    }catch(err){fail('formStatus',err);}finally{
+      records.forEach(r=>{r.nationalId='';r.teacherName='';r.pgyName='';});
+      submitting=false;$('submit').disabled=false;renumberTeachers();
+    }
   });
-
-  $('creditForm').addEventListener('submit', event => {
-    event.preventDefault();
-    if (submitting) return;
-    if (!$('creditForm').reportValidity()) return;
-    const payload = {
-      accessCode: sharedAccessCode,
-      unit: $('unit').value.trim(), managerName: $('managerName').value.trim(),
-      teacherName: $('teacherName').value.trim(), nationalId: $('nationalId').value.trim(),
-      course1: document.querySelector('input[name="course1"]:checked')?.value || '',
-      course2: document.querySelector('input[name="course2"]:checked')?.value || '',
-      course3: document.querySelector('input[name="course3"]:checked')?.value || '',
-      pgyName: $('pgyName').value.trim()
-    };
-    submitting = true; $('submit').disabled = true;
-    status('formStatus', '正在送出…', 'wait');
-    sendToBackend('submit', payload).then(result => {
-      submitting = false; $('submit').disabled = false;
-      $('nationalId').value = ''; payload.nationalId = ''; payload.accessCode = '';
-      $('doneText').textContent = result.message;
-      show('creditForm', false); show('done', true);
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }).catch(error => {
-      submitting = false; $('submit').disabled = false;
-      payload.nationalId = ''; payload.accessCode = '';
-      fail('formStatus', error);
-    });
-  });
-  $('again').addEventListener('click', () => {
-    const unit = $('unit').value, managerName = $('managerName').value;
-    $('creditForm').reset(); $('nationalId').type = 'password';
-    $('unit').value = unit; $('managerName').value = managerName;
-    show('pgyArea', false); $('pgyName').required = false;
-    hideStatus('formStatus'); show('done', false); show('creditForm', true);
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  });
+  $('again').addEventListener('click',()=>pickCourse(selectedCourse));
+  $('anotherCourse').addEventListener('click',()=>{selectedCourse='';show('done',false);show('coursePicker',true);window.scrollTo({top:0,behavior:'smooth'});});
 </script>
 </body>
 </html>
