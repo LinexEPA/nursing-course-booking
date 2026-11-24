@@ -22,6 +22,7 @@ const EPAS = Object.freeze({
   DEADLINE: '20261205235959',
   MAIN_SHEET: '補查資料',
   AUDIT_SHEET: '異動紀錄',
+  MAX_BATCH: 30,
   COURSE_AB: ['已填答但未入學分', '未收到通知', '已收到尚未填答', '無須補查'],
   COURSE_C: ['已完成並繳交紙本', '已完成尚未繳交', '尚未完成評核', '無須補查']
 });
@@ -46,6 +47,9 @@ function doPost(e) {
     if (params.action === 'verify') {
       verifySharedCode(params.accessCode);
       response = {ok: true, message: '共用碼已確認。'};
+    } else if (params.action === 'submitBatch') {
+      const result = submitCreditBatch(params);
+      response = {ok: true, message: result.message};
     } else if (params.action === 'submit') {
       const result = submitCreditRecord(params);
       response = {ok: true, message: result.message};
@@ -134,6 +138,97 @@ function submitCreditRecord(rawPayload) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * 新版：護理長先選一堂課，再一次提交多位臨床教師。
+ * 一位教師、一堂課各佔一列；仍沿用原始 13 欄，不破壞既有紀錄。
+ * 整批驗證全部通過後才進行寫入；完整身分證字號絕不落地。
+ */
+function submitCreditBatch(rawPayload) {
+  if (isClosed_()) throw new Error('本次補查已截止，逾期申請請循護理部裁示辦理。');
+  requireSharedCode_(rawPayload && rawPayload.accessCode);
+  const payload = validateBatch_(rawPayload);
+  const now = Utilities.formatDate(new Date(), EPAS.TIMEZONE, 'yyyy/MM/dd HH:mm:ss');
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    if (isClosed_()) throw new Error('本次補查已截止。');
+    const ss = getSpreadsheet_();
+    const sheet = ss.getSheetByName(EPAS.MAIN_SHEET);
+    const audit = ss.getSheetByName(EPAS.AUDIT_SHEET);
+    if (!sheet || !audit) throw new Error('系統尚未完成初始化。');
+    const rows = [];
+    const auditRows = [];
+    for (const item of payload.records) {
+      const hash = hmac_(item.nationalId);
+      const maskedId = item.nationalId.slice(0, 1) + '＊＊＊＊＊' + item.nationalId.slice(-4);
+      rows.push([
+        now, now, safeCell_(payload.unit), safeCell_(payload.managerName), '護理長整批補查（待人工核對）',
+        safeCell_(item.teacherName), hash, maskedId,
+        payload.course === '1' ? '簽到待查核' : '',
+        payload.course === '2' ? '簽到待查核' : '',
+        payload.course === '3' ? '紙本待查核' : '',
+        payload.course === '3' ? safeCell_(item.pgyName) : '', '待查核'
+      ]);
+      auditRows.push([
+        now, safeCell_(payload.unit + '｜' + payload.managerName),
+        '第' + payload.course + '堂新增補查登記', hash
+      ]);
+    }
+    appendRows_(sheet, rows);
+    appendRows_(audit, auditRows);
+    SpreadsheetApp.flush();
+    return {ok: true, message: '第' + payload.course + '堂已登記 ' + rows.length + ' 位教師，將依' +
+      (payload.course === '3' ? '繳回的紙本評核表' : '簽到單') + '核對。'};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function validateBatch_(payload) {
+  if (!payload || typeof payload !== 'object') throw new Error('表單資料不完整。');
+  const unit = String(payload.unit || '').trim();
+  const managerName = String(payload.managerName || '').trim();
+  const course = String(payload.course || '').trim();
+  if (unit.length < 1 || unit.length > 40 || managerName.length < 2 || managerName.length > 40) {
+    throw new Error('請填寫單位及護理長全名。');
+  }
+  if (!['1', '2', '3'].includes(course)) throw new Error('請選擇正確的課程。');
+  let source;
+  try { source = JSON.parse(String(payload.recordsJson || '')); }
+  catch (err) { throw new Error('教師名單格式不正確，請重新整理後再試。'); }
+  if (!Array.isArray(source) || source.length < 1 || source.length > EPAS.MAX_BATCH) {
+    throw new Error('每次請登記 1 至 ' + EPAS.MAX_BATCH + ' 位教師。');
+  }
+  const seen = new Set();
+  const records = source.map((item, i) => {
+    const teacherName = String((item && item.teacherName) || '').trim();
+    const nationalId = String((item && item.nationalId) || '').trim().toUpperCase().replace(/\s|-/g, '');
+    const pgyName = String((item && item.pgyName) || '').trim();
+    if (teacherName.length < 2 || teacherName.length > 40) {
+      throw new Error('第 ' + (i + 1) + ' 位請填寫臨床教師全名。');
+    }
+    if (!/^[A-Z][A-Z0-9]{9}$/.test(nationalId)) {
+      throw new Error('第 ' + (i + 1) + ' 位教師的身分證字號格式不正確。');
+    }
+    if (seen.has(nationalId)) throw new Error('教師名單中有重複身分證字號，請確認後再送出。');
+    seen.add(nationalId);
+    if (course === '3' && (pgyName.length < 2 || pgyName.length > 40)) {
+      throw new Error('第 ' + (i + 1) + ' 位請填寫受評 PGY 學員全名。');
+    }
+    return {teacherName, nationalId, pgyName: course === '3' ? pgyName : ''};
+  });
+  return {unit, managerName, course, records};
+}
+
+function appendRows_(sheet, rows) {
+  const first = sheet.getLastRow() + 1;
+  const required = first + rows.length - 1;
+  if (required > sheet.getMaxRows()) {
+    sheet.insertRowsAfter(sheet.getMaxRows(), required - sheet.getMaxRows());
+  }
+  sheet.getRange(first, 1, rows.length, rows[0].length).setValues(rows);
 }
 
 function validateRecord_(payload) {
