@@ -32,6 +32,38 @@ function doGet() {
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover');
 }
 
+/**
+ * GitHub Pages 的資料傳送入口。使用瀏覽器原生表單 POST，
+ * 回覆只含處理結果，不含身分證、教師姓名或共用碼。
+ * 僅放行這個無互動的回覆頁被 iframe 載入，不開放實際表單被嵌入。
+ */
+function doPost(e) {
+  const params = (e && e.parameter) || {};
+  const requestId = String(params.requestId || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
+  let response;
+  try {
+    if (!requestId) throw new Error('請重新開啟表單後再試。');
+    if (params.action === 'verify') {
+      verifySharedCode(params.accessCode);
+      response = {ok: true, message: '共用碼已確認。'};
+    } else if (params.action === 'submit') {
+      const result = submitCreditRecord(params);
+      response = {ok: true, message: result.message};
+    } else {
+      throw new Error('無效的表單操作。');
+    }
+  } catch (error) {
+    response = {ok: false, message: error && error.message ? error.message : '處理失敗，請稍後再試。'};
+  }
+  const message = JSON.stringify({app: 'epa-credit-recovery', requestId,
+    ok: response.ok, message: response.message})
+    .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+  return HtmlService.createHtmlOutput(
+    '<!doctype html><html><body><script>window.top.postMessage(' + message +
+    ', "https://linexepa.github.io");<\/script></body></html>'
+  ).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
 /** 僅供腳本擁有者從 Apps Script 編輯器執行。重複執行不清除紀錄。 */
 function initialize() {
   const actor = Session.getActiveUser().getEmail();
