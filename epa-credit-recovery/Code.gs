@@ -22,6 +22,8 @@ const EPAS = Object.freeze({
   EMAIL_DOMAIN: '@tzuchi.com.tw',
   OTP_TTL_SECONDS: 600,
   OTP_COOLDOWN_SECONDS: 75,
+  OTP_WINDOW_SECONDS: 21600,
+  MAX_OTP_REQUESTS: 5,
   SESSION_TTL_SECONDS: 1800,
   MAX_OTP_ATTEMPTS: 5,
   MAIN_SHEET: '補查資料',
@@ -77,10 +79,22 @@ function requestOtp(rawEmail) {
   const cache = CacheService.getScriptCache();
   const emailKey = hmac_(email).slice(0, 36);
   const throttleKey = 'cooldown_' + emailKey;
-  if (cache.get(throttleKey)) {
-    throw new Error('驗證碼已寄送，請稍候再試。');
+  const limitKey = 'request_limit_' + emailKey;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(5000);
+  try {
+    if (cache.get(throttleKey)) {
+      throw new Error('驗證碼已寄送，請稍候再試。');
+    }
+    const requests = Number(cache.get(limitKey) || 0);
+    if (requests >= EPAS.MAX_OTP_REQUESTS) {
+      throw new Error('驗證碼申請過於頻繁，請稍後聯絡承辦人。');
+    }
+    cache.put(throttleKey, '1', EPAS.OTP_COOLDOWN_SECONDS);
+    cache.put(limitKey, String(requests + 1), EPAS.OTP_WINDOW_SECONDS);
+  } finally {
+    lock.releaseLock();
   }
-  cache.put(throttleKey, '1', EPAS.OTP_COOLDOWN_SECONDS);
 
   const manager = findManager_(email);
   if (manager) {
@@ -108,26 +122,32 @@ function verifyOtp(rawEmail, rawCode) {
   const cache = CacheService.getScriptCache();
   const emailKey = hmac_(email).slice(0, 36);
   const key = 'otp_' + emailKey;
-  const stored = cache.get(key);
-  if (!stored) throw new Error('驗證碼已失效，請重新申請。');
-  const record = JSON.parse(stored);
-  record.attempts += 1;
-  if (record.attempts > EPAS.MAX_OTP_ATTEMPTS) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(5000);
+  try {
+    const stored = cache.get(key);
+    if (!stored) throw new Error('驗證碼已失效，請重新申請。');
+    const record = JSON.parse(stored);
+    record.attempts += 1;
+    if (record.attempts > EPAS.MAX_OTP_ATTEMPTS) {
+      cache.remove(key);
+      throw new Error('嘗試次數過多，請重新申請驗證碼。');
+    }
+    if (!sameText_(record.hash, hmac_(record.nonce + ':' + code))) {
+      if (record.attempts >= EPAS.MAX_OTP_ATTEMPTS) cache.remove(key);
+      else cache.put(key, JSON.stringify(record), EPAS.OTP_TTL_SECONDS);
+      throw new Error('驗證碼不正確。');
+    }
+    const manager = findManager_(email);
+    if (!manager) throw new Error('目前無法確認填寫權限，請聯絡承辦人。');
     cache.remove(key);
-    throw new Error('嘗試次數過多，請重新申請驗證碼。');
-  }
-  if (!sameText_(record.hash, hmac_(record.nonce + ':' + code))) {
-    if (record.attempts >= EPAS.MAX_OTP_ATTEMPTS) cache.remove(key);
-    else cache.put(key, JSON.stringify(record), EPAS.OTP_TTL_SECONDS);
-    throw new Error('驗證碼不正確。');
-  }
-  const manager = findManager_(email);
-  if (!manager) throw new Error('目前無法確認填寫權限，請聯絡承辦人。');
-  cache.remove(key);
 
-  const token = Utilities.getUuid() + Utilities.getUuid();
-  cache.put('session_' + hmac_(token).slice(0, 48), JSON.stringify(manager), EPAS.SESSION_TTL_SECONDS);
-  return {ok: true, token, unit: manager.unit, manager: manager.name, expiresMinutes: 30};
+    const token = Utilities.getUuid() + Utilities.getUuid();
+    cache.put('session_' + hmac_(token).slice(0, 48), JSON.stringify(manager), EPAS.SESSION_TTL_SECONDS);
+    return {ok: true, token, unit: manager.unit, manager: manager.name, expiresMinutes: 30};
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /** 同一位教師在同一單位重複回填，更新原紀錄，不產生重複學分案件。 */
