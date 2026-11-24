@@ -11,7 +11,8 @@
  * 安全設計：
  * - 不在 GitHub、URL、郵件、試算表或稽核紀錄儲存完整身分證字號。
  * - 完整身分證字號僅在伺服端以秘密金鑰產生 HMAC 比對值。
- * - 不蒐集電子信箱、不使用登入或填寫碼；任何可開啟表單者皆可登記。
+ * - 不蒐集電子信箱；使用 Apps Script 私有指令碼屬性中的共用碼限制登記。
+ * - 共用碼僅為基本門檻，不能證明填寫者身分，也不得寫入公開 GitHub。
  * - 所有登記僅供承辦人核對紙本證據，絕不自動認列學分。
  * - 請勿與既有課程預約 Apps Script 或 Sheets 共用。
  */
@@ -64,9 +65,17 @@ function getFormStatus() {
   return {open: !isClosed_(), deadline: '115/12/05', title: '115年度護理部 EPAs 系列課程'};
 }
 
+/** 初次進入表單時核對共用碼；不將共用碼寫入試算表。 */
+function verifySharedCode(accessCode) {
+  if (isClosed_()) throw new Error('本次補查已截止，逾期申請請循護理部裁示辦理。');
+  requireSharedCode_(accessCode);
+  return {ok: true};
+}
+
 /** 登記只代表請求補查。保留每次提交供人工比對，不覆寫前次證據。 */
 function submitCreditRecord(rawPayload) {
   if (isClosed_()) throw new Error('本次補查已截止，逾期申請請循護理部裁示辦理。');
+  requireSharedCode_(rawPayload && rawPayload.accessCode);
   const payload = validateRecord_(rawPayload);
   const idHash = hmac_(payload.nationalId);
   const maskedId = payload.nationalId.slice(0, 1) + '＊＊＊＊＊' + payload.nationalId.slice(-4);
@@ -125,6 +134,16 @@ function validateRecord_(payload) {
 function isClosed_() {
   const current = Utilities.formatDate(new Date(), EPAS.TIMEZONE, 'yyyyMMddHHmmss');
   return current > EPAS.DEADLINE;
+}
+
+function requireSharedCode_(accessCode) {
+  const expected = PropertiesService.getScriptProperties().getProperty('EPA_CREDIT_SHARED_CODE');
+  if (!expected) throw new Error('表單尚未完成共用碼設定，請聯繫承辦人。');
+  const supplied = String(accessCode || '').trim().toUpperCase();
+  if (supplied.length !== expected.length) throw new Error('共用碼不正確，請向護理長確認。');
+  let mismatch = 0;
+  for (let i = 0; i < expected.length; i++) mismatch |= supplied.charCodeAt(i) ^ expected.charCodeAt(i);
+  if (mismatch) throw new Error('共用碼不正確，請向護理長確認。');
 }
 
 function getSpreadsheet_() {
