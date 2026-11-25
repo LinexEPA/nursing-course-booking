@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
-  <title>EPAs 學分補查｜護理教育 Learning Hub</title>
+  <title>EPAs 學分未入調查｜護理教育 Learning Hub</title>
   <style>
     :root{--bg:#faf9f6;--ink:#2d3540;--muted:#71808b;--blue:#527c9f;--soft:#e5f0f8;--line:#e4e7ea;--rose:#f7e8e6;--white:#fff}
     *{box-sizing:border-box}html{font-size:16px}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.6}
@@ -22,17 +22,17 @@
 <main class="wrap">
   <a href="index.html" class="back">← 返回 Learning Hub</a>
   <div class="top"><span class="brand">NURSING LEARNING HUB</span><span class="deadline">12/05 截止</span></div>
-  <div class="intro"><div class="eyebrow">115年度護理部 EPAs 系列課程</div><h1>學分補查登記</h1><p class="sub">請由各單位護理長統一登記。</p></div>
-  <section id="closed" class="card hidden"><h2>本次補查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
+  <div class="intro"><div class="eyebrow">115年度護理部 EPAs 系列課程</div><h1>學分未入調查</h1><p class="sub">請由各單位護理長統一登記。</p></div>
+  <section id="closed" class="card hidden"><h2>本次調查已截止</h2><p class="sub">逾期申請請循護理部裁示辦理。</p></section>
   <section id="accessGate" class="card">
     <h2>護理長專用入口</h2>
     <div class="field"><label for="accessCode">共用碼</label><input id="accessCode" class="control" type="password" maxlength="64" placeholder="請輸入護理長共用碼" autocomplete="off" spellcheck="false"></div>
-    <button id="unlock" class="button wide" type="button">進入補查表單</button>
+    <button id="unlock" class="button wide" type="button">進入調查表單</button>
     <div id="gateStatus" class="status" role="status" aria-live="polite"></div>
     <p class="tiny">共用碼僅限護理長使用，請勿告知或轉傳其他同仁。</p>
   </section>
   <section id="coursePicker" class="card hidden">
-    <h2>選擇補查課程</h2>
+    <h2>選擇調查課程</h2>
     <div class="course-grid">
       <button class="course-choice" type="button" data-course="1"><b>第一堂</b><span>甚麼學員可以被信賴</span></button>
       <button class="course-choice" type="button" data-course="2"><b>第二堂</b><span>你以為的，是我以為的？</span></button>
@@ -56,7 +56,7 @@
       <p class="tiny" style="margin:10px 0 0">每堂課最多可一次登記 30 位教師。</p>
     </section>
     <section class="card">
-      <div class="privacy">送出為申請補查，並非直接認列學分。教師完整身分證字號僅用於識別，不儲存於試算表。</div>
+      <div class="privacy">送出僅供學分查核，並非直接認列學分。教師完整身分證字號僅用於識別，不儲存於試算表。</div>
       <button id="submit" class="button wide" type="submit">確認整批送出</button>
       <div id="formStatus" class="status" role="status" aria-live="polite"></div>
     </section>
